@@ -2,17 +2,18 @@
 #define GRAPH_H
 
 #include <vector>
+#include <QPointF>
 
 class Node;
 class Edge;
-class QPointF;
 
 class Graph
 {
 public:
     virtual ~Graph();
 
-    virtual Node *createNode(int id, int weight, const QPointF &pos) = 0;
+    Node *createNode(int id, int weight, const QPointF &pos);
+
     virtual Edge *createEdge(int weight, Node *from, Node *to) = 0;
 
     const std::vector<Node*> &nodes() const;
@@ -25,7 +26,7 @@ protected:
     std::vector<Edge*>  _edges;
 
 private:
-    std::vector<int>    _id_nodes;
+    std::vector<int>    _id_nodes; // sorted vector of all nodes ids.
 };
 
 class DirectedGraph : public Graph
@@ -34,7 +35,6 @@ public:
     DirectedGraph();
     virtual ~DirectedGraph();
 
-    virtual Node *createNode(int id, int weight, const QPointF &pos);
     virtual Edge *createEdge(int weight, Node *from, Node *to);
 };
 
@@ -44,7 +44,6 @@ public:
     UndirectedGraph();
     virtual ~UndirectedGraph();
 
-    virtual Node *createNode(int id, int weight, const QPointF &pos);
     virtual Edge *createEdge(int weight, Node *from, Node *to);
 };
 

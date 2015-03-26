@@ -1,10 +1,10 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <QPointF>
+
 class Graph;
 class Edge;
-
-class QPointF;
 
 class Node
 {
