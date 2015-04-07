@@ -3,16 +3,16 @@
 
 #include <QGraphicsView>
 
-class GraphScene;
+class BasicGraphScene;
 
 class GraphView : public QGraphicsView
 {
 public:
     GraphView(QWidget *parent = 0);
-    GraphView(GraphScene *graph, QWidget *parent = 0);
+    GraphView(BasicGraphScene *graph, QWidget *parent = 0);
 
-    void setGraphScene(GraphScene *graph);
-    GraphScene *graphScene() const;
+    void setGraphScene(BasicGraphScene *graph);
+    BasicGraphScene *graphScene() const;
 };
 
 #endif // GRAPHVIEW_H

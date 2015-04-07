@@ -1,60 +1,52 @@
 #include "graph_scene.h"
 
-GraphScene::GraphScene(Graph<NodeInfo, EdgeInfo> *graph, QObject *parent)
+BasicGraphScene::BasicGraphScene(Graph<NodeInfo, EdgeInfo> *graph, QObject *parent)
     : QGraphicsScene(parent), _graph(graph)
 {
 
 }
 
-GraphScene::~GraphScene()
+BasicGraphScene::~BasicGraphScene()
 {
     delete _graph;
 }
 
-void GraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void BasicGraphScene::addNode(const QPointF &centerPos, int weight)
+{
+    node_type *node = _graph->createNode();
+    node.setPos(centerPos);
+    node.setWeight(weight);
+    addItem(createGraphicsNode(node));
+}
+
+void BasicGraphScene::addEdge(int weight)
+{
+    edge_type *edge = _graph->createEdge();
+    edge.setWeight(weight);
+    addItem(createGraphicsEdge(edge));
+}
+
+void BasicGraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
 }
 
-void GraphScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void BasicGraphScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
-void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void BasicGraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     QGraphicsScene::mousePressEvent(mouseEvent);
 }
 
-void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void BasicGraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
 
-void GraphScene::keyPressEvent(QKeyEvent *keyEvent)
+void BasicGraphScene::keyPressEvent(QKeyEvent *keyEvent)
 {
     QGraphicsScene::keyPressEvent(keyEvent);
-}
-
-
-DirectedGraphScene::DirectedGraphScene(QObject *parent)
-    : GraphScene(new DirectedGraph<NodeInfo, EdgeInfo>(), parent)
-{
-
-}
-
-DirectedGraphScene::~DirectedGraphScene()
-{
-
-}
-
-UndirectedGraphScene::UndirectedGraphScene(QObject *parent)
-    : GraphScene(new UndirectedGraph<NodeInfo, EdgeInfo>(), parent)
-{
-
-}
-
-UndirectedGraphScene::~UndirectedGraphScene()
-{
-
 }

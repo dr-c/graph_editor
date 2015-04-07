@@ -7,18 +7,18 @@ GraphView::GraphView(QWidget *parent)
 
 }
 
-GraphView::GraphView(GraphScene *graph, QWidget *parent)
+GraphView::GraphView(BasicGraphScene *graph, QWidget *parent)
     : QGraphicsView(graph, parent)
 {
 
 }
 
-void GraphView::setGraphScene(GraphScene *graph)
+void GraphView::setGraphScene(BasicGraphScene *graph)
 {
     QGraphicsView::setScene(graph);
 }
 
-GraphScene* GraphView::graphScene() const
+BasicGraphScene* GraphView::graphScene() const
 {
-    return dynamic_cast<GraphScene*>(QGraphicsView::scene());
+    return dynamic_cast<BasicGraphScene*>(QGraphicsView::scene());
 }
