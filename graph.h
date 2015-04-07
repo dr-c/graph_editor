@@ -91,7 +91,7 @@ public:
     virtual Node<N, E> *createNode() override {
         int id = this->_nodes.rbegin()->first;
         auto node = new UndirectedNode<N, E>(this, id);
-        auto pair = this->_nodes.insert(make_pair(id, node));
+        auto pair = this->_nodes.insert(std::make_pair(id, node));
         assert(pair.second == true);
         return node;
     }

@@ -88,7 +88,7 @@ public:
 
     virtual void addSuccessor(Node<N, E> *node, Edge<N, E> *edge) override {
         assert(_adjacents.find(node) == _adjacents.end());
-        _adjacents.insert(node, edge);
+        _adjacents.insert(std::make_pair(node, edge));
     }
 
     virtual void removeSuccessor(Node<N, E> *node) override {
@@ -98,7 +98,7 @@ public:
 
     virtual void addPredecessor(Node<N, E> *node, Edge<N, E> *edge) override {
         assert(_adjacents.find(node) == _adjacents.end());
-        _adjacents.insert(node, edge);
+        _adjacents.insert(std::make_pair(node, edge));
     }
 
     virtual void removePredecessor(Node<N, E> *node) override {
