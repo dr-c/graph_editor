@@ -1,14 +1,42 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "graph_scene.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    _ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+    _ui->setupUi(this);
+
+    _graphScene = new DirectedGraphScene();
+    _ui->graphicsView->setGraphScene(_graphScene);
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    delete _ui;
+    delete _graphScene;
+}
+
+void MainWindow::on_actionPointer_toggled(bool checked)
+{
+    if (checked)
+    {
+        _ui->graphicsView->setDragMode(QGraphicsView::RubberBandDrag);
+        _ui->actionPencil->setChecked(false);
+    }
+    else
+        _ui->actionPointer->setChecked(true);
+}
+
+void MainWindow::on_actionPencil_toggled(bool checked)
+{
+    if (checked)
+    {
+        _ui->graphicsView->setDragMode(QGraphicsView::NoDrag);
+        _ui->actionPointer->setChecked(false);
+    }
+    else
+        _ui->actionPencil->setChecked(true);
 }
