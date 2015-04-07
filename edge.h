@@ -3,25 +3,32 @@
 
 #include <assert.h>
 
-class Graph;
-class Node;
+template<typename N, typename E>
+class Edge;
+
+#include "graph.h"
+#include "node.h"
 
 template<typename N, typename E>
 class Edge : public E
 {
 public:
-    template<typename... Params>
-    Edge(Graph *graph, Params&&... params) : E(params...), _graph(graph), _fromNode(nullptr), _toNode(nullptr) {}
+    Edge(Graph<N, E> *graph) : E(), _graph(graph), _fromNode(nullptr), _toNode(nullptr) {}
 
-    ~Edge() {
-        _fromNode->removeSuccessor(_toNode);
-        _toNode->removePredecessor(_fromNode);
+    virtual ~Edge() override {
+        if (_fromNode != nullptr) {
+            _fromNode->removeSuccessor(_toNode);
+            _toNode->removePredecessor(_fromNode);
+        }
     }
 
     void setNodes(Node<N, E> *fromNode, Node<N, E> *toNode) {
         assert(_fromNode == nullptr && _toNode == nullptr); // Prohibited to reassign
+        assert(fromNode != nullptr && toNode != nullptr);   // Prohibited to assign nullptr
         _fromNode = fromNode;
         _toNode = toNode;
+        _fromNode->addSuccessor(_toNode, this);
+        _toNode->addPredecessor(_fromNode, this);
     }
 
     void remove() {
@@ -35,10 +42,9 @@ public:
     Node<N, E> *toNode() const {
         return _toNode;
     }
-    //Graph *graph() const { return _graph; }
 
 private:
-    Graph *_graph;
+    Graph<N, E> *_graph;
     Node<N, E> *_fromNode;
     Node<N, E> *_toNode;
 };

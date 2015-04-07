@@ -5,10 +5,11 @@
 #include <map>
 #include <assert.h>
 
-class Node;
-class DirectedNode;
-class UndirectedNode;
-class Edge;
+template<typename N, typename E>
+class Graph;
+
+#include "node.h"
+#include "edge.h"
 
 template<typename N, typename E>
 class Graph
@@ -18,17 +19,15 @@ public:
         for (auto edge : _edges)
             delete edge;
         _edges.clear();
-        for (auto node : _nodes)
-            delete node;
+        for (auto& node : _nodes)
+            delete node.second;
         _nodes.clear();
     }
 
-    template<typename... Params>
-    virtual Node<N, E> *createNode(Params&&... params) = 0;
+    virtual Node<N, E> *createNode() = 0;
 
-    template<typename... Params>
-    Edge<N, E> *createEdge(Params&&... params) {
-        auto edge = new Edge<N, E>(this, params);
+    Edge<N, E> *createEdge() {
+        auto edge = new Edge<N, E>(this);
         _edges.push_back(edge);
         return edge;
     }
@@ -40,24 +39,30 @@ public:
     }
 
     void remove(Edge<N, E> *edge) {
-        auto erased_count = _edges.erase(edge);
-        assert(erased_count == 1);
+        auto iter = _edges.begin();
+        while (iter != _edges.end()) {
+            if (*iter == edge)
+                break;
+            ++iter;
+        }
+        assert(iter != _edges.end());
+        _edges.erase(iter);
         delete edge;
     }
 
-    const std::map<int, Node*> &nodes() const {
+    const std::map<int, Node<N, E>*> &nodes() const {
         return _nodes;
     }
 
-    const std::set<Edge*> &edges() const {
+    const std::vector<Edge<N, E>*> &edges() const {
         return _edges;
     }
 
 protected:
     Graph() {}
 
-    std::map<int, Node*>    _nodes;
-    std::vector<Edge*>      _edges;
+    std::map<int, Node<N, E>*>    _nodes;
+    std::vector<Edge<N, E>*>      _edges;
 };
 
 template<typename N, typename E>
@@ -67,10 +72,10 @@ public:
     DirectedGraph() : Graph<N, E>() {}
     virtual ~DirectedGraph() override {}
 
-    template<typename... Params>
-    virtual Node<N, E> *createNode(Params&&... params) override {
-        auto node = new DirectedNode<N, E>(this, id, params...);
-        auto pair = _nodes.insert(make_pair(_nodes.rbegin()->first, node));
+    virtual Node<N, E> *createNode() override {
+        int id = this->_nodes.rbegin()->first;
+        auto node = new DirectedNode<N, E>(this, id);
+        auto pair = this->_nodes.insert(std::make_pair(id, node));
         assert(pair.second == true);
         return node;
     }
@@ -83,10 +88,10 @@ public:
     UndirectedGraph() : Graph<N, E>() {}
     virtual ~UndirectedGraph() override {}
 
-    template<typename... Params>
-    virtual Node<N, E> *createNode(Params&&... params) override {
-        auto node = new UndirectedNode<N, E>(this, id, params...);
-        auto pair = _nodes.insert(make_pair(_nodes.rbegin()->first, node));
+    virtual Node<N, E> *createNode() override {
+        int id = this->_nodes.rbegin()->first;
+        auto node = new UndirectedNode<N, E>(this, id);
+        auto pair = this->_nodes.insert(make_pair(id, node));
         assert(pair.second == true);
         return node;
     }
