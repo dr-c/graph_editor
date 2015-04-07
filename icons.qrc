@@ -1,0 +1,29 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/arrow_black_back.png</file>
+        <file>img/arrow_black_forward.png</file>
+        <file>img/arrow_white_back.png</file>
+        <file>img/arrow_white_forward.png.png</file>
+        <file>img/arrow_white_forward_small.png</file>
+        <file>img/clear_left.png</file>
+        <file>img/clear_right.png</file>
+        <file>img/cursor_cursor.png</file>
+        <file>img/cursor_finger.png</file>
+        <file>img/cursor_move.png</file>
+        <file>img/cursor_pencil.png</file>
+        <file>img/cursor_plus.png</file>
+        <file>img/gantt_chart.png</file>
+        <file>img/generate.png</file>
+        <file>img/graph_directed.png</file>
+        <file>img/graph_directed_old.png</file>
+        <file>img/graph_undirected.png</file>
+        <file>img/graph_undirected_old.png</file>
+        <file>img/so_open_black.png</file>
+        <file>img/so_open_black_simple.png</file>
+        <file>img/so_open_color.png</file>
+        <file>img/so_saveas_black.png</file>
+        <file>img/so_saveas_color.png</file>
+        <file>img/so_save_black.png</file>
+        <file>img/so_save_color.png</file>
+    </qresource>
+</RCC>

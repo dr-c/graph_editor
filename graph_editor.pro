@@ -27,3 +27,6 @@ HEADERS  += mainwindow.h \
     graph_scene.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    icons.qrc
