@@ -14,11 +14,22 @@ struct EdgeInfo;
 class GraphScene : public QGraphicsScene
 {
 public:
-    GraphScene(Graph<NodeInfo, EdgeInfo> *graph, QObject *parent = 0);
+    typedef Graph<NodeInfo, EdgeInfo> graph_type;
+    typedef Node<NodeInfo, EdgeInfo> node_type;
+    typedef Edge<NodeInfo, EdgeInfo> edge_type;
+
+    GraphScene(graph_type *graph, QObject *parent = 0);
     virtual ~GraphScene();
 
+protected:
+    virtual void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    virtual void	mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    virtual void	mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    virtual void	mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    virtual void    keyPressEvent(QKeyEvent *keyEvent);
+
 private:
-    Graph<NodeInfo, EdgeInfo> *_graph;
+    graph_type *_graph;
 };
 
 class DirectedGraphScene : public GraphScene
