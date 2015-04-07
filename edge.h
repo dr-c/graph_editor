@@ -1,42 +1,46 @@
 #ifndef EDGE_H
 #define EDGE_H
 
+#include <assert.h>
+
 class Graph;
 class Node;
 
-class Edge
+template<typename N, typename E>
+class Edge : public E
 {
 public:
-    virtual ~Edge();
+    template<typename... Params>
+    Edge(Graph *graph, Params&&... params) : E(params...), _graph(graph), _fromNode(nullptr), _toNode(nullptr) {}
 
-    void setWeight(int weight);
+    ~Edge() {
+        _fromNode->removeSuccessor(_toNode);
+        _toNode->removePredecessor(_fromNode);
+    }
 
-    Graph   *graph()    const;
-    int      weight()   const;
-    Node    *nodeFrom() const;
-    Node    *nodeTo()   const;
+    void setNodes(Node<N, E> *fromNode, Node<N, E> *toNode) {
+        assert(_fromNode == nullptr && _toNode == nullptr); // Prohibited to reassign
+        _fromNode = fromNode;
+        _toNode = toNode;
+    }
 
-protected:
-    Edge(Graph *graph, int weight, Node *from, Node *to);
+    void remove() {
+        _graph->remove(this);
+    }
 
-    Graph   *_graph;
-    int      _weight;
-    Node    *_from;
-    Node    *_to;
-};
+    Node<N, E> *fromNode() const {
+        return _fromNode;
+    }
 
-class DirectedEdge : public Edge
-{
-public:
-    DirectedEdge(Graph *graph, int weight, Node *from, Node *to);
-    virtual ~DirectedEdge();
-};
+    Node<N, E> *toNode() const {
+        return _toNode;
+    }
+    //Graph *graph() const { return _graph; }
 
-class UndirectedEdge : public Edge
-{
-public:
-    UndirectedEdge(Graph *graph, int weight, Node *from, Node *to);
-    virtual ~UndirectedEdge();
+private:
+    Graph *_graph;
+    Node<N, E> *_fromNode;
+    Node<N, E> *_toNode;
 };
 
 #endif // EDGE_H
