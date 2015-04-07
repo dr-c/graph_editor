@@ -2,49 +2,94 @@
 #define GRAPH_H
 
 #include <vector>
-#include <QPointF>
+#include <map>
+#include <assert.h>
 
 class Node;
+class DirectedNode;
+class UndirectedNode;
 class Edge;
 
+template<typename N, typename E>
 class Graph
 {
 public:
-    virtual ~Graph();
+    virtual ~Graph() {
+        for (auto edge : _edges)
+            delete edge;
+        _edges.clear();
+        for (auto node : _nodes)
+            delete node;
+        _nodes.clear();
+    }
 
-    Node *createNode(int id, int weight, const QPointF &pos);
+    template<typename... Params>
+    virtual Node<N, E> *createNode(Params&&... params) = 0;
 
-    virtual Edge *createEdge(int weight, Node *from, Node *to) = 0;
+    template<typename... Params>
+    Edge<N, E> *createEdge(Params&&... params) {
+        auto edge = new Edge<N, E>(this, params);
+        _edges.push_back(edge);
+        return edge;
+    }
 
-    const std::vector<Node*> &nodes() const;
-    const std::vector<Edge*> &edges() const;
+    void remove(Node<N, E> *node) {
+        auto erased_count = _nodes.erase(node->id());
+        assert(erased_count == 1);
+        delete node;
+    }
+
+    void remove(Edge<N, E> *edge) {
+        auto erased_count = _edges.erase(edge);
+        assert(erased_count == 1);
+        delete edge;
+    }
+
+    const std::map<int, Node*> &nodes() const {
+        return _nodes;
+    }
+
+    const std::set<Edge*> &edges() const {
+        return _edges;
+    }
 
 protected:
-    Graph();
+    Graph() {}
 
-    std::vector<Node*>  _nodes;
-    std::vector<Edge*>  _edges;
-
-private:
-    std::vector<int>    _id_nodes; // sorted vector of all nodes ids.
+    std::map<int, Node*>    _nodes;
+    std::vector<Edge*>      _edges;
 };
 
-class DirectedGraph : public Graph
+template<typename N, typename E>
+class DirectedGraph : public Graph<N, E>
 {
 public:
-    DirectedGraph();
-    virtual ~DirectedGraph();
+    DirectedGraph() : Graph<N, E>() {}
+    virtual ~DirectedGraph() override {}
 
-    virtual Edge *createEdge(int weight, Node *from, Node *to);
+    template<typename... Params>
+    virtual Node<N, E> *createNode(Params&&... params) override {
+        auto node = new DirectedNode<N, E>(this, id, params...);
+        auto pair = _nodes.insert(make_pair(_nodes.rbegin()->first, node));
+        assert(pair.second == true);
+        return node;
+    }
 };
 
-class UndirectedGraph : public Graph
+template<typename N, typename E>
+class UndirectedGraph : public Graph<N, E>
 {
 public:
-    UndirectedGraph();
-    virtual ~UndirectedGraph();
+    UndirectedGraph() : Graph<N, E>() {}
+    virtual ~UndirectedGraph() override {}
 
-    virtual Edge *createEdge(int weight, Node *from, Node *to);
+    template<typename... Params>
+    virtual Node<N, E> *createNode(Params&&... params) override {
+        auto node = new UndirectedNode<N, E>(this, id, params...);
+        auto pair = _nodes.insert(make_pair(_nodes.rbegin()->first, node));
+        assert(pair.second == true);
+        return node;
+    }
 };
 
 #endif // GRAPH_H

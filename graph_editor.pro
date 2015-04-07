@@ -16,7 +16,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    graph.cpp \
     edge.cpp \
     graph_view.cpp \
     graph_scene.cpp
