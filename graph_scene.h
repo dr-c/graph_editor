@@ -8,8 +8,7 @@
 class QGraphicsNode;
 class QGraphicsEdge;
 
-struct NodeInfo;
-struct EdgeInfo;
+class GraphSceneMode;
 
 class BasicGraphScene : public QGraphicsScene
 {
@@ -21,8 +20,8 @@ public:
     virtual int typeGraphicsNode() const = 0;
     virtual int typeGraphicsEdge() const = 0;
 
-    void addNode(const QPointF &centerPos, int weight);
-    void addEdge(int weight);
+    void addNode(const QPointF &centerPos, int weight = 1);
+    void addEdge(int weight = 1);
 
 protected:
     BasicGraphScene(WeightedGraph *graph, QObject *parent = 0);
@@ -32,9 +31,11 @@ protected:
     virtual void	mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
     virtual void	mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
     virtual void    keyPressEvent(QKeyEvent *keyEvent);
+    virtual void    keyReleaseEvent(QKeyEvent *keyEvent);
 
 private:
     WeightedGraph *_graph;
+    GraphSceneMode *_mode;
 };
 
 template<typename GN, typename GE>
