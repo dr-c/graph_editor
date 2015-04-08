@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     graph_scene.cpp \
     graph_scene_mode.cpp \
     qgraphics_node.cpp \
-    qgraphics_edge.cpp
+    qgraphics_edge.cpp \
+    qgraphics_ellipse_node.cpp
 
 HEADERS  += mainwindow.h \
     graph.h \
@@ -31,7 +32,8 @@ HEADERS  += mainwindow.h \
     graph_scene_mode.h \
     qgraphics_node.h \
     item_info.h \
-    qgraphics_edge.h
+    qgraphics_edge.h \
+    qgraphics_ellipse_node.h
 
 FORMS    += mainwindow.ui
 
