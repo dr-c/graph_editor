@@ -9,11 +9,12 @@ class QGraphicsSceneMouseEvent;
 class QKeyEvent;
 
 class GraphSceneMode
-{
+{    
 public:
     virtual ~GraphSceneMode();
 
     virtual void    setItemFlags(QGraphicsItem *item) = 0;
+    virtual int     type() const = 0;
 
     virtual void    mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)   { Q_UNUSED(mouseEvent); }
     virtual void    mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)    { Q_UNUSED(mouseEvent); }
@@ -24,26 +25,35 @@ public:
     BasicGraphScene *scene();
 
 protected:
-    GraphSceneMode(BasicGraphScene *scene);
+    GraphSceneMode(BasicGraphScene *scene = nullptr);
 
     BasicGraphScene *_scene;
+
+private:
+    void setScene(BasicGraphScene *scene);
+
+    friend class BasicGraphScene;
 };
 
 class PointerMode : public GraphSceneMode
 {
 public:
-    PointerMode(BasicGraphScene *graphScene);
+    enum { Type = 1 };
+    PointerMode(BasicGraphScene *graphScene = nullptr);
     virtual ~PointerMode();
 
+    virtual int     type() const;
     virtual void    setItemFlags(QGraphicsItem *item);
 };
 
 class PencilMode : public GraphSceneMode
 {
 public:
-    PencilMode(BasicGraphScene *graphScene);
+    enum { Type = 2 };
+    PencilMode(BasicGraphScene *graphScene = nullptr);
     virtual ~PencilMode();
 
+    virtual int     type() const;
     virtual void    setItemFlags(QGraphicsItem *item);
 };
 
