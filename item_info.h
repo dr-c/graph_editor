@@ -32,7 +32,7 @@ public:
     virtual ~EdgeInfo() {}
 
     void setWeight(int weight)              { _weight       = weight;   }
-    void setGraphicsNode(QGraphicsEdge *ge) { _graphicsEdge = ge;       }
+    void setGraphicsEdge(QGraphicsEdge *ge) { _graphicsEdge = ge;       }
 
     int weight() const                      { return _weight;           }
     QGraphicsEdge *graphicsEdge() const     { return _graphicsEdge;     }
