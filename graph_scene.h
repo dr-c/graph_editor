@@ -23,8 +23,11 @@ public:
     void addNode(const QPointF &centerPos, int weight = 1);
     void addEdge(int weight = 1);
 
+    const GraphSceneMode *mode() const;
+    void setMode(GraphSceneMode *mode);
+
 protected:
-    BasicGraphScene(WeightedGraph *graph, QObject *parent = 0);
+    BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent = 0);
 
     virtual void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
     virtual void	mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -58,7 +61,7 @@ public:
     }
 
 protected:
-    GraphScene(WeightedGraph *graph, QObject *parent = 0) : BasicGraphScene(graph, parent) {
+    GraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent = 0) : BasicGraphScene(graph, mode, parent) {
         static_assert(std::is_base_of<QGraphicsNode, GN>::value, "GN type must be derived from QGraphicsNode");
         static_assert(std::is_base_of<QGraphicsEdge, GE>::value, "GE type must be derived from QGraphicsEdge");
     }
@@ -68,7 +71,7 @@ template<typename GN, typename GE>
 class DirectedGraphScene : public GraphScene<GN, GE>
 {
 public:
-    DirectedGraphScene(QObject *parent = 0) : GraphScene<GN, GE>(new DirectedGraph<NodeInfo, EdgeInfo>(), parent) {}
+    DirectedGraphScene(GraphSceneMode *mode, QObject *parent = 0) : GraphScene<GN, GE>(new DirectedGraph<NodeInfo, EdgeInfo>(), mode, parent) {}
     virtual ~DirectedGraphScene() {}
 };
 
@@ -76,7 +79,7 @@ template<typename GN, typename GE>
 class UndirectedGraphScene : public GraphScene<GN, GE>
 {
 public:
-    UndirectedGraphScene(QObject *parent = 0) : GraphScene<GN, GE>(new UndirectedGraph<NodeInfo, EdgeInfo>(), parent) {}
+    UndirectedGraphScene(GraphSceneMode *mode, QObject *parent = 0) : GraphScene<GN, GE>(new UndirectedGraph<NodeInfo, EdgeInfo>(), mode, parent) {}
     virtual ~UndirectedGraphScene() {}
 };
 

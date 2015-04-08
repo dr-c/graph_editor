@@ -6,10 +6,10 @@
 
 #include <QGraphicsSceneMouseEvent>
 
-BasicGraphScene::BasicGraphScene(Graph<NodeInfo, EdgeInfo> *graph, QObject *parent)
-    : QGraphicsScene(parent), _graph(graph)
+BasicGraphScene::BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent)
+    : QGraphicsScene(parent), _graph(graph), _mode(mode)
 {
-
+    _mode->setScene(this);
 }
 
 BasicGraphScene::~BasicGraphScene()
@@ -36,9 +36,22 @@ void BasicGraphScene::addEdge(int weight)
     addItem(graphics_edge);
 }
 
+const GraphSceneMode *BasicGraphScene::mode() const
+{
+    return _mode;
+}
+
+void BasicGraphScene::setMode(GraphSceneMode *mode)
+{
+    delete _mode;
+    _mode = mode;
+    for (auto pair : _graph->nodes())
+        _mode->setItemFlags(pair.second->graphicsNode());
+}
+
 void BasicGraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    if (mouseEvent->button() == Qt::LeftButton && itemAt(mouseEvent->scenePos(), QTransform()) != nullptr)
+    if (mouseEvent->button() == Qt::LeftButton && itemAt(mouseEvent->scenePos(), QTransform()) == nullptr)
         addNode(mouseEvent->scenePos());
 
     QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
