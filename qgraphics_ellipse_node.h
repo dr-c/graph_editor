@@ -7,7 +7,7 @@ class QGraphicsEllipseNode : public QGraphicsNode
 {
     Q_OBJECT
 public:
-    enum { Type = UserType + 100 };
+    enum { Type = UserType + 101 };
 
     QGraphicsEllipseNode(WeightedNode *node, QGraphicsItem *parent = 0);
     virtual ~QGraphicsEllipseNode();
