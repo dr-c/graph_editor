@@ -9,11 +9,9 @@ class QGraphicsNode : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    enum { Type = UserType + 100 };
-
     virtual ~QGraphicsNode();
 
-    virtual int type() const;
+    virtual int type() const = 0;
 
 protected:
     QGraphicsNode(WeightedNode *node, QGraphicsItem *parent = 0);

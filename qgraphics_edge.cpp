@@ -10,8 +10,3 @@ QGraphicsEdge::~QGraphicsEdge()
 {
 
 }
-
-int QGraphicsEdge::type() const
-{
-    return Type;
-}

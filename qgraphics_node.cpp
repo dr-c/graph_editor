@@ -10,8 +10,3 @@ QGraphicsNode::~QGraphicsNode()
 {
 
 }
-
-int QGraphicsNode::type() const
-{
-    return Type;
-}

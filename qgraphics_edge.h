@@ -9,11 +9,9 @@ class QGraphicsEdge : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    enum { Type = UserType + 100 };
-
     virtual ~QGraphicsEdge();
 
-    virtual int type() const;
+    virtual int type() const = 0;
 
 protected:
     QGraphicsEdge(WeightedNode *edge, QGraphicsItem *parent = 0);
