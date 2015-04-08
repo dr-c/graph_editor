@@ -1,7 +1,7 @@
 #include "qgraphics_edge.h"
 
-QGraphicsEdge::QGraphicsEdge(WeightedNode *edge, QGraphicsItem *parent)
-    : QGraphicsObject(parent), _edge(edge)
+QGraphicsEdge::QGraphicsEdge(WeightedEdge *edge, QGraphicsItem *parent)
+    : QGraphicsPathItem(parent), _edge(edge)
 {
 
 }

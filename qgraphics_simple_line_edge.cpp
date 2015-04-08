@@ -1,6 +1,6 @@
 #include "qgraphics_simple_line_edge.h"
 
-QGraphicsSimpleLineEdge::QGraphicsSimpleLineEdge()
+QGraphicsSimpleLineEdge::QGraphicsSimpleLineEdge(WeightedEdge *edge, QGraphicsItem *parent)
     : QGraphicsEdge(edge, parent)
 {
 

@@ -20,3 +20,15 @@ int QGraphicsEllipseNode::type() const
 {
     return Type;
 }
+
+QRectF QGraphicsEllipseNode::boundingRect() const
+{
+    return _ellipseItem->boundingRect();
+}
+
+void QGraphicsEllipseNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(painter);
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+}

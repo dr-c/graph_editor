@@ -8,7 +8,7 @@ class QGraphicsSimpleLineEdge : public QGraphicsEdge
 public:
     enum { Type = UserType + 201 };
 
-    QGraphicsSimpleLineEdge(WeightedNode *edge, QGraphicsItem *parent = 0);
+    QGraphicsSimpleLineEdge(WeightedEdge *edge, QGraphicsItem *parent = 0);
     virtual ~QGraphicsSimpleLineEdge();
 
     virtual int type() const;

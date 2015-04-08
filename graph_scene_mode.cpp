@@ -1,7 +1,10 @@
 #include "graph_scene_mode.h"
 
 #include "graph_scene.h"
+
 #include <QGraphicsItem>
+#include <QKeyEvent>
+#include <QGraphicsSceneMouseEvent>
 
 GraphSceneMode::GraphSceneMode(BasicGraphScene *scene)
     : _scene(scene)
@@ -14,7 +17,7 @@ GraphSceneMode::~GraphSceneMode()
 
 }
 
-PointerMode::PointerMode(GraphScene *graphScene)
+PointerMode::PointerMode(BasicGraphScene *graphScene)
     : GraphSceneMode(graphScene)
 {
 
@@ -34,7 +37,7 @@ void PointerMode::setItemFlags(QGraphicsItem *item)
     }
 }
 
-PencilMode::PencilMode(GraphScene *graphScene)
+PencilMode::PencilMode(BasicGraphScene *graphScene)
     : GraphSceneMode(graphScene)
 {
 

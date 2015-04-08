@@ -1,8 +1,12 @@
 #ifndef GRAPHSCENEMODE_H
 #define GRAPHSCENEMODE_H
 
+#include <QtGlobal>
+
 class BasicGraphScene;
 class QGraphicsItem;
+class QGraphicsSceneMouseEvent;
+class QKeyEvent;
 
 class GraphSceneMode
 {
@@ -28,7 +32,7 @@ protected:
 class PointerMode : public GraphSceneMode
 {
 public:
-    PointerMode(GraphScene *graphScene);
+    PointerMode(BasicGraphScene *graphScene);
     virtual ~PointerMode();
 
     virtual void    setItemFlags(QGraphicsItem *item);
@@ -37,7 +41,7 @@ public:
 class PencilMode : public GraphSceneMode
 {
 public:
-    PencilMode(GraphScene *graphScene) : GraphSceneMode(graphScene), _itemFrom(nullptr), _itemMousePress(nullptr), _itemArrow(nullptr) {}
+    PencilMode(BasicGraphScene *graphScene);
     virtual ~PencilMode();
 
     virtual void    setItemFlags(QGraphicsItem *item);
