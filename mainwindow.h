@@ -18,8 +18,8 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_actionPointer_toggled(bool checked);
-    void on_actionPencil_toggled(bool checked);
+    void on_actionPointer_triggered(bool checked);
+    void on_actionPencil_triggered(bool checked);
 
 private:
     Ui::MainWindow *_ui;
