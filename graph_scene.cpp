@@ -13,7 +13,7 @@ BasicGraphScene::~BasicGraphScene()
 
 void BasicGraphScene::addNode(const QPointF &centerPos, int weight)
 {
-    node_type *node = _graph->createNode();
+    WeightedNode *node = _graph->createNode();
     node.setPos(centerPos);
     node.setWeight(weight);
     addItem(createGraphicsNode(node));
@@ -21,7 +21,7 @@ void BasicGraphScene::addNode(const QPointF &centerPos, int weight)
 
 void BasicGraphScene::addEdge(int weight)
 {
-    edge_type *edge = _graph->createEdge();
+    WeightedEdge *edge = _graph->createEdge();
     edge.setWeight(weight);
     addItem(createGraphicsEdge(edge));
 }
