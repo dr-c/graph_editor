@@ -26,6 +26,14 @@ public:
     const GraphSceneMode *mode() const;
     void setMode(GraphSceneMode *mode);
 
+    void setNodePen(const QPen &pen);
+    void setNodeFont(const QFont &font);
+    void setNodeBrush(const QBrush &brush);
+
+    QPen nodePen() const;
+    QFont nodeFont() const;
+    QBrush nodeBrush() const;
+
 protected:
     BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent = 0);
 
@@ -37,8 +45,12 @@ protected:
     virtual void    keyReleaseEvent(QKeyEvent *keyEvent);
 
 private:
-    WeightedGraph *_graph;
-    GraphSceneMode *_mode;
+    WeightedGraph   *_graph;
+    GraphSceneMode  *_mode;
+
+    QPen    _nodePen;
+    QFont   _nodeFont;
+    QBrush  _nodeBrush;
 };
 
 template<typename GN, typename GE>
