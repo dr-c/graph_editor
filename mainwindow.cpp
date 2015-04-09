@@ -3,7 +3,10 @@
 
 #include "graph_scene.h"
 #include "graph_scene_mode.h"
+
 #include "qgraphics_ellipse_node.h"
+#include "qgraphics_rounded_rect_node.h"
+
 #include "qgraphics_simple_line_edge.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -12,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     _ui->setupUi(this);
 
-    _graphScene = new DirectedGraphScene<QGraphicsEllipseNode, QGraphicsSimpleLineEdge>(new PointerMode());
+    _graphScene = new DirectedGraphScene<QGraphicsRoundedRectNode, QGraphicsSimpleLineEdge>(new PointerMode());
 
     _ui->graphicsView->setGraphScene(_graphScene);
 }
