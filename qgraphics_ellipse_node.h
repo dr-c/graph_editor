@@ -3,6 +3,8 @@
 
 #include "qgraphics_node.h"
 
+class WeightTextItem;
+
 class QGraphicsEllipseNode : public QGraphicsNode
 {
     Q_OBJECT
@@ -29,6 +31,8 @@ protected:
 
 private:
     QGraphicsEllipseItem    *_ellipseItem;
+    WeightTextItem          *_weightItem;
+    QGraphicsLineItem       *_lineItem;
     QGraphicsSimpleTextItem *_idItem;
 };
 
