@@ -24,10 +24,11 @@ public:
     virtual QFont font() const = 0;
     virtual QBrush brush() const = 0;
 
-    void setWeight(int weight);
-
     qreal radius() const;
     WeightedNode *node() const;
+
+protected slots:
+    void setWeight(int weight);
 
 protected:
     QGraphicsNode(WeightedNode *node, QGraphicsItem *parent = 0);
