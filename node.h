@@ -14,11 +14,11 @@ class Node;
 template<typename N, typename E>
 class Node : public N
 {
+    friend Node<N, E> *Graph<N, E>::createNode();
+    friend void Graph<N, E>::remove(Node<N, E> *node);
+    friend Graph<N, E>::~Graph<N, E>();
+
 public:
-    Node(Graph<N, E> *graph, int id) : N(), _graph(graph), _id(id) {}
-
-    virtual ~Node() override {}
-
     virtual void addSuccessor(Node<N, E> *node, Edge<N, E> *edge) = 0;
     virtual void removeSuccessor(Node<N, E> *node) = 0;
 
@@ -35,6 +35,10 @@ public:
         return _id;
     }
 
+protected:
+    Node(Graph<N, E> *graph, int id) : N(), _graph(graph), _id(id) {}
+    virtual ~Node() override {}
+
 private:
     Graph<N, E> *_graph;
     int _id;
@@ -43,16 +47,9 @@ private:
 template<typename N, typename E>
 class DirectedNode : public Node<N, E>
 {
+    friend Node<N, E> *DirectedGraph<N, E>::createNode();
+
 public:
-    DirectedNode(Graph<N, E> *graph, int id) : Node<N, E>(graph, id) {}
-
-    virtual ~DirectedNode() override {
-        for (auto& pair : _successors)
-            pair.second->remove();
-        for (auto& pair : _predecessors)
-            pair.second->remove();
-    }
-
     virtual void addSuccessor(Node<N, E> *node, Edge<N, E> *edge) override {
         assert(_successors.find(node) == _successors.end());
         _successors.insert(std::make_pair(node, edge));
@@ -78,6 +75,16 @@ public:
         std::for_each(_predecessors.begin(), _predecessors.end(), funct);
     }
 
+protected:
+    DirectedNode(Graph<N, E> *graph, int id) : Node<N, E>(graph, id) {}
+
+    virtual ~DirectedNode() override {
+        for (auto& pair : _successors)
+            pair.second->remove();
+        for (auto& pair : _predecessors)
+            pair.second->remove();
+    }
+
 private:
     std::map<Node<N, E>*, Edge<N, E>*> _successors;
     std::map<Node<N, E>*, Edge<N, E>*> _predecessors;
@@ -86,14 +93,9 @@ private:
 template<typename N, typename E>
 class UndirectedNode : public Node<N, E>
 {
+    friend Node<N, E> *UndirectedGraph<N, E>::createNode();
+
 public:
-    UndirectedNode(Graph<N, E> *graph, int id) : Node<N, E>(graph, id) {}
-
-    virtual ~UndirectedNode() override {
-        for (auto& pair : _adjacents)
-            pair.second->remove();
-    }
-
     virtual void addSuccessor(Node<N, E> *node, Edge<N, E> *edge) override {
         assert(_adjacents.find(node) == _adjacents.end());
         _adjacents.insert(std::make_pair(node, edge));
@@ -116,6 +118,14 @@ public:
 
     virtual void for_each(void (*funct)(std::pair<Node<N, E>* const, Edge<N, E>*>&)) override {
         std::for_each(_adjacents.begin(), _adjacents.end(), funct);
+    }
+
+protected:
+    UndirectedNode(Graph<N, E> *graph, int id) : Node<N, E>(graph, id) {}
+
+    virtual ~UndirectedNode() override {
+        for (auto& pair : _adjacents)
+            pair.second->remove();
     }
 
 private:

@@ -7,6 +7,10 @@
 
 template<typename N, typename E>
 class Graph;
+template<typename N, typename E>
+class DirectedGraph;
+template<typename N, typename E>
+class UndirectedGraph;
 
 #include "node.h"
 #include "edge.h"
