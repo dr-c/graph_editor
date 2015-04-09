@@ -15,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     _ui->setupUi(this);
 
-    _graphScene = new DirectedGraphScene<QGraphicsRoundedRectNode, QGraphicsSimpleLineEdge>(new PointerMode());
+    _directedGraph = new DirectedGraph<NodeInfo, EdgeInfo>();
+    _graphScene = new DirectedGraphScene<QGraphicsRoundedRectNode, QGraphicsSimpleLineEdge>(_directedGraph, new PointerMode());
 
     _ui->graphicsView->setGraphScene(_graphScene);
 }
@@ -24,6 +25,7 @@ MainWindow::~MainWindow()
 {
     delete _ui;
     delete _graphScene;
+    delete _directedGraph;
 }
 
 void MainWindow::on_actionPointer_triggered(bool checked)

@@ -17,7 +17,7 @@ BasicGraphScene::BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QOb
 
 BasicGraphScene::~BasicGraphScene()
 {
-    delete _graph;
+
 }
 
 void BasicGraphScene::addNode(const QPointF &centerPos, int weight)

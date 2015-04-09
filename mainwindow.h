@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "item_info.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -23,7 +25,7 @@ private slots:
 
 private:
     Ui::MainWindow *_ui;
-
+    DirectedGraph<NodeInfo, EdgeInfo> *_directedGraph;
     BasicGraphScene *_graphScene;
 };
 

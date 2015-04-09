@@ -83,7 +83,7 @@ template<typename GN, typename GE>
 class DirectedGraphScene : public GraphScene<GN, GE>
 {
 public:
-    DirectedGraphScene(GraphSceneMode *mode, QObject *parent = 0) : GraphScene<GN, GE>(new DirectedGraph<NodeInfo, EdgeInfo>(), mode, parent) {}
+    DirectedGraphScene(DirectedGraph<NodeInfo, EdgeInfo> *graph, GraphSceneMode *mode, QObject *parent = 0) : GraphScene<GN, GE>(graph, mode, parent) {}
     virtual ~DirectedGraphScene() {}
 };
 
@@ -91,7 +91,7 @@ template<typename GN, typename GE>
 class UndirectedGraphScene : public GraphScene<GN, GE>
 {
 public:
-    UndirectedGraphScene(GraphSceneMode *mode, QObject *parent = 0) : GraphScene<GN, GE>(new UndirectedGraph<NodeInfo, EdgeInfo>(), mode, parent) {}
+    UndirectedGraphScene(UndirectedGraph<NodeInfo, EdgeInfo> *graph, GraphSceneMode *mode, QObject *parent = 0) : GraphScene<GN, GE>(graph, mode, parent) {}
     virtual ~UndirectedGraphScene() {}
 };
 
