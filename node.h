@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include <map>
+#include <algorithm>
 #include <assert.h>
 
 template<typename N, typename E>
@@ -23,6 +24,8 @@ public:
 
     virtual void addPredecessor(Node<N, E> *node, Edge<N, E> *edge) = 0;
     virtual void removePredecessor(Node<N, E> *node) = 0;
+
+    virtual void for_each(void (*funct)(std::pair<Node<N, E>* const, Edge<N, E>*>&)) = 0;
 
     void remove() {
         _graph->remove(this);
@@ -70,6 +73,11 @@ public:
         _predecessors.erase(node);
     }
 
+    virtual void for_each(void (*funct)(std::pair<Node<N, E>* const, Edge<N, E>*>&)) override {
+        std::for_each(_successors.begin(), _successors.end(), funct);
+        std::for_each(_predecessors.begin(), _predecessors.end(), funct);
+    }
+
 private:
     std::map<Node<N, E>*, Edge<N, E>*> _successors;
     std::map<Node<N, E>*, Edge<N, E>*> _predecessors;
@@ -104,6 +112,10 @@ public:
     virtual void removePredecessor(Node<N, E> *node) override {
         assert(_adjacents.find(node) != _adjacents.end());
         _adjacents.erase(node);
+    }
+
+    virtual void for_each(void (*funct)(std::pair<Node<N, E>* const, Edge<N, E>*>&)) override {
+        std::for_each(_adjacents.begin(), _adjacents.end(), funct);
     }
 
 private:
