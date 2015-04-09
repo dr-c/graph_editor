@@ -17,6 +17,7 @@ public:
     virtual int type() const override;
     virtual QRectF boundingRect() const override;
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0) override;
+    virtual QPointF calcIntermediatePoint(const QPointF &toPoint) override;
 
     virtual void setPen(const QPen &pen) override;
     virtual void setFont(const QFont &font, const QColor &color = Qt::black) override;

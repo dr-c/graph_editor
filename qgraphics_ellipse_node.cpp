@@ -108,3 +108,19 @@ void QGraphicsEllipseNode::setGeometry(const QPointF &centerPos)
     _idItem->setPos(_radius - shift_to_text_item_center - id_item_rect.width() / 2,
                     _radius - shift_to_text_item_center - id_item_rect.height() / 2);
 }
+
+QPointF QGraphicsEllipseNode::calcIntermediatePoint(const QPointF &toPoint)
+{
+    QPointF fromPoint = _node->pos();
+    // y = kx + b, k = dy / dx
+    qreal dx = fromPoint.x() - toPoint.x();
+    qreal dy = fromPoint.y() - toPoint.y();
+    if (dx == 0)
+        return QPointF(fromPoint.x(), fromPoint.y() + (dy < 0 ? _radius : -_radius));
+
+    qreal k = dy / dx;
+    qreal deltaX = _radius / sqrt(k * k + 1);
+    if (dx > 0)
+        deltaX = -deltaX;
+    return QPointF(fromPoint.x() + deltaX, fromPoint.y() + k * deltaX);
+}

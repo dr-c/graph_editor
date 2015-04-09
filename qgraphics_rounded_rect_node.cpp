@@ -1,19 +1,26 @@
 #include "qgraphics_rounded_rect_node.h"
 
-QGraphicsRoundedRectNode::QGraphicsRoundedRectNode(WeightedNode *node, qreal roundingCoef, QGraphicsItem *parent)
-    : QGraphicsNode(node, parent)
+#include "weight_text_item.h"
+
+QGraphicsRoundedRectNode::QGraphicsRoundedRectNode(WeightedNode *node, qreal lineShiftCoef, qreal roundingCoef, QGraphicsItem *parent)
+    : QGraphicsNode(node, parent),
+      _weightItem(new WeightTextItem(_node->weight(), this)),
+      _lineItem(new QGraphicsLineItem(this)),
+      _idItem(new QGraphicsSimpleTextItem(QString::number(_node->id()), this)),
+      _lineShiftCoefficient(checkInRange(lineShiftCoef, 0.5, 1.)),
+      _roundingCoefficient(checkInRange(roundingCoef, 0., 0.3)),
+      _roundingRadius(_roundingCoefficient * _radius)
 {
-    _roundingCoefficient = checkInRange(roundingCoef, 0., 0.3);
-    _roundingRadius = _roundingCoefficient * _radius;
-
-    _idItem = new QGraphicsSimpleTextItem(QString::number(_node->id()), this);
-
     setGeometry(_node->pos());
+
+    connect(_weightItem, SIGNAL(textChanged(int)), this, SLOT(setWeight(int)));
 }
 
 QGraphicsRoundedRectNode::~QGraphicsRoundedRectNode()
 {
     delete _idItem;
+    delete _lineItem;
+    delete _weightItem;
 }
 
 int QGraphicsRoundedRectNode::type() const
@@ -33,6 +40,14 @@ void QGraphicsRoundedRectNode::paint(QPainter *painter, const QStyleOptionGraphi
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
+    if (this->isSelected())
+    {
+        QPen pen;
+        pen.setStyle(Qt::DashLine);
+        painter->setPen(pen);
+        painter->drawRect(boundingRect());
+    }
+
     painter->setPen(_pen);
     painter->setBrush(_brush);
 
@@ -43,17 +58,21 @@ void QGraphicsRoundedRectNode::paint(QPainter *painter, const QStyleOptionGraphi
 void QGraphicsRoundedRectNode::setPen(const QPen &pen)
 {
     _pen = pen;
+    _lineItem->setPen(pen);
 }
 
 void QGraphicsRoundedRectNode::setFont(const QFont &font, const QColor &color)
 {
-    Q_UNUSED(color);
+    _weightItem->setFont(font);
+    _weightItem->setDefaultTextColor(color);
     _idItem->setFont(font);
+    setGeometry(_node->pos());
 }
 
 void QGraphicsRoundedRectNode::setBrush(const QBrush &brush)
 {
     _brush = brush;
+    update(boundingRect());
 }
 
 QPen QGraphicsRoundedRectNode::pen() const
@@ -71,18 +90,60 @@ QBrush QGraphicsRoundedRectNode::brush() const
     return _brush;
 }
 
+void QGraphicsRoundedRectNode::setCoefficients(qreal lineShiftCoef, qreal roundingCoef)
+{
+    _lineShiftCoefficient = checkInRange(lineShiftCoef, 0.5, 1.);
+    _roundingCoefficient = checkInRange(roundingCoef, 0., 0.3);
+    _roundingRadius = _roundingCoefficient * _radius;
+    setGeometry(_node->pos());
+}
+
 void QGraphicsRoundedRectNode::setGeometry(const QPointF &centerPos)
 {
     setPos(centerPos.x() - _radius, centerPos.y() - _radius);
 
+    const QRectF weight_item_rect = _weightItem->boundingRect();
+    const qreal shift_to_weight_item_center = _radius * (2 - _lineShiftCoefficient / 2) - _roundingRadius / 2;
+    _weightItem->setPos(shift_to_weight_item_center - weight_item_rect.width() / 2,
+                        shift_to_weight_item_center - weight_item_rect.height() / 2);
+
+    const qreal line_item_rect_shift = (1 - _lineShiftCoefficient) * _radius * 2;
+    _lineItem->setPos(line_item_rect_shift, line_item_rect_shift);
+    const qreal line_projection_length = _lineShiftCoefficient * _radius * 2 - _pen.widthF() / 2;
+    _lineItem->setLine(0, line_projection_length, line_projection_length, 0);
+
     const QRectF id_item_rect = _idItem->boundingRect();
-    _idItem->setPos(_radius - id_item_rect.width() / 2, _radius - id_item_rect.height() / 2);
+    const qreal shift_to_id_item_center = (_radius * (2 - _lineShiftCoefficient) + _roundingRadius) / 2;
+    _idItem->setPos(shift_to_id_item_center - id_item_rect.width() / 2,
+                    shift_to_id_item_center - id_item_rect.height() / 2);
 }
 
 void QGraphicsRoundedRectNode::calcRadius(int weight)
 {
     QGraphicsNode::calcRadius(weight);
     _roundingRadius = _radius * _roundingCoefficient;
+}
+
+QPointF QGraphicsRoundedRectNode::calcIntermediatePoint(const QPointF &toPoint)
+{
+    QPointF fromPoint = _node->pos();
+
+    qreal DX = fromPoint.x() - toPoint.x();
+    qreal DY = fromPoint.y() - toPoint.y();
+
+    qreal dx, dy;
+
+    if (abs(DY) > abs(DX))
+    {
+       dy = (DY < 0) ? _radius : -_radius;
+       dx = (DX == 0) ? 0 : dy * DX / DY;
+    }
+    else
+    {
+       dx = (DX < 0) ? _radius : -_radius;
+       dy = (DY == 0) ? 0 : dx * DY / DX;
+    }
+    return QPointF(fromPoint.x() + dx, fromPoint.y() + dy);
 }
 
 qreal QGraphicsRoundedRectNode::checkInRange(qreal var, qreal from, qreal to)

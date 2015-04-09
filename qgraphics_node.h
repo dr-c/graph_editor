@@ -12,9 +12,9 @@ public:
     virtual ~QGraphicsNode() override;
 
     virtual int type() const = 0;
-
     virtual QRectF boundingRect() const = 0;
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0) = 0;
+    virtual QPointF calcIntermediatePoint(const QPointF &toPoint) = 0;
 
     virtual void setPen(const QPen &pen) = 0;
     virtual void setFont(const QFont &font, const QColor &color = Qt::black) = 0;
@@ -33,14 +33,19 @@ protected slots:
 protected:
     QGraphicsNode(WeightedNode *node, QGraphicsItem *parent = 0);
 
-    virtual void setGeometry(const QPointF &centerPos) = 0;
-    virtual void calcRadius(int weight);
+    virtual void        setGeometry(const QPointF &centerPos) = 0;
+    virtual void        calcRadius(int weight);
+
+    virtual void        keyPressEvent(QKeyEvent *event);
+    virtual QVariant    itemChange(GraphicsItemChange change, const QVariant &value);
 
     WeightedNode *_node;
 
     qreal _radius;
 
 private:
+    void updateRelatedEdges();
+
     static  const       int     RADIUS_SHIFT = 25;
     static  constexpr   qreal   RADIUS_SCALE = 5.;
 };
