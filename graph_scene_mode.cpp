@@ -68,7 +68,8 @@ PencilMode::PencilMode(BasicGraphScene *graphScene)
 
 PencilMode::~PencilMode()
 {
-
+    if (_arrowItem != nullptr)
+        _arrowItem->deleteCompletely();
 }
 
 int PencilMode::type() const
@@ -153,6 +154,7 @@ void PencilMode::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
         if (_firstClickedItem != _mousePressedItem && !_firstClickedItem->node()->hasSuccessor(_mousePressedItem->node()))
         {
             _arrowItem->join(_firstClickedItem, _mousePressedItem);
+            _arrowItem->showWeight();
             reset();
         }
     }
@@ -163,7 +165,7 @@ void PencilMode::keyPressEvent(QKeyEvent *keyEvent)
     if (keyEvent->key() == Qt::Key_Escape)
     {
         if (_arrowItem != nullptr)
-            delete _arrowItem;
+            _arrowItem->deleteCompletely();
         reset();
     }
 }
