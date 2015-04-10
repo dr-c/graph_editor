@@ -25,6 +25,8 @@ public:
     virtual QPen pen() const = 0;
     virtual QFont font() const = 0;
     virtual QBrush brush() const = 0;
+    virtual bool intersects(QGraphicsNode *node) const = 0;
+    virtual QPainterPath shape() const = 0;
 
     qreal radius() const;
     WeightedNode *node() const;

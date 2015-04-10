@@ -80,6 +80,13 @@ QBrush QGraphicsEllipseNode::brush() const
     return _ellipseItem->brush();
 }
 
+bool QGraphicsEllipseNode::intersects(QGraphicsNode *node) const
+{
+    QPointF difference = pos() - node->pos();
+    qreal required_distance = _radius + node->radius();
+    return difference.x() * difference.x() + difference.y() * difference.y() <= required_distance * required_distance;
+}
+
 QPainterPath QGraphicsEllipseNode::shape() const
 {
     return _ellipseItem->shape();

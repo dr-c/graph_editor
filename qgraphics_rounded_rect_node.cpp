@@ -84,6 +84,21 @@ QBrush QGraphicsRoundedRectNode::brush() const
     return _brush;
 }
 
+bool QGraphicsRoundedRectNode::intersects(QGraphicsNode *node) const
+{
+    QPointF difference = pos() - node->pos();
+    qreal required_distance = _radius + node->radius();
+    return abs(difference.x()) <= required_distance && abs(difference.y()) <= required_distance;
+}
+
+QPainterPath QGraphicsRoundedRectNode::shape() const
+{
+    QPainterPath path;
+    const qreal diameter = _radius * 2;
+    path.addRoundedRect(0, 0, diameter, diameter, _roundingRadius, _roundingRadius);
+    return path;
+}
+
 void QGraphicsRoundedRectNode::setCoefficients(qreal lineShiftCoef, qreal roundingCoef)
 {
     _lineShiftCoefficient = checkInRange(lineShiftCoef, 0.5, 1.);

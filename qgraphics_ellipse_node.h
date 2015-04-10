@@ -24,6 +24,7 @@ public:
     virtual QPen pen() const override;
     virtual QFont font() const override;
     virtual QBrush brush() const override;
+    virtual bool intersects(QGraphicsNode *node) const override;
     virtual QPainterPath shape() const override;
 
 protected:

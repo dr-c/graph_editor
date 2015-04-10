@@ -4,7 +4,6 @@
 #include "weight_text_item.h"
 
 #include <QKeyEvent>
-#include <QDebug>
 
 QGraphicsNode::QGraphicsNode(WeightedNode *node, QGraphicsItem *parent)
     : QGraphicsObject(parent),

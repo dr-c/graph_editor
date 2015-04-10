@@ -43,8 +43,7 @@ void QGraphicsEdge::join(QGraphicsNode *fromNode, QGraphicsNode *toNode)
 
 void QGraphicsEdge::refresh()
 {
-    QPointF distance = _edge->fromNode()->pos() - _edge->toNode()->pos();
-    if (sqrt(distance.x() * distance.x() + distance.y() * distance.y()) <= _edge->fromNode()->graphicsNode()->radius() + _edge->toNode()->graphicsNode()->radius())
+    if (_edge->fromNode()->graphicsNode()->intersects(_edge->toNode()->graphicsNode()))
     {
         if (isVisible())
             hide();
