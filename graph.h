@@ -23,8 +23,8 @@ public:
         for (auto edge : _edges)
             delete edge;
         _edges.clear();
-        for (auto& node : _nodes)
-            delete node.second;
+        for (auto& pair : _nodes)
+            delete pair.second;
         _nodes.clear();
     }
 
