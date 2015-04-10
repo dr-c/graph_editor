@@ -37,6 +37,10 @@ public:
         return _id;
     }
 
+    Graph<N, E> *graph() const {
+        return _graph;
+    }
+
 protected:
     Node(Graph<N, E> *graph, int id) : N(), _graph(graph), _id(id) {}
     virtual ~Node() override {}

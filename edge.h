@@ -38,6 +38,10 @@ public:
         return _toNode;
     }
 
+    Graph<N, E> *graph() const {
+        return _graph;
+    }
+
 protected:
     Edge(Graph<N, E> *graph) : E(), _graph(graph), _fromNode(nullptr), _toNode(nullptr) {}
 
