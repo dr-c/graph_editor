@@ -33,6 +33,8 @@ protected slots:
 protected:
     QGraphicsNode(WeightedNode *node, QGraphicsItem *parent = 0);
 
+    virtual void        deleteCompletely();
+
     virtual void        setGeometry(const QPointF &centerPos) = 0;
     virtual void        calcRadius(int weight);
 

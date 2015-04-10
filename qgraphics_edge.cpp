@@ -9,7 +9,7 @@ QGraphicsEdge::QGraphicsEdge(WeightedEdge *edge, QGraphicsItem *parent)
 
 QGraphicsEdge::~QGraphicsEdge()
 {
-
+    _edge->setGraphicsEdge(nullptr);
 }
 
 WeightedEdge *QGraphicsEdge::edge() const
@@ -17,7 +17,7 @@ WeightedEdge *QGraphicsEdge::edge() const
     return _edge;
 }
 
-void QGraphicsEdge::connect(QGraphicsNode *fromNode, QGraphicsNode *toNode)
+void QGraphicsEdge::join(QGraphicsNode *fromNode, QGraphicsNode *toNode)
 {
     _edge->setNodes(fromNode->node(), toNode->node());
     draw(fromNode, toNode);

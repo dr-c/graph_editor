@@ -2,6 +2,7 @@
 #include "qgraphics_edge.h"
 
 #include <QKeyEvent>
+#include <QDebug>
 
 QGraphicsNode::QGraphicsNode(WeightedNode *node, QGraphicsItem *parent)
     : QGraphicsObject(parent), _node(node)
@@ -12,9 +13,18 @@ QGraphicsNode::QGraphicsNode(WeightedNode *node, QGraphicsItem *parent)
 
 QGraphicsNode::~QGraphicsNode()
 {
-    _node->for_each([](std::pair<WeightedNode* const, WeightedEdge*>& pair){ delete pair.second->graphicsEdge(); });
+    _node->setGraphicsNode(nullptr);
 }
 
+void QGraphicsNode::deleteCompletely()
+{
+    _node->for_each([](std::pair<WeightedNode* const, WeightedEdge*>& pair){
+        if (pair.second->graphicsEdge() != nullptr)
+            delete pair.second->graphicsEdge();
+    });
+    _node->remove();
+    delete this;
+}
 
 qreal QGraphicsNode::radius() const
 {
@@ -44,10 +54,7 @@ void QGraphicsNode::calcRadius(int weight)
 void QGraphicsNode::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Delete)
-    {
-        delete this;
-        _node->remove();
-    }
+        deleteCompletely();
 }
 
 QVariant QGraphicsNode::itemChange(GraphicsItemChange change, const QVariant &value)

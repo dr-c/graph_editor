@@ -14,7 +14,7 @@ public:
     virtual void draw(QGraphicsNode *fromNode, QGraphicsNode *toNode) = 0;
     virtual void draw(QGraphicsNode *fromNode, const QPointF &toPoint) = 0;
 
-    void connect(QGraphicsNode *fromNode, QGraphicsNode *toNode);
+    void join(QGraphicsNode *fromNode, QGraphicsNode *toNode);
     void update();
 
     WeightedEdge *edge() const;
