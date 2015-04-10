@@ -20,8 +20,8 @@ public:
     virtual int typeGraphicsNode() const = 0;
     virtual int typeGraphicsEdge() const = 0;
 
-    void addNode(const QPointF &centerPos, int weight = 1);
-    void addEdge(int weight = 1);
+    QGraphicsNode *addNode(const QPointF &centerPos, int weight = 1);
+    QGraphicsEdge *addEdge(int weight = 1);
 
     const GraphSceneMode *mode() const;
     void setMode(GraphSceneMode *mode);

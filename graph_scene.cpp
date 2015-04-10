@@ -20,7 +20,7 @@ BasicGraphScene::~BasicGraphScene()
 
 }
 
-void BasicGraphScene::addNode(const QPointF &centerPos, int weight)
+QGraphicsNode *BasicGraphScene::addNode(const QPointF &centerPos, int weight)
 {
     WeightedNode *node = _graph->createNode();
     node->setPos(centerPos);
@@ -31,15 +31,17 @@ void BasicGraphScene::addNode(const QPointF &centerPos, int weight)
     graphics_node->setBrush(_nodeBrush);
     _mode->setItemFlags(graphics_node);
     addItem(graphics_node);
+    return graphics_node;
 }
 
-void BasicGraphScene::addEdge(int weight)
+QGraphicsEdge *BasicGraphScene::addEdge(int weight)
 {
     WeightedEdge *edge = _graph->createEdge();
     edge->setWeight(weight);
     QGraphicsEdge *graphics_edge = createGraphicsEdge(edge);
     graphics_edge->setFlags(QGraphicsItem::ItemIsFocusable);
     addItem(graphics_edge);
+    return graphics_edge;
 }
 
 const GraphSceneMode *BasicGraphScene::mode() const
@@ -93,9 +95,7 @@ QBrush BasicGraphScene::nodeBrush() const
 
 void BasicGraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    if (mouseEvent->button() == Qt::LeftButton && itemAt(mouseEvent->scenePos(), QTransform()) == nullptr)
-        addNode(mouseEvent->scenePos());
-
+    _mode->mouseDoubleClickEvent(mouseEvent);
     QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
 }
 
