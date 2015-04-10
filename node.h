@@ -20,9 +20,11 @@ class Node : public N
 
 public:
     virtual void addSuccessor(Node<N, E> *node, Edge<N, E> *edge) = 0;
+    virtual bool hasSuccessor(Node<N, E> *node) = 0;
     virtual void removeSuccessor(Node<N, E> *node) = 0;
 
     virtual void addPredecessor(Node<N, E> *node, Edge<N, E> *edge) = 0;
+    virtual bool hasPredecessor(Node<N, E> *node) = 0;
     virtual void removePredecessor(Node<N, E> *node) = 0;
 
     virtual void for_each(void (*funct)(std::pair<Node<N, E>* const, Edge<N, E>*>&)) = 0;
@@ -55,6 +57,10 @@ public:
         _successors.insert(std::make_pair(node, edge));
     }
 
+    virtual bool hasSuccessor(Node<N, E> *node) override {
+        return _successors.find(node) != _successors.end();
+    }
+
     virtual void removeSuccessor(Node<N, E> *node) override {
         assert(_successors.find(node) != _successors.end());
         _successors.erase(node);
@@ -63,6 +69,10 @@ public:
     virtual void addPredecessor(Node<N, E> *node, Edge<N, E> *edge) override {
         assert(_predecessors.find(node) == _predecessors.end());
         _predecessors.insert(std::make_pair(node, edge));
+    }
+
+    virtual bool hasPredecessor(Node<N, E> *node) override {
+        return _predecessors.find(node) != _predecessors.end();
     }
 
     virtual void removePredecessor(Node<N, E> *node) override {
@@ -101,6 +111,10 @@ public:
         _adjacents.insert(std::make_pair(node, edge));
     }
 
+    virtual bool hasSuccessor(Node<N, E> *node) override {
+        return _adjacents.find(node) != _adjacents.end();
+    }
+
     virtual void removeSuccessor(Node<N, E> *node) override {
         assert(_adjacents.find(node) != _adjacents.end());
         _adjacents.erase(node);
@@ -109,6 +123,10 @@ public:
     virtual void addPredecessor(Node<N, E> *node, Edge<N, E> *edge) override {
         assert(_adjacents.find(node) == _adjacents.end());
         _adjacents.insert(std::make_pair(node, edge));
+    }
+
+    virtual bool hasPredecessor(Node<N, E> *node) override {
+        return _adjacents.find(node) != _adjacents.end();
     }
 
     virtual void removePredecessor(Node<N, E> *node) override {
