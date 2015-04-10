@@ -4,23 +4,17 @@
 
 QGraphicsRoundedRectNode::QGraphicsRoundedRectNode(WeightedNode *node, qreal lineShiftCoef, qreal roundingCoef, QGraphicsItem *parent)
     : QGraphicsNode(node, parent),
-      _weightItem(new WeightTextItem(_node->weight(), this)),
       _lineItem(new QGraphicsLineItem(this)),
-      _idItem(new QGraphicsSimpleTextItem(QString::number(_node->id()), this)),
       _lineShiftCoefficient(checkInRange(lineShiftCoef, 0.5, 1.)),
       _roundingCoefficient(checkInRange(roundingCoef, 0., 0.3)),
       _roundingRadius(_roundingCoefficient * _radius)
 {
     setGeometry(_node->pos());
-
-    connect(_weightItem, SIGNAL(textChanged(int)), this, SLOT(setWeight(int)));
 }
 
 QGraphicsRoundedRectNode::~QGraphicsRoundedRectNode()
 {
-    delete _idItem;
     delete _lineItem;
-    delete _weightItem;
 }
 
 int QGraphicsRoundedRectNode::type() const

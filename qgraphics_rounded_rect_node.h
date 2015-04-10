@@ -38,9 +38,7 @@ protected:
 private:
     static qreal checkInRange(qreal var, qreal from, qreal to);
 
-    WeightTextItem          *_weightItem;
     QGraphicsLineItem       *_lineItem;
-    QGraphicsSimpleTextItem *_idItem;
 
     QPen    _pen;
     QBrush  _brush;

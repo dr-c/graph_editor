@@ -5,6 +5,8 @@
 
 #include "item_info.h"
 
+class WeightTextItem;
+
 class QGraphicsNode : public QGraphicsObject
 {
     Q_OBJECT
@@ -38,10 +40,14 @@ protected:
     virtual void        setGeometry(const QPointF &centerPos) = 0;
     virtual void        calcRadius(int weight);
 
-    virtual void        keyPressEvent(QKeyEvent *event);
-    virtual QVariant    itemChange(GraphicsItemChange change, const QVariant &value);
+    virtual void        mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void        keyPressEvent(QKeyEvent *event) override;
+    virtual QVariant    itemChange(GraphicsItemChange change, const QVariant &value) override;
 
     WeightedNode *_node;
+
+    WeightTextItem          *_weightItem;
+    QGraphicsSimpleTextItem *_idItem;
 
     qreal _radius;
 

@@ -1,18 +1,29 @@
 #include "qgraphics_node.h"
 #include "qgraphics_edge.h"
 
+#include "weight_text_item.h"
+
 #include <QKeyEvent>
 #include <QDebug>
 
 QGraphicsNode::QGraphicsNode(WeightedNode *node, QGraphicsItem *parent)
-    : QGraphicsObject(parent), _node(node)
+    : QGraphicsObject(parent),
+      _node(node),
+      _weightItem(new WeightTextItem(_node->weight(), this)),
+      _idItem(new QGraphicsSimpleTextItem(QString::number(_node->id()), this))
 {
     _node->setGraphicsNode(this);
     calcRadius(_node->weight());
+    _weightItem->setZValue(1);
+    _idItem->setZValue(1);
+
+    connect(_weightItem, SIGNAL(textChanged(int)), this, SLOT(setWeight(int)));
 }
 
 QGraphicsNode::~QGraphicsNode()
 {
+    delete _idItem;
+    delete _weightItem;
     _node->setGraphicsNode(nullptr);
 }
 
@@ -49,6 +60,14 @@ void QGraphicsNode::calcRadius(int weight)
     if (weight < 0)
         weight = 0;
     _radius = sqrt(weight + RADIUS_SHIFT) * RADIUS_SCALE;
+    setZValue(1000./_radius);
+}
+
+void QGraphicsNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsItem::mouseDoubleClickEvent(event);
+    _weightItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+    _weightItem->setFocus();
 }
 
 void QGraphicsNode::keyPressEvent(QKeyEvent *event)
@@ -70,5 +89,5 @@ QVariant QGraphicsNode::itemChange(GraphicsItemChange change, const QVariant &va
 
 void QGraphicsNode::updateRelatedEdges()
 {
-    _node->for_each([](std::pair<WeightedNode* const, WeightedEdge*>& pair){ pair.second->graphicsEdge()->update(); });
+    _node->for_each([](std::pair<WeightedNode* const, WeightedEdge*>& pair){ pair.second->graphicsEdge()->refresh(); });
 }

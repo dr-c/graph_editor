@@ -7,20 +7,14 @@
 QGraphicsEllipseNode::QGraphicsEllipseNode(WeightedNode *node, QGraphicsItem *parent)
     : QGraphicsNode(node, parent),
       _ellipseItem(new QGraphicsEllipseItem(this)),
-      _weightItem(new WeightTextItem(_node->weight(), this)),
-      _lineItem(new QGraphicsLineItem(this)),
-      _idItem(new QGraphicsSimpleTextItem(QString::number(_node->id()), this))
+      _lineItem(new QGraphicsLineItem(this))
 {
     setGeometry(_node->pos());
-
-    connect(_weightItem, SIGNAL(textChanged(int)), this, SLOT(setWeight(int)));
 }
 
 QGraphicsEllipseNode::~QGraphicsEllipseNode()
 {
-    delete _idItem;
     delete _lineItem;
-    delete _weightItem;
     delete _ellipseItem;
 }
 
@@ -84,6 +78,11 @@ QFont QGraphicsEllipseNode::font() const
 QBrush QGraphicsEllipseNode::brush() const
 {
     return _ellipseItem->brush();
+}
+
+QPainterPath QGraphicsEllipseNode::shape() const
+{
+    return _ellipseItem->shape();
 }
 
 void QGraphicsEllipseNode::setGeometry(const QPointF &centerPos)

@@ -3,8 +3,6 @@
 
 #include "qgraphics_node.h"
 
-class WeightTextItem;
-
 class QGraphicsEllipseNode : public QGraphicsNode
 {
     Q_OBJECT
@@ -26,15 +24,14 @@ public:
     virtual QPen pen() const override;
     virtual QFont font() const override;
     virtual QBrush brush() const override;
+    virtual QPainterPath shape() const override;
 
 protected:
-    virtual void setGeometry(const QPointF &centerPos);
+    virtual void setGeometry(const QPointF &centerPos) override;
 
 private:
     QGraphicsEllipseItem    *_ellipseItem;
-    WeightTextItem          *_weightItem;
     QGraphicsLineItem       *_lineItem;
-    QGraphicsSimpleTextItem *_idItem;
 };
 
 #endif // QGRAPHICSELLIPSENODE_H
