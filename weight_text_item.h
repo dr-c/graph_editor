@@ -2,6 +2,7 @@
 #define WEIGHTTEXTITEM_H
 
 #include <QGraphicsTextItem>
+#include <QBrush>
 
 class WeightTextItem : public QGraphicsTextItem
 {
@@ -36,6 +37,26 @@ private:
     int     _prevCursorPosition;
 
     static const int _defaultWeight = 1;
+};
+
+class WeightEdgeTextItem : public WeightTextItem
+{
+public:
+    WeightEdgeTextItem(QGraphicsItem *parent = 0);
+    WeightEdgeTextItem(const QString &text, QGraphicsItem *parent = 0);
+
+    void calcCenterPoint(const QRectF &rect);
+    void placeInCenter();
+    QPointF center() const;
+
+protected:
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+
+private:
+    QPointF _center;
+
+    static const QBrush backgroundBrush;
 };
 
 #endif // WEIGHTTEXTITEM_H

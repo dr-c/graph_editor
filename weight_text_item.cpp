@@ -3,6 +3,7 @@
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QFocusEvent>
+#include <QPainter>
 
 WeightTextItem::WeightTextItem(QGraphicsItem *parent)
     : QGraphicsTextItem(parent)
@@ -128,4 +129,48 @@ void WeightTextItem::keyReleaseEvent(QKeyEvent *event)
 void WeightTextItem::init()
 {
     connect(document(), SIGNAL(contentsChanged()), this, SLOT(validateContentsChanging()));
+}
+
+const QBrush WeightEdgeTextItem::backgroundBrush = QBrush(QColor(Qt::white));
+
+WeightEdgeTextItem::WeightEdgeTextItem(QGraphicsItem *parent)
+    : WeightTextItem(parent)
+{
+
+}
+
+WeightEdgeTextItem::WeightEdgeTextItem(const QString &text, QGraphicsItem *parent)
+    : WeightTextItem(text, parent)
+{
+
+}
+
+void WeightEdgeTextItem::calcCenterPoint(const QRectF &rect)
+{
+    _center = rect.center();
+}
+
+void WeightEdgeTextItem::placeInCenter()
+{
+    QSizeF size = boundingRect().size();
+    setPos(_center.x() - size.width() / 2, _center.y() - size.height() / 2);
+}
+
+QPointF WeightEdgeTextItem::center() const
+{
+    return _center;
+}
+
+void WeightEdgeTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    painter->setBrush(backgroundBrush);
+    painter->drawRect(boundingRect());
+    WeightTextItem::paint(painter, option, widget);
+}
+
+void WeightEdgeTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    WeightTextItem::mouseDoubleClickEvent(event);
+    setTextInteractionFlags(Qt::TextEditorInteraction);
+    setFocus();
 }
