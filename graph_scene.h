@@ -4,9 +4,8 @@
 #include <QGraphicsScene>
 
 #include "item_info.h"
-
-class QGraphicsNode;
-class QGraphicsEdge;
+#include "qgraphics_edge.h"
+#include "qgraphics_node.h"
 
 class GraphSceneMode;
 
@@ -15,14 +14,15 @@ class BasicGraphScene : public QGraphicsScene
 public:
     virtual ~BasicGraphScene();
 
-    virtual QGraphicsNode *createGraphicsNode(WeightedNode *node) = 0;
-    virtual QGraphicsEdge *createGraphicsEdge(WeightedEdge *edge) = 0;
     virtual int typeGraphicsNode() const = 0;
     virtual int typeGraphicsEdge() const = 0;
 
     QGraphicsNode *addNode(const QPointF &centerPos, int weight = 1);
+    QGraphicsNode *addNode(WeightedNode *node);
     QGraphicsEdge *addEdge(int weight = 1);
+    QGraphicsEdge *addEdge(WeightedEdge *edge);
 
+    const WeightedGraph *graph() const;
     const GraphSceneMode *mode() const;
     void setMode(GraphSceneMode *mode);
 
@@ -36,6 +36,9 @@ public:
 
 protected:
     BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent = 0);
+
+    virtual QGraphicsNode *createGraphicsNode(WeightedNode *node) = 0;
+    virtual QGraphicsEdge *createGraphicsEdge(WeightedEdge *edge) = 0;
 
     virtual void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
     virtual void	mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -59,12 +62,6 @@ class GraphScene : public BasicGraphScene
 public:
     virtual ~GraphScene() {}
 
-    virtual QGraphicsNode *createGraphicsNode(WeightedNode *node) override final {
-        return new GN(node);
-    }
-    virtual QGraphicsEdge *createGraphicsEdge(WeightedEdge *edge) override final {
-        return new GE(edge);
-    }
     virtual int typeGraphicsNode() const override final {
         return GN::Type;
     }
@@ -76,6 +73,22 @@ protected:
     GraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent = 0) : BasicGraphScene(graph, mode, parent) {
         static_assert(std::is_base_of<QGraphicsNode, GN>::value, "GN type must be derived from QGraphicsNode");
         static_assert(std::is_base_of<QGraphicsEdge, GE>::value, "GE type must be derived from QGraphicsEdge");
+
+        for (auto pair : graph->nodes()) {
+            assert(pair.second->graphicsNode() == nullptr);
+            addNode(pair.second);
+        }
+        for (auto edge : graph->edges()) {
+            assert(edge->graphicsEdge() == nullptr);
+            addEdge(edge)->showWeight();
+        }
+    }
+
+    virtual QGraphicsNode *createGraphicsNode(WeightedNode *node) override final {
+        return new GN(node);
+    }
+    virtual QGraphicsEdge *createGraphicsEdge(WeightedEdge *edge) override final {
+        return new GE(edge);
     }
 };
 

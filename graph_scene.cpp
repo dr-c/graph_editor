@@ -1,8 +1,6 @@
 #include "graph_scene.h"
 
 #include "graph_scene_mode.h"
-#include "qgraphics_node.h"
-#include "qgraphics_edge.h"
 
 #include <QGraphicsSceneMouseEvent>
 
@@ -17,7 +15,7 @@ BasicGraphScene::BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QOb
 
 BasicGraphScene::~BasicGraphScene()
 {
-
+    delete _mode;
 }
 
 QGraphicsNode *BasicGraphScene::addNode(const QPointF &centerPos, int weight)
@@ -25,6 +23,12 @@ QGraphicsNode *BasicGraphScene::addNode(const QPointF &centerPos, int weight)
     WeightedNode *node = _graph->createNode();
     node->setPos(centerPos);
     node->setWeight(weight);
+    return addNode(node);
+}
+
+QGraphicsNode *BasicGraphScene::addNode(WeightedNode *node)
+{
+    assert(node->graph() == this->_graph);
     QGraphicsNode *graphics_node = createGraphicsNode(node);
     graphics_node->setPen(_nodePen);
     graphics_node->setFont(_nodeFont);
@@ -38,10 +42,21 @@ QGraphicsEdge *BasicGraphScene::addEdge(int weight)
 {
     WeightedEdge *edge = _graph->createEdge();
     edge->setWeight(weight);
+    return addEdge(edge);
+}
+
+QGraphicsEdge *BasicGraphScene::addEdge(WeightedEdge *edge)
+{
+    assert(edge->graph() == this->_graph);
     QGraphicsEdge *graphics_edge = createGraphicsEdge(edge);
     graphics_edge->setFlags(QGraphicsItem::ItemIsFocusable);
     addItem(graphics_edge);
     return graphics_edge;
+}
+
+const WeightedGraph *BasicGraphScene::graph() const
+{
+    return _graph;
 }
 
 const GraphSceneMode *BasicGraphScene::mode() const
