@@ -7,8 +7,10 @@
 BasicGraphScene::BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent)
     : QGraphicsScene(parent), _graph(graph), _mode(mode),
       _nodePen(QPen(QColor(Qt::blue), 2)),
-      _nodeFont(QFont("Times New Roman", 10)),
-      _nodeBrush(QBrush(QColor(192, 192, 192, 192)))
+      _nodeHoverPen(QPen(QColor(Qt::red), 2)),
+      _itemFont(QFont("Times New Roman", 10)),
+      _nodeBrush(QBrush(QColor(192, 192, 192, 192))),
+      _edgeBrush(QBrush(QColor(192, 192, 192, 255)))
 {
     _mode->setScene(this);
 }
@@ -31,8 +33,10 @@ QGraphicsNode *BasicGraphScene::addNode(WeightedNode *node)
     assert(node->graph() == this->_graph);
     QGraphicsNode *graphics_node = createGraphicsNode(node);
     graphics_node->setPen(_nodePen);
-    graphics_node->setFont(_nodeFont);
+    graphics_node->setFont(_itemFont);
     graphics_node->setBrush(_nodeBrush);
+    graphics_node->setHoverPen(_nodeHoverPen);
+    graphics_node->setAcceptHoverEvents(true);
     _mode->setItemFlags(graphics_node);
     addItem(graphics_node);
     return graphics_node;
@@ -49,6 +53,8 @@ QGraphicsEdge *BasicGraphScene::addEdge(WeightedEdge *edge)
 {
     assert(edge->graph() == this->_graph);
     QGraphicsEdge *graphics_edge = createGraphicsEdge(edge);
+    graphics_edge->setFont(_itemFont);
+    graphics_edge->setBrush(_edgeBrush);
     graphics_edge->setFlags(QGraphicsItem::ItemIsFocusable);
     addItem(graphics_edge);
     return graphics_edge;
@@ -81,9 +87,9 @@ void BasicGraphScene::setNodePen(const QPen &pen)
 
 void BasicGraphScene::setNodeFont(const QFont &font)
 {
-    _nodeFont = font;
+    _itemFont = font;
     for (auto pair : _graph->nodes())
-        pair.second->graphicsNode()->setFont(_nodeFont);
+        pair.second->graphicsNode()->setFont(_itemFont);
 }
 
 void BasicGraphScene::setNodeBrush(const QBrush &brush)
@@ -100,7 +106,7 @@ QPen BasicGraphScene::nodePen() const
 
 QFont BasicGraphScene::nodeFont() const
 {
-    return _nodeFont;
+    return _itemFont;
 }
 
 QBrush BasicGraphScene::nodeBrush() const

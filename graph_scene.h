@@ -52,8 +52,10 @@ private:
     GraphSceneMode  *_mode;
 
     QPen    _nodePen;
-    QFont   _nodeFont;
+    QPen    _nodeHoverPen;
+    QFont   _itemFont;
     QBrush  _nodeBrush;
+    QBrush  _edgeBrush;
 };
 
 template<typename GN, typename GE>
