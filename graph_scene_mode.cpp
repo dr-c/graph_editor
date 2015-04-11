@@ -14,17 +14,12 @@ GraphSceneMode::GraphSceneMode(BasicGraphScene *scene)
 
 }
 
-GraphSceneMode::~GraphSceneMode()
-{
-
-}
-
 void GraphSceneMode::setScene(BasicGraphScene *scene)
 {
     _scene = scene;
 }
 
-BasicGraphScene *GraphSceneMode::scene()
+const BasicGraphScene *GraphSceneMode::scene() const
 {
     return _scene;
 }
@@ -41,17 +36,12 @@ PointerMode::PointerMode(BasicGraphScene *graphScene)
 
 }
 
-PointerMode::~PointerMode()
-{
-
-}
-
 int PointerMode::type() const
 {
     return Type;
 }
 
-void PointerMode::setItemFlags(QGraphicsItem *item)
+void PointerMode::setItemFlags(QGraphicsItem *item) const
 {
     item->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsFocusable
                         | QGraphicsItem::ItemContainsChildrenInShape | QGraphicsItem::ItemSendsScenePositionChanges);
@@ -77,7 +67,7 @@ int PencilMode::type() const
     return Type;
 }
 
-void PencilMode::setItemFlags(QGraphicsItem *item)
+void PencilMode::setItemFlags(QGraphicsItem *item) const
 {
     item->setFlags(QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemContainsChildrenInShape);
 }

@@ -15,9 +15,9 @@ class QKeyEvent;
 class GraphSceneMode
 {    
 public:
-    virtual ~GraphSceneMode();
+    virtual ~GraphSceneMode() = default;
 
-    virtual void    setItemFlags(QGraphicsItem *item) = 0;
+    virtual void    setItemFlags(QGraphicsItem *item) const = 0;
     virtual int     type() const = 0;
 
     virtual void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -27,7 +27,7 @@ public:
     virtual void	keyPressEvent(QKeyEvent *keyEvent)                          { Q_UNUSED(keyEvent);   }
     virtual void    keyReleaseEvent(QKeyEvent *keyEvent)                        { Q_UNUSED(keyEvent);   }
 
-    BasicGraphScene *scene();
+    const BasicGraphScene *scene() const;
 
 protected:
     GraphSceneMode(BasicGraphScene *scene = nullptr);
@@ -35,9 +35,8 @@ protected:
     BasicGraphScene *_scene;
 
 private:
-    void setScene(BasicGraphScene *scene);
-
     friend class BasicGraphScene;
+    void setScene(BasicGraphScene *scene);
 };
 
 class PointerMode : public GraphSceneMode
@@ -45,10 +44,10 @@ class PointerMode : public GraphSceneMode
 public:
     enum { Type = 1 };
     PointerMode(BasicGraphScene *graphScene = nullptr);
-    virtual ~PointerMode();
+    virtual ~PointerMode() override = default;
 
-    virtual int     type() const;
-    virtual void    setItemFlags(QGraphicsItem *item);
+    virtual int     type() const override;
+    virtual void    setItemFlags(QGraphicsItem *item) const override;
 };
 
 class PencilMode : public GraphSceneMode
@@ -56,10 +55,10 @@ class PencilMode : public GraphSceneMode
 public:
     enum { Type = 2 };
     PencilMode(BasicGraphScene *graphScene = nullptr);
-    virtual ~PencilMode();
+    virtual ~PencilMode() override;
 
-    virtual void    setItemFlags(QGraphicsItem *item);
-    virtual int     type() const;
+    virtual int     type() const override;
+    virtual void    setItemFlags(QGraphicsItem *item) const override;
 
     virtual void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
     virtual void    mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) override;

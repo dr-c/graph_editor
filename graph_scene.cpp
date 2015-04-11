@@ -5,7 +5,9 @@
 #include <QGraphicsSceneMouseEvent>
 
 BasicGraphScene::BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent)
-    : QGraphicsScene(parent), _graph(graph), _mode(mode),
+    : QGraphicsScene(parent),
+      _graph(graph),
+      _mode(mode),
       _nodePen(QPen(QColor(Qt::blue), 2)),
       _nodeHoverPen(QPen(QColor(Qt::red), 2)),
       _edgePen(QPen(QColor(Qt::black), 2)),
@@ -136,42 +138,6 @@ bool BasicGraphScene::calcEdgesWeightRange()
     for (auto edge : _graph->edges())
         edge->graphicsEdge()->setPenTransparency(_minEdgeWeight, _maxEdgeWeight);
     return true;
-}
-
-void BasicGraphScene::setNodePen(const QPen &pen)
-{
-    _nodePen = pen;
-    for (auto pair : _graph->nodes())
-        pair.second->graphicsNode()->setPen(_nodePen);
-}
-
-void BasicGraphScene::setNodeFont(const QFont &font)
-{
-    _itemFont = font;
-    for (auto pair : _graph->nodes())
-        pair.second->graphicsNode()->setFont(_itemFont);
-}
-
-void BasicGraphScene::setNodeBrush(const QBrush &brush)
-{
-    _nodeBrush = brush;
-    for (auto pair : _graph->nodes())
-        pair.second->graphicsNode()->setBrush(_nodeBrush);
-}
-
-QPen BasicGraphScene::nodePen() const
-{
-    return _nodePen;
-}
-
-QFont BasicGraphScene::nodeFont() const
-{
-    return _itemFont;
-}
-
-QBrush BasicGraphScene::nodeBrush() const
-{
-    return _nodeBrush;
 }
 
 void BasicGraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)

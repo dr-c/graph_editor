@@ -132,11 +132,13 @@ void WeightTextItem::init()
 WeightEdgeTextItem::WeightEdgeTextItem(QGraphicsItem *parent)
     : WeightTextItem(parent), _backgroundBrush(QBrush(QColor(Qt::white)))
 {
+    setFlag(QGraphicsItem::ItemIsFocusable, true);
 }
 
 WeightEdgeTextItem::WeightEdgeTextItem(const QString &text, QGraphicsItem *parent)
     : WeightTextItem(text, parent)
 {
+    setFlag(QGraphicsItem::ItemIsFocusable, true);
 }
 
 void WeightEdgeTextItem::calcCenterPoint(const QRectF &rect)
@@ -146,11 +148,11 @@ void WeightEdgeTextItem::calcCenterPoint(const QRectF &rect)
 
 void WeightEdgeTextItem::placeInCenter()
 {
-    QSizeF size = boundingRect().size();
+    const QSizeF &size = boundingRect().size();
     setPos(_center.x() - size.width() / 2, _center.y() - size.height() / 2);
 }
 
-QPointF WeightEdgeTextItem::center() const
+const QPointF &WeightEdgeTextItem::center() const
 {
     return _center;
 }
@@ -160,7 +162,7 @@ void WeightEdgeTextItem::setBrush(const QBrush &brush)
     _backgroundBrush = brush;
 }
 
-QBrush WeightEdgeTextItem::brush() const
+const QBrush &WeightEdgeTextItem::brush() const
 {
     return _backgroundBrush;
 }

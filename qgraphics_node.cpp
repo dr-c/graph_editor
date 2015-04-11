@@ -46,7 +46,7 @@ void QGraphicsNode::setPen(const QPen &pen)
     setActivePen(_simplePen);
 }
 
-QPen QGraphicsNode::pen() const
+const QPen &QGraphicsNode::pen() const
 {
     return _simplePen;
 }
@@ -56,7 +56,7 @@ void QGraphicsNode::setHoverPen(const QPen &pen)
     _hoverPen = pen;
 }
 
-QPen QGraphicsNode::hoverPen() const
+const QPen &QGraphicsNode::hoverPen() const
 {
     return _hoverPen;
 }

@@ -73,7 +73,7 @@ void QGraphicsEdge::setPen(const QPen &pen)
     QGraphicsPathItem::setPen(_simplePen);
 }
 
-QPen QGraphicsEdge::pen() const
+const QPen &QGraphicsEdge::pen() const
 {
     return _simplePen;
 }
@@ -83,24 +83,24 @@ void QGraphicsEdge::setHoverPen(const QPen &pen)
     _hoverPen = pen;
 }
 
-QPen QGraphicsEdge::hoverPen() const
+const QPen &QGraphicsEdge::hoverPen() const
 {
     return _hoverPen;
 }
 
 void QGraphicsEdge::setPenTransparency(int minWeight, int maxWeight)
 {
-    const qreal d_weight = maxWeight - minWeight;
-    const qreal alpha = (d_weight == 0) ? 1 : 0.3 + (_edge->weight() - minWeight) / d_weight * 0.7;
+    const qreal weight_diff = maxWeight - minWeight;
+    const qreal alpha = (weight_diff == 0) ? 1 : 0.3 + (_edge->weight() - minWeight) / weight_diff * 0.7;
     QColor color = _simplePen.color();
     color.setAlphaF(alpha);
     _simplePen.setColor(color);
     setPen(_simplePen);
 }
 
-void QGraphicsEdge::join(QGraphicsNode *fromNode, QGraphicsNode *toNode)
+void QGraphicsEdge::join(QGraphicsNode *fromGNode, QGraphicsNode *toGNode)
 {
-    _edge->setNodes(fromNode->node(), toNode->node());
+    _edge->setNodes(fromGNode->node(), toGNode->node());
     refresh();
     emit created(this);
 }

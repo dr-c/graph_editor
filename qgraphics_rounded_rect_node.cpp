@@ -74,10 +74,10 @@ QBrush QGraphicsRoundedRectNode::brush() const
     return _brush;
 }
 
-bool QGraphicsRoundedRectNode::intersects(QGraphicsNode *gnode) const
+bool QGraphicsRoundedRectNode::intersects(QGraphicsNode *gNode) const
 {
-    QPointF difference = _node->pos() - gnode->node()->pos();
-    qreal required_distance = _radius + gnode->radius();
+    QPointF difference = _node->pos() - gNode->node()->pos();
+    qreal required_distance = _radius + gNode->radius();
     return abs(difference.x()) <= required_distance && abs(difference.y()) <= required_distance;
 }
 
@@ -130,7 +130,7 @@ void QGraphicsRoundedRectNode::calcRadius(int weight)
     _roundingRadius = _radius * _roundingCoefficient;
 }
 
-QPointF QGraphicsRoundedRectNode::calcIntermediatePoint(const QPointF &toPoint)
+QPointF QGraphicsRoundedRectNode::calcIntermediatePoint(const QPointF &toPoint) const
 {
     QPointF fromPoint = _node->pos();
 

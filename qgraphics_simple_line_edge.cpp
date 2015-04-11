@@ -9,20 +9,15 @@ QGraphicsSimpleLineEdge::QGraphicsSimpleLineEdge(WeightedEdge *edge, QGraphicsIt
 
 }
 
-QGraphicsSimpleLineEdge::~QGraphicsSimpleLineEdge()
-{
-
-}
-
 int QGraphicsSimpleLineEdge::type() const
 {
     return Type;
 }
 
-void QGraphicsSimpleLineEdge::draw(QGraphicsNode *fromNode, QGraphicsNode *toNode)
+void QGraphicsSimpleLineEdge::draw(QGraphicsNode *fromGNode, QGraphicsNode *toGNode)
 {
-    const QPointF from_interm_point = fromNode->calcIntermediatePoint(toNode->node()->pos());
-    const QPointF to_interm_point = toNode->calcIntermediatePoint(fromNode->node()->pos());
+    const QPointF from_interm_point = fromGNode->calcIntermediatePoint(toGNode->node()->pos());
+    const QPointF to_interm_point = toGNode->calcIntermediatePoint(fromGNode->node()->pos());
     QPainterPath path(from_interm_point);
     path.lineTo(to_interm_point);
     setPath(path);
@@ -30,9 +25,9 @@ void QGraphicsSimpleLineEdge::draw(QGraphicsNode *fromNode, QGraphicsNode *toNod
     _weightItem->placeInCenter();
 }
 
-void QGraphicsSimpleLineEdge::draw(QGraphicsNode *fromNode, const QPointF &toPoint)
+void QGraphicsSimpleLineEdge::draw(QGraphicsNode *fromGNode, const QPointF &toPoint)
 {
-    QPainterPath path(fromNode->calcIntermediatePoint(toPoint));
+    QPainterPath path(fromGNode->calcIntermediatePoint(toPoint));
     path.lineTo(toPoint);
     setPath(path);
 }

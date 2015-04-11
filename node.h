@@ -23,16 +23,16 @@ public:
     typedef const map&  map_ref;
 
     virtual void    addSuccessor(Node<N, E> *node, Edge<N, E> *edge) = 0;
-    virtual bool    hasSuccessor(Node<N, E> *node) = 0;
     virtual void    removeSuccessor(Node<N, E> *node) = 0;
+    virtual bool    hasSuccessor(Node<N, E> *node) const = 0;
     virtual map_ref successors() const = 0;
 
     virtual void    addPredecessor(Node<N, E> *node, Edge<N, E> *edge) = 0;
-    virtual bool    hasPredecessor(Node<N, E> *node) = 0;
     virtual void    removePredecessor(Node<N, E> *node) = 0;
+    virtual bool    hasPredecessor(Node<N, E> *node) const = 0;
     virtual map_ref predecessors() const = 0;
 
-    virtual void for_each(void (*funct)(std::pair<Node<N, E>* const, Edge<N, E>*>&)) = 0;
+    virtual void    for_each(void (*funct)(std::pair<Node<N, E>* const, Edge<N, E>*>&)) = 0;
 
     void remove() {
         _graph->remove(this);
@@ -48,7 +48,9 @@ public:
 
 protected:
     Node(Graph<N, E> *graph, int id) : N(), _graph(graph), _id(id) {}
-    virtual ~Node() override {}
+    Node(const Node<N, E> &node) = delete;
+    Node<N, E> &operator=(const Node<N, E> &node) = delete;
+    virtual ~Node() override = default;
 
 private:
     Graph<N, E> *_graph;
@@ -69,13 +71,13 @@ public:
         _successors.insert(std::make_pair(node, edge));
     }
 
-    virtual bool hasSuccessor(Node<N, E> *node) override {
-        return _successors.find(node) != _successors.end();
-    }
-
     virtual void removeSuccessor(Node<N, E> *node) override {
         assert(_successors.find(node) != _successors.end());
         _successors.erase(node);
+    }
+
+    virtual bool hasSuccessor(Node<N, E> *node) const override {
+        return _successors.find(node) != _successors.end();
     }
 
     virtual map_ref successors() const override {
@@ -87,13 +89,13 @@ public:
         _predecessors.insert(std::make_pair(node, edge));
     }
 
-    virtual bool hasPredecessor(Node<N, E> *node) override {
-        return _predecessors.find(node) != _predecessors.end();
-    }
-
     virtual void removePredecessor(Node<N, E> *node) override {
         assert(_predecessors.find(node) != _predecessors.end());
         _predecessors.erase(node);
+    }
+
+    virtual bool hasPredecessor(Node<N, E> *node) const override {
+        return _predecessors.find(node) != _predecessors.end();
     }
 
     virtual map_ref predecessors() const override {
@@ -107,7 +109,8 @@ public:
 
 protected:
     DirectedNode(Graph<N, E> *graph, int id) : Node<N, E>(graph, id) {}
-
+    DirectedNode(const DirectedNode<N, E> &node) = delete;
+    DirectedNode<N, E> &operator=(const DirectedNode<N, E> &node) = delete;
     virtual ~DirectedNode() override {
         for (auto& pair : _successors)
             pair.second->remove();
@@ -134,13 +137,13 @@ public:
         _adjacents.insert(std::make_pair(node, edge));
     }
 
-    virtual bool hasSuccessor(Node<N, E> *node) override {
-        return _adjacents.find(node) != _adjacents.end();
-    }
-
     virtual void removeSuccessor(Node<N, E> *node) override {
         assert(_adjacents.find(node) != _adjacents.end());
         _adjacents.erase(node);
+    }
+
+    virtual bool hasSuccessor(Node<N, E> *node) const override {
+        return _adjacents.find(node) != _adjacents.end();
     }
 
     virtual map_ref successors() const override {
@@ -152,13 +155,13 @@ public:
         _adjacents.insert(std::make_pair(node, edge));
     }
 
-    virtual bool hasPredecessor(Node<N, E> *node) override {
-        return _adjacents.find(node) != _adjacents.end();
-    }
-
     virtual void removePredecessor(Node<N, E> *node) override {
         assert(_adjacents.find(node) != _adjacents.end());
         _adjacents.erase(node);
+    }
+
+    virtual bool hasPredecessor(Node<N, E> *node) const override {
+        return _adjacents.find(node) != _adjacents.end();
     }
 
     virtual map_ref predecessors() const override {
@@ -171,7 +174,8 @@ public:
 
 protected:
     UndirectedNode(Graph<N, E> *graph, int id) : Node<N, E>(graph, id) {}
-
+    UndirectedNode(const UndirectedNode<N, E> &node) = delete;
+    UndirectedNode<N, E> &operator=(const UndirectedNode<N, E> &node) = delete;
     virtual ~UndirectedNode() override {
         for (auto& pair : _adjacents)
             pair.second->remove();

@@ -24,9 +24,9 @@ private slots:
     void on_actionPencil_triggered(bool checked);
 
 private:
-    Ui::MainWindow *_ui;
-    DirectedGraph<NodeInfo, EdgeInfo> *_directedGraph;
-    BasicGraphScene *_graphScene;
+    Ui::MainWindow                      *_ui;
+    DirectedGraph<NodeInfo, EdgeInfo>   *_directedGraph;
+    BasicGraphScene                     *_graphScene;
 };
 
 #endif // MAINWINDOW_H

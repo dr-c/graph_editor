@@ -28,26 +28,34 @@ public:
     const GraphSceneMode *mode() const;
     void setMode(GraphSceneMode *mode);
 
-    void setNodePen(const QPen &pen);
-    void setNodeFont(const QFont &font);
-    void setNodeBrush(const QBrush &brush);
+    void setNodePen(const QPen &pen)        { _nodePen = pen;       }
+    void setnodeHoverPen(const QPen &pen)   { _nodeHoverPen = pen;  }
+    void setedgePen(const QPen &pen)        { _edgePen = pen;       }
+    void setedgeHoverPen(const QPen &pen)   { _edgeHoverPen = pen;  }
+    void setItemFont(const QFont &font)     { _itemFont = font;     }
+    void setNodeBrush(const QBrush &brush)  { _nodeBrush = brush;   }
+    void setedgeBrush(const QBrush &brush)  { _edgeBrush = brush;   }
 
-    QPen nodePen() const;
-    QFont nodeFont() const;
-    QBrush nodeBrush() const;
+    const QPen &nodePen() const             { return _nodePen;      }
+    const QPen &nodeHoverPen() const        { return _nodeHoverPen; }
+    const QPen &edgePen() const             { return _edgePen;      }
+    const QPen &edgeHoverPen() const        { return _edgeHoverPen; }
+    const QFont &itemFont() const           { return _itemFont;     }
+    const QBrush &nodeBrush() const         { return _nodeBrush;    }
+    const QBrush &edgeBrush() const         { return _edgeBrush;    }
 
 protected:
     BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent = 0);
 
-    virtual QGraphicsNode *createGraphicsNode(WeightedNode *node) = 0;
-    virtual QGraphicsEdge *createGraphicsEdge(WeightedEdge *edge) = 0;
+    virtual QGraphicsNode *createGraphicsNode(WeightedNode *node) const = 0;
+    virtual QGraphicsEdge *createGraphicsEdge(WeightedEdge *edge) const = 0;
 
-    virtual void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    virtual void	mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    virtual void	mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    virtual void	mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    virtual void    keyPressEvent(QKeyEvent *keyEvent);
-    virtual void    keyReleaseEvent(QKeyEvent *keyEvent);
+    virtual void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+    virtual void	mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+    virtual void	mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+    virtual void	mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+    virtual void    keyPressEvent(QKeyEvent *keyEvent) override;
+    virtual void    keyReleaseEvent(QKeyEvent *keyEvent) override;
 
 private slots:
     void calcEdgesTransparencyOnCreate(QGraphicsEdge *gEdge);
@@ -76,7 +84,7 @@ template<typename GN, typename GE>
 class GraphScene : public BasicGraphScene
 {
 public:
-    virtual ~GraphScene() {}
+    virtual ~GraphScene() = default;
 
     virtual int typeGraphicsNode() const override final {
         return GN::Type;
@@ -100,10 +108,10 @@ protected:
         }
     }
 
-    virtual QGraphicsNode *createGraphicsNode(WeightedNode *node) override final {
+    virtual QGraphicsNode *createGraphicsNode(WeightedNode *node) const override final {
         return new GN(node);
     }
-    virtual QGraphicsEdge *createGraphicsEdge(WeightedEdge *edge) override final {
+    virtual QGraphicsEdge *createGraphicsEdge(WeightedEdge *edge) const override final {
         return new GE(edge);
     }
 };
@@ -112,16 +120,20 @@ template<typename GN, typename GE>
 class DirectedGraphScene : public GraphScene<GN, GE>
 {
 public:
-    DirectedGraphScene(DirectedGraph<NodeInfo, EdgeInfo> *graph, GraphSceneMode *mode, QObject *parent = 0) : GraphScene<GN, GE>(graph, mode, parent) {}
-    virtual ~DirectedGraphScene() {}
+    DirectedGraphScene(DirectedGraph<NodeInfo, EdgeInfo> *graph, GraphSceneMode *mode, QObject *parent = 0)
+        : GraphScene<GN, GE>(graph, mode, parent) {}
+    virtual ~DirectedGraphScene() = default;
 };
 
 template<typename GN, typename GE>
 class UndirectedGraphScene : public GraphScene<GN, GE>
 {
 public:
-    UndirectedGraphScene(UndirectedGraph<NodeInfo, EdgeInfo> *graph, GraphSceneMode *mode, QObject *parent = 0) : GraphScene<GN, GE>(graph, mode, parent) {}
-    virtual ~UndirectedGraphScene() {}
+    UndirectedGraphScene(UndirectedGraph<NodeInfo, EdgeInfo> *graph, GraphSceneMode *mode, QObject *parent = 0)
+        : GraphScene<GN, GE>(graph, mode, parent) {}
+    UndirectedGraphScene(const UndirectedGraphScene<GN, GE> &scene) = delete;
+    UndirectedGraphScene<GN, GE> &operator=(const UndirectedGraphScene<GN, GE> &scene) = delete;
+    virtual ~UndirectedGraphScene() = default;
 };
 
 #endif // GRAPHSCENE_H

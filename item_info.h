@@ -10,7 +10,7 @@ class QGraphicsEdge;
 struct NodeInfo {
 public:
     NodeInfo() : _weight(1), _graphicsNode(nullptr), _pos(QPointF()) {}
-    virtual ~NodeInfo() {}
+    virtual ~NodeInfo() = default;
 
     void setWeight(int weight)              { _weight       = weight;   }
     void setGraphicsNode(QGraphicsNode *gn) { _graphicsNode = gn;       }
@@ -18,7 +18,7 @@ public:
 
     int weight() const                      { return _weight;           }
     QGraphicsNode *graphicsNode() const     { return _graphicsNode;     }
-    QPointF pos() const                     { return _pos;              }
+    const QPointF &pos() const              { return _pos;              }
 
 private:
     int             _weight;
@@ -29,7 +29,7 @@ private:
 struct EdgeInfo {
 public:
     EdgeInfo() : _weight(1), _graphicsEdge(nullptr) {}
-    virtual ~EdgeInfo() {}
+    virtual ~EdgeInfo() = default;
 
     void setWeight(int weight)              { _weight       = weight;   }
     void setGraphicsEdge(QGraphicsEdge *ge) { _graphicsEdge = ge;       }

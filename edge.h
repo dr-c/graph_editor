@@ -44,7 +44,8 @@ public:
 
 protected:
     Edge(Graph<N, E> *graph) : E(), _graph(graph), _fromNode(nullptr), _toNode(nullptr) {}
-
+    Edge(const Edge<N, E> &edge) = delete;
+    Edge<N, E> &operator=(const Edge<N, E> &edge) = delete;
     virtual ~Edge() override {
         if (_fromNode != nullptr) {
             _fromNode->removeSuccessor(_toNode);
@@ -54,8 +55,8 @@ protected:
 
 private:
     Graph<N, E> *_graph;
-    Node<N, E> *_fromNode;
-    Node<N, E> *_toNode;
+    Node<N, E>  *_fromNode;
+    Node<N, E>  *_toNode;
 };
 
 #endif // EDGE_H

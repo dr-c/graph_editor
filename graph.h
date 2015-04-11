@@ -63,7 +63,9 @@ public:
     }
 
 protected:
-    Graph() {}
+    Graph() = default;
+    Graph(const Graph<N, E> &graph) = delete;
+    Graph<N, E> &operator=(const Graph<N, E> &graph) = delete;
 
     std::map<int, Node<N, E>*>    _nodes;
     std::vector<Edge<N, E>*>      _edges;
@@ -73,8 +75,10 @@ template<typename N, typename E>
 class DirectedGraph : public Graph<N, E>
 {
 public:
-    DirectedGraph() : Graph<N, E>() {}
-    virtual ~DirectedGraph() override {}
+    DirectedGraph() = default;
+    DirectedGraph(const DirectedGraph<N, E> &graph) = delete;
+    DirectedGraph<N, E> &operator=(const DirectedGraph<N, E> &graph) = delete;
+    virtual ~DirectedGraph() override = default;
 
     virtual Node<N, E> *createNode() override {
         int id = this->_nodes.empty() ? 1 : this->_nodes.rbegin()->first + 1;
@@ -89,8 +93,10 @@ template<typename N, typename E>
 class UndirectedGraph : public Graph<N, E>
 {
 public:
-    UndirectedGraph() : Graph<N, E>() {}
-    virtual ~UndirectedGraph() override {}
+    UndirectedGraph() = default;
+    UndirectedGraph(const UndirectedGraph<N, E> &graph) = delete;
+    UndirectedGraph<N, E> &operator=(const UndirectedGraph<N, E> &graph) = delete;
+    virtual ~UndirectedGraph() override = default;
 
     virtual Node<N, E> *createNode() override {
         int id = this->_nodes.rbegin()->first;

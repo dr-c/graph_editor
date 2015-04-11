@@ -9,14 +9,11 @@ public:
     enum { Type = UserType + 201 };
 
     QGraphicsSimpleLineEdge(WeightedEdge *edge, QGraphicsItem *parent = 0);
-    virtual ~QGraphicsSimpleLineEdge();
+    virtual ~QGraphicsSimpleLineEdge() override = default;
 
     virtual int type() const override;
-    virtual void draw(QGraphicsNode *fromNode, QGraphicsNode *toNode) override;
-    virtual void draw(QGraphicsNode *fromNode, const QPointF &toPoint) override;
-
-private:
-    static QPointF calcIntermediatePoint(const QPointF &fromPoint, const QPointF &toPoint, qreal bCathetus);
+    virtual void draw(QGraphicsNode *fromGNode, QGraphicsNode *toGNode) override;
+    virtual void draw(QGraphicsNode *fromGNode, const QPointF &toPoint) override;
 };
 
 #endif // QGRAPHICSSIMPLELINEEDGE_H
