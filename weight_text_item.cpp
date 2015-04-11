@@ -84,20 +84,28 @@ void WeightTextItem::validateContentsChanging()
 
 void WeightTextItem::focusInEvent(QFocusEvent *event)
 {
-    _firstText = toPlainText();
-    _prevText = _firstText;
+    if (textInteractionFlags() == Qt::TextEditorInteraction)
+    {
+        _firstText = toPlainText();
+        _prevText = _firstText;
+    }
     QGraphicsTextItem::focusInEvent(event);
 }
 
 void WeightTextItem::focusOutEvent(QFocusEvent *event)
 {
-    if (toPlainText().isEmpty())
-        setPlainText(_firstText);
-    QTextCursor cursor = textCursor();
-    cursor.clearSelection();
-    setTextCursor(cursor);
-    QGraphicsTextItem::focusOutEvent(event);
-    setTextInteractionFlags(Qt::NoTextInteraction);
+    if (textInteractionFlags() == Qt::TextEditorInteraction)
+    {
+        if (toPlainText().isEmpty())
+            setPlainText(_firstText);
+        QTextCursor cursor = textCursor();
+        cursor.clearSelection();
+        setTextCursor(cursor);
+        QGraphicsTextItem::focusOutEvent(event);
+        setTextInteractionFlags(Qt::NoTextInteraction);
+    }
+    else
+        QGraphicsTextItem::focusOutEvent(event);
 }
 
 void WeightTextItem::keyPressEvent(QKeyEvent *event)
@@ -124,13 +132,11 @@ void WeightTextItem::init()
 WeightEdgeTextItem::WeightEdgeTextItem(QGraphicsItem *parent)
     : WeightTextItem(parent), _backgroundBrush(QBrush(QColor(Qt::white)))
 {
-    setFlag(QGraphicsItem::ItemIsFocusable, true);
 }
 
 WeightEdgeTextItem::WeightEdgeTextItem(const QString &text, QGraphicsItem *parent)
     : WeightTextItem(text, parent)
 {
-    setFlag(QGraphicsItem::ItemIsFocusable, true);
 }
 
 void WeightEdgeTextItem::calcCenterPoint(const QRectF &rect)
@@ -161,15 +167,9 @@ QBrush WeightEdgeTextItem::brush() const
 
 void WeightEdgeTextItem::keyPressEvent(QKeyEvent *event)
 {
-    switch (event->key())
-    {
-    case Qt::Key_Delete:
-        if (textInteractionFlags() == Qt::NoTextInteraction)
-            emit deleteKeyPressed();
-        break;
-    default:
-        QGraphicsTextItem::keyPressEvent(event);
-    }
+    QGraphicsTextItem::keyPressEvent(event);
+    if (event->key() == Qt::Key_Delete && textInteractionFlags() != Qt::TextEditorInteraction)
+        emit deleteKeyPressed();
 }
 
 void WeightEdgeTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -182,6 +182,7 @@ void WeightEdgeTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
 void WeightEdgeTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     WeightTextItem::mouseDoubleClickEvent(event);
+    clearFocus();
     setTextInteractionFlags(Qt::TextEditorInteraction);
     setFocus();
 }
@@ -191,3 +192,4 @@ void WeightEdgeTextItem::focusOutEvent(QFocusEvent *event)
     WeightTextItem::focusOutEvent(event);
     setFlag(QGraphicsItem::ItemIsFocusable, true);
 }
+
