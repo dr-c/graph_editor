@@ -46,12 +46,6 @@ void QGraphicsEllipseNode::paint(QPainter *painter, const QStyleOptionGraphicsIt
     }
 }
 
-void QGraphicsEllipseNode::setPen(const QPen &pen)
-{
-    _ellipseItem->setPen(pen);
-    _lineItem->setPen(pen);
-}
-
 void QGraphicsEllipseNode::setFont(const QFont &font, const QColor &color)
 {
     _weightItem->setDefaultTextColor(color);
@@ -65,11 +59,6 @@ void QGraphicsEllipseNode::setBrush(const QBrush &brush)
     _ellipseItem->setBrush(brush);
 }
 
-QPen QGraphicsEllipseNode::pen() const
-{
-    return _ellipseItem->pen();
-}
-
 QFont QGraphicsEllipseNode::font() const
 {
     return _idItem->font();
@@ -80,10 +69,10 @@ QBrush QGraphicsEllipseNode::brush() const
     return _ellipseItem->brush();
 }
 
-bool QGraphicsEllipseNode::intersects(QGraphicsNode *node) const
+bool QGraphicsEllipseNode::intersects(QGraphicsNode *gnode) const
 {
-    QPointF difference = pos() - node->pos();
-    qreal required_distance = _radius + node->radius();
+    QPointF difference = _node->pos() - gnode->node()->pos();
+    qreal required_distance = _radius + gnode->radius();
     return difference.x() * difference.x() + difference.y() * difference.y() <= required_distance * required_distance;
 }
 
@@ -113,6 +102,12 @@ void QGraphicsEllipseNode::setGeometry(const QPointF &centerPos)
     const QRectF id_item_rect = _idItem->boundingRect();
     _idItem->setPos(_radius - shift_to_text_item_center - id_item_rect.width() / 2,
                     _radius - shift_to_text_item_center - id_item_rect.height() / 2);
+}
+
+void QGraphicsEllipseNode::setActivePen(const QPen &pen)
+{
+    _ellipseItem->setPen(pen);
+    _lineItem->setPen(pen);
 }
 
 QPointF QGraphicsEllipseNode::calcIntermediatePoint(const QPointF &toPoint)

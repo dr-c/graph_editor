@@ -7,7 +7,8 @@ QGraphicsRoundedRectNode::QGraphicsRoundedRectNode(WeightedNode *node, qreal lin
       _lineItem(new QGraphicsLineItem(this)),
       _lineShiftCoefficient(checkInRange(lineShiftCoef, 0.5, 1.)),
       _roundingCoefficient(checkInRange(roundingCoef, 0., 0.3)),
-      _roundingRadius(_roundingCoefficient * _radius)
+      _roundingRadius(_roundingCoefficient * _radius),
+      _pen(pen())
 {
     setGeometry(_node->pos());
 }
@@ -49,12 +50,6 @@ void QGraphicsRoundedRectNode::paint(QPainter *painter, const QStyleOptionGraphi
     painter->drawRoundedRect(0, 0, diameter, diameter, _roundingRadius, _roundingRadius);
 }
 
-void QGraphicsRoundedRectNode::setPen(const QPen &pen)
-{
-    _pen = pen;
-    _lineItem->setPen(pen);
-}
-
 void QGraphicsRoundedRectNode::setFont(const QFont &font, const QColor &color)
 {
     _weightItem->setFont(font);
@@ -69,11 +64,6 @@ void QGraphicsRoundedRectNode::setBrush(const QBrush &brush)
     update(boundingRect());
 }
 
-QPen QGraphicsRoundedRectNode::pen() const
-{
-    return _pen;
-}
-
 QFont QGraphicsRoundedRectNode::font() const
 {
     return _idItem->font();
@@ -84,10 +74,10 @@ QBrush QGraphicsRoundedRectNode::brush() const
     return _brush;
 }
 
-bool QGraphicsRoundedRectNode::intersects(QGraphicsNode *node) const
+bool QGraphicsRoundedRectNode::intersects(QGraphicsNode *gnode) const
 {
-    QPointF difference = pos() - node->pos();
-    qreal required_distance = _radius + node->radius();
+    QPointF difference = pos() - gnode->pos();
+    qreal required_distance = _radius + gnode->radius();
     return abs(difference.x()) <= required_distance && abs(difference.y()) <= required_distance;
 }
 
@@ -125,6 +115,13 @@ void QGraphicsRoundedRectNode::setGeometry(const QPointF &centerPos)
     const qreal shift_to_id_item_center = (_radius * (2 - _lineShiftCoefficient) + _roundingRadius) / 2;
     _idItem->setPos(shift_to_id_item_center - id_item_rect.width() / 2,
                     shift_to_id_item_center - id_item_rect.height() / 2);
+}
+
+void QGraphicsRoundedRectNode::setActivePen(const QPen &pen)
+{
+    _pen = pen;
+    _lineItem->setPen(_pen);
+    update(boundingRect());
 }
 
 void QGraphicsRoundedRectNode::calcRadius(int weight)

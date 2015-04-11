@@ -2,6 +2,7 @@
 #define QGRAPHICSNODE_H
 
 #include <QGraphicsObject>
+#include <QPen>
 
 #include "item_info.h"
 
@@ -18,15 +19,21 @@ public:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0) = 0;
     virtual QPointF calcIntermediatePoint(const QPointF &toPoint) = 0;
 
-    virtual void setPen(const QPen &pen) = 0;
     virtual void setFont(const QFont &font, const QColor &color = Qt::black) = 0;
     virtual void setBrush(const QBrush &brush) = 0;
 
-    virtual QPen pen() const = 0;
     virtual QFont font() const = 0;
     virtual QBrush brush() const = 0;
-    virtual bool intersects(QGraphicsNode *node) const = 0;
+    virtual bool intersects(QGraphicsNode *gnode) const = 0;
     virtual QPainterPath shape() const = 0;
+
+    virtual void setActivePen(const QPen &pen) = 0;
+
+    void setPen(const QPen &pen);
+    QPen pen() const;
+
+    void setHoverPen(const QPen &pen);
+    QPen hoverPen() const;
 
     qreal radius() const;
     WeightedNode *node() const;
@@ -45,13 +52,18 @@ protected:
     virtual void        mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
     virtual void        keyPressEvent(QKeyEvent *event) override;
     virtual QVariant    itemChange(GraphicsItemChange change, const QVariant &value) override;
+    virtual void        hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    virtual void        hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
     WeightedNode *_node;
 
     WeightTextItem          *_weightItem;
     QGraphicsSimpleTextItem *_idItem;
 
-    qreal _radius;
+    qreal   _radius;
+
+    QPen    _simplePen;
+    QPen    _hoverPen;
 
 private:
     void updateRelatedEdges();

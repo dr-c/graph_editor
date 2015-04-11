@@ -69,6 +69,7 @@ public:
 
 private:
     static QGraphicsItem *findNodeInAncestors(QGraphicsItem *item, int type);
+    static void toggleAcceptHoverEvent(QGraphicsNode *gNode, bool enable);
 
     void reset();
 

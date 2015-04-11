@@ -9,7 +9,9 @@ QGraphicsNode::QGraphicsNode(WeightedNode *node, QGraphicsItem *parent)
     : QGraphicsObject(parent),
       _node(node),
       _weightItem(new WeightTextItem(_node->weight(), this)),
-      _idItem(new QGraphicsSimpleTextItem(QString::number(_node->id()), this))
+      _idItem(new QGraphicsSimpleTextItem(QString::number(_node->id()), this)),
+      _simplePen(QPen(QColor(Qt::black))),
+      _hoverPen(QPen(QColor(Qt::red)))
 {
     _node->setGraphicsNode(this);
     calcRadius(_node->weight());
@@ -36,6 +38,27 @@ void QGraphicsNode::deleteCompletely()
     delete this;
 }
 
+void QGraphicsNode::setPen(const QPen &pen)
+{
+    _simplePen = pen;
+    setActivePen(_simplePen);
+}
+
+QPen QGraphicsNode::pen() const
+{
+    return _simplePen;
+}
+
+void QGraphicsNode::setHoverPen(const QPen &pen)
+{
+    _hoverPen = pen;
+}
+
+QPen QGraphicsNode::hoverPen() const
+{
+    return _hoverPen;
+}
+
 qreal QGraphicsNode::radius() const
 {
     return _radius;
@@ -48,10 +71,11 @@ WeightedNode *QGraphicsNode::node() const
 
 void QGraphicsNode::setWeight(int weight)
 {
-    _node->setWeight(weight);
+    const QPointF center = _node->pos();
     calcRadius(weight);
-    setGeometry(_node->pos());
+    setGeometry(center);
     updateRelatedEdges();
+    _node->setWeight(weight);
 }
 
 void QGraphicsNode::calcRadius(int weight)
@@ -73,6 +97,7 @@ void QGraphicsNode::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Delete)
         deleteCompletely();
+    QGraphicsObject::keyPressEvent(event);
 }
 
 QVariant QGraphicsNode::itemChange(GraphicsItemChange change, const QVariant &value)
@@ -84,6 +109,18 @@ QVariant QGraphicsNode::itemChange(GraphicsItemChange change, const QVariant &va
     }
 
     return QGraphicsObject::itemChange(change, value);
+}
+
+void QGraphicsNode::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    setActivePen(_hoverPen);
+    QGraphicsObject::hoverEnterEvent(event);
+}
+
+void QGraphicsNode::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    setActivePen(_simplePen);
+    QGraphicsObject::hoverLeaveEvent(event);
 }
 
 void QGraphicsNode::updateRelatedEdges()

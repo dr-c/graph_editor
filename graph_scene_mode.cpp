@@ -95,6 +95,8 @@ void PencilMode::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     {
         _mousePressedPoint = mouseEvent->scenePos();
         _mousePressedItem = dynamic_cast<QGraphicsNode*>(cur_item);
+        if (_firstClickedItem == nullptr)
+            toggleAcceptHoverEvent(_mousePressedItem, false);
         assert(_mousePressedItem != nullptr);
     }
 }
@@ -105,6 +107,8 @@ void PencilMode::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
             ((_mousePressedPoint.x() - mouseEvent->scenePos().x()) > 5 ||
              (_mousePressedPoint.y() - mouseEvent->scenePos().y()) > 5))
     {
+        if (_firstClickedItem == nullptr)
+            toggleAcceptHoverEvent(_mousePressedItem, true);
         _mousePressedItem = nullptr;
     }
 
@@ -153,6 +157,7 @@ void PencilMode::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     {
         if (_firstClickedItem != _mousePressedItem && !_firstClickedItem->node()->hasSuccessor(_mousePressedItem->node()))
         {
+            toggleAcceptHoverEvent(_firstClickedItem, true);
             _arrowItem->join(_firstClickedItem, _mousePressedItem);
             _arrowItem->showWeight();
             reset();
@@ -164,6 +169,7 @@ void PencilMode::keyPressEvent(QKeyEvent *keyEvent)
 {
     if (keyEvent->key() == Qt::Key_Escape)
     {
+        toggleAcceptHoverEvent(_firstClickedItem, true);
         if (_arrowItem != nullptr)
             _arrowItem->deleteCompletely();
         reset();
@@ -182,4 +188,14 @@ QGraphicsItem *PencilMode::findNodeInAncestors(QGraphicsItem *item, int type)
     while (item != nullptr && item->type() != type)
         item = item->parentItem();
     return item;
+}
+
+void PencilMode::toggleAcceptHoverEvent(QGraphicsNode *gNode, bool enable)
+{
+    if (enable)
+        gNode->setActivePen(gNode->pen());
+
+    gNode->setAcceptHoverEvents(enable);
+    for (auto pair : gNode->node()->successors())
+        pair.first->graphicsNode()->setAcceptHoverEvents(enable);
 }
