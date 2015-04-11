@@ -4,6 +4,7 @@
 #include "weight_text_item.h"
 
 #include <QPen>
+#include <QFont>
 #include <QKeyEvent>
 
 QGraphicsEdge::QGraphicsEdge(WeightedEdge *edge, QGraphicsItem *parent)
@@ -13,6 +14,10 @@ QGraphicsEdge::QGraphicsEdge(WeightedEdge *edge, QGraphicsItem *parent)
 {
     _edge->setGraphicsEdge(this);
     setZValue(0.);
+
+    QPen pen;
+    pen.setWidth(2);
+    setPen(pen);
 
     _weightItem->hide();
 
@@ -33,6 +38,28 @@ void QGraphicsEdge::deleteCompletely()
 WeightedEdge *QGraphicsEdge::edge() const
 {
     return _edge;
+}
+
+void QGraphicsEdge::setFont(const QFont &font, const QColor &color)
+{
+    _weightItem->setFont(font);
+    _weightItem->setDefaultTextColor(color);
+}
+
+void QGraphicsEdge::setBrush(const QBrush &brush)
+{
+    QGraphicsPathItem::setBrush(brush);
+    _weightItem->setBrush(brush);
+}
+
+QFont QGraphicsEdge::font() const
+{
+    return _weightItem->font();
+}
+
+QBrush QGraphicsEdge::brush() const
+{
+    return QGraphicsPathItem::brush();
 }
 
 void QGraphicsEdge::join(QGraphicsNode *fromNode, QGraphicsNode *toNode)

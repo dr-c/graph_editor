@@ -49,14 +49,16 @@ public:
     void placeInCenter();
     QPointF center() const;
 
+    void setBrush(const QBrush &brush);
+    QBrush brush() const;
+
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     QPointF _center;
-
-    static const QBrush backgroundBrush;
+    QBrush  _backgroundBrush;
 };
 
 #endif // WEIGHTTEXTITEM_H

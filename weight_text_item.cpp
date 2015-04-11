@@ -131,10 +131,8 @@ void WeightTextItem::init()
     connect(document(), SIGNAL(contentsChanged()), this, SLOT(validateContentsChanging()));
 }
 
-const QBrush WeightEdgeTextItem::backgroundBrush = QBrush(QColor(Qt::white));
-
 WeightEdgeTextItem::WeightEdgeTextItem(QGraphicsItem *parent)
-    : WeightTextItem(parent)
+    : WeightTextItem(parent), _backgroundBrush(QBrush(QColor(Qt::white)))
 {
 
 }
@@ -161,9 +159,19 @@ QPointF WeightEdgeTextItem::center() const
     return _center;
 }
 
+void WeightEdgeTextItem::setBrush(const QBrush &brush)
+{
+    _backgroundBrush = brush;
+}
+
+QBrush WeightEdgeTextItem::brush() const
+{
+    return _backgroundBrush;
+}
+
 void WeightEdgeTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->setBrush(backgroundBrush);
+    painter->setBrush(_backgroundBrush);
     painter->drawRect(boundingRect());
     WeightTextItem::paint(painter, option, widget);
 }

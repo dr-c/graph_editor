@@ -20,6 +20,12 @@ public:
     virtual void draw(QGraphicsNode *fromNode, QGraphicsNode *toNode) = 0;
     virtual void draw(QGraphicsNode *fromNode, const QPointF &toPoint) = 0;
 
+    void setFont(const QFont &font, const QColor &color = Qt::black);
+    void setBrush(const QBrush &brush);
+
+    QFont font() const;
+    QBrush brush() const;
+
     void join(QGraphicsNode *fromNode, QGraphicsNode *toNode);
     void refresh();
     void showWeight();
