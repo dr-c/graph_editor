@@ -76,7 +76,7 @@ QBrush QGraphicsRoundedRectNode::brush() const
 
 bool QGraphicsRoundedRectNode::intersects(QGraphicsNode *gnode) const
 {
-    QPointF difference = pos() - gnode->pos();
+    QPointF difference = _node->pos() - gnode->node()->pos();
     qreal required_distance = _radius + gnode->radius();
     return abs(difference.x()) <= required_distance && abs(difference.y()) <= required_distance;
 }
