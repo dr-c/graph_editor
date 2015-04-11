@@ -22,6 +22,7 @@ QGraphicsEdge::QGraphicsEdge(WeightedEdge *edge, QGraphicsItem *parent)
     _weightItem->hide();
 
     connect(_weightItem, SIGNAL(textChanged(int)), this, SLOT(setWeight(int)));
+    connect(_weightItem, SIGNAL(deleteKeyPressed()), this, SLOT(deleteCompletely()));
 }
 
 QGraphicsEdge::~QGraphicsEdge()
@@ -104,13 +105,9 @@ void QGraphicsEdge::refresh()
     }
 }
 
-void QGraphicsEdge::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_UNUSED(event);
-}
-
 void QGraphicsEdge::keyPressEvent(QKeyEvent *event)
 {
+    QGraphicsPathItem::keyPressEvent(event);
     if (event->key() == Qt::Key_Delete)
         deleteCompletely();
 }
@@ -125,6 +122,11 @@ void QGraphicsEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     QGraphicsPathItem::setPen(_simplePen);
     QGraphicsPathItem::hoverLeaveEvent(event);
+}
+
+void QGraphicsEdge::focusInEvent(QFocusEvent *event)
+{
+    _weightItem->setFocus();
 }
 
 void QGraphicsEdge::showWeight()

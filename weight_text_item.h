@@ -18,10 +18,9 @@ public:
     virtual int type() const;
 
 protected:
-    virtual void focusInEvent(QFocusEvent *event);
-    virtual void focusOutEvent(QFocusEvent *event);
-    virtual void keyPressEvent(QKeyEvent *event);
-    virtual void keyReleaseEvent(QKeyEvent *event);
+    virtual void focusInEvent(QFocusEvent *event) override;
+    virtual void focusOutEvent(QFocusEvent *event) override;
+    virtual void keyPressEvent(QKeyEvent *event) override;
 
 signals:
     void textChanged(int);
@@ -41,6 +40,8 @@ private:
 
 class WeightEdgeTextItem : public WeightTextItem
 {
+    Q_OBJECT
+
 public:
     WeightEdgeTextItem(QGraphicsItem *parent = 0);
     WeightEdgeTextItem(const QString &text, QGraphicsItem *parent = 0);
@@ -52,9 +53,14 @@ public:
     void setBrush(const QBrush &brush);
     QBrush brush() const;
 
+signals:
+    void deleteKeyPressed();
+
 protected:
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    virtual void keyPressEvent(QKeyEvent *event) override;
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void focusOutEvent(QFocusEvent *event) override;
 
 private:
     QPointF _center;

@@ -5,6 +5,8 @@
 #include <QFocusEvent>
 #include <QPainter>
 
+#include <QDebug>
+
 WeightTextItem::WeightTextItem(QGraphicsItem *parent)
     : QGraphicsTextItem(parent)
 {
@@ -114,18 +116,6 @@ void WeightTextItem::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void WeightTextItem::keyReleaseEvent(QKeyEvent *event)
-{
-    switch (event->key())
-    {
-    case Qt::Key_Escape:
-    case Qt::Key_Return:
-        break;
-    default:
-        QGraphicsTextItem::keyReleaseEvent(event);
-    }
-}
-
 void WeightTextItem::init()
 {
     connect(document(), SIGNAL(contentsChanged()), this, SLOT(validateContentsChanging()));
@@ -134,13 +124,13 @@ void WeightTextItem::init()
 WeightEdgeTextItem::WeightEdgeTextItem(QGraphicsItem *parent)
     : WeightTextItem(parent), _backgroundBrush(QBrush(QColor(Qt::white)))
 {
-
+    setFlag(QGraphicsItem::ItemIsFocusable, true);
 }
 
 WeightEdgeTextItem::WeightEdgeTextItem(const QString &text, QGraphicsItem *parent)
     : WeightTextItem(text, parent)
 {
-
+    setFlag(QGraphicsItem::ItemIsFocusable, true);
 }
 
 void WeightEdgeTextItem::calcCenterPoint(const QRectF &rect)
@@ -169,6 +159,19 @@ QBrush WeightEdgeTextItem::brush() const
     return _backgroundBrush;
 }
 
+void WeightEdgeTextItem::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key())
+    {
+    case Qt::Key_Delete:
+        if (textInteractionFlags() == Qt::NoTextInteraction)
+            emit deleteKeyPressed();
+        break;
+    default:
+        QGraphicsTextItem::keyPressEvent(event);
+    }
+}
+
 void WeightEdgeTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setBrush(_backgroundBrush);
@@ -181,4 +184,10 @@ void WeightEdgeTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     WeightTextItem::mouseDoubleClickEvent(event);
     setTextInteractionFlags(Qt::TextEditorInteraction);
     setFocus();
+}
+
+void WeightEdgeTextItem::focusOutEvent(QFocusEvent *event)
+{
+    WeightTextItem::focusOutEvent(event);
+    setFlag(QGraphicsItem::ItemIsFocusable, true);
 }

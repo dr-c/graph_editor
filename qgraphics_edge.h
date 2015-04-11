@@ -15,7 +15,6 @@ class QGraphicsEdge : public QObject, public QGraphicsPathItem
 
 public:
     virtual ~QGraphicsEdge() override;
-    void deleteCompletely();
 
     virtual int type() const = 0;
     virtual void draw(QGraphicsNode *fromNode, QGraphicsNode *toNode) = 0;
@@ -39,13 +38,16 @@ public:
 
     WeightedEdge *edge() const;
 
+public slots:
+    void deleteCompletely();
+
 protected:
     QGraphicsEdge(WeightedEdge *edge, QGraphicsItem *parent = 0);
 
-    virtual void        mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
     virtual void        keyPressEvent(QKeyEvent *event) override;
     virtual void        hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     virtual void        hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+    virtual void        focusInEvent(QFocusEvent *event) override;
 
     WeightedEdge        *_edge;
     WeightEdgeTextItem  *_weightItem;
