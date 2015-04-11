@@ -19,13 +19,18 @@ class Node : public N
     friend Graph<N, E>::~Graph<N, E>();
 
 public:
-    virtual void addSuccessor(Node<N, E> *node, Edge<N, E> *edge) = 0;
-    virtual bool hasSuccessor(Node<N, E> *node) = 0;
-    virtual void removeSuccessor(Node<N, E> *node) = 0;
+    typedef std::map<Node<N, E>*, Edge<N, E>*>  map;
+    typedef const map&  map_ref;
 
-    virtual void addPredecessor(Node<N, E> *node, Edge<N, E> *edge) = 0;
-    virtual bool hasPredecessor(Node<N, E> *node) = 0;
-    virtual void removePredecessor(Node<N, E> *node) = 0;
+    virtual void    addSuccessor(Node<N, E> *node, Edge<N, E> *edge) = 0;
+    virtual bool    hasSuccessor(Node<N, E> *node) = 0;
+    virtual void    removeSuccessor(Node<N, E> *node) = 0;
+    virtual map_ref successors() const = 0;
+
+    virtual void    addPredecessor(Node<N, E> *node, Edge<N, E> *edge) = 0;
+    virtual bool    hasPredecessor(Node<N, E> *node) = 0;
+    virtual void    removePredecessor(Node<N, E> *node) = 0;
+    virtual map_ref predecessors() const = 0;
 
     virtual void for_each(void (*funct)(std::pair<Node<N, E>* const, Edge<N, E>*>&)) = 0;
 
@@ -55,6 +60,9 @@ class DirectedNode : public Node<N, E>
 {
     friend Node<N, E> *DirectedGraph<N, E>::createNode();
 
+    using typename Node<N, E>::map;
+    using typename Node<N, E>::map_ref;
+
 public:
     virtual void addSuccessor(Node<N, E> *node, Edge<N, E> *edge) override {
         assert(_successors.find(node) == _successors.end());
@@ -70,6 +78,10 @@ public:
         _successors.erase(node);
     }
 
+    virtual map_ref successors() const override {
+        return _successors;
+    }
+
     virtual void addPredecessor(Node<N, E> *node, Edge<N, E> *edge) override {
         assert(_predecessors.find(node) == _predecessors.end());
         _predecessors.insert(std::make_pair(node, edge));
@@ -82,6 +94,10 @@ public:
     virtual void removePredecessor(Node<N, E> *node) override {
         assert(_predecessors.find(node) != _predecessors.end());
         _predecessors.erase(node);
+    }
+
+    virtual map_ref predecessors() const override {
+        return _predecessors;
     }
 
     virtual void for_each(void (*funct)(std::pair<Node<N, E>* const, Edge<N, E>*>&)) override {
@@ -100,14 +116,17 @@ protected:
     }
 
 private:
-    std::map<Node<N, E>*, Edge<N, E>*> _successors;
-    std::map<Node<N, E>*, Edge<N, E>*> _predecessors;
+    map _successors;
+    map _predecessors;
 };
 
 template<typename N, typename E>
 class UndirectedNode : public Node<N, E>
 {
     friend Node<N, E> *UndirectedGraph<N, E>::createNode();
+
+    using typename Node<N, E>::map;
+    using typename Node<N, E>::map_ref;
 
 public:
     virtual void addSuccessor(Node<N, E> *node, Edge<N, E> *edge) override {
@@ -124,6 +143,10 @@ public:
         _adjacents.erase(node);
     }
 
+    virtual map_ref successors() const override {
+        return _adjacents;
+    }
+
     virtual void addPredecessor(Node<N, E> *node, Edge<N, E> *edge) override {
         assert(_adjacents.find(node) == _adjacents.end());
         _adjacents.insert(std::make_pair(node, edge));
@@ -136,6 +159,10 @@ public:
     virtual void removePredecessor(Node<N, E> *node) override {
         assert(_adjacents.find(node) != _adjacents.end());
         _adjacents.erase(node);
+    }
+
+    virtual map_ref predecessors() const override {
+        return _adjacents;
     }
 
     virtual void for_each(void (*funct)(std::pair<Node<N, E>* const, Edge<N, E>*>&)) override {
@@ -151,7 +178,7 @@ protected:
     }
 
 private:
-    std::map<Node<N, E>*, Edge<N, E>*> _adjacents;
+    map _adjacents;
 };
 
 #endif // NODE_H
