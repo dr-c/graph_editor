@@ -10,14 +10,14 @@
 QGraphicsEdge::QGraphicsEdge(WeightedEdge *edge, QGraphicsItem *parent)
     : QGraphicsPathItem(parent),
       _edge(edge),
-      _weightItem(new WeightEdgeTextItem(QString::number(_edge->weight()), this))
+      _weightItem(new WeightEdgeTextItem(QString::number(_edge->weight()), this)),
+      _simplePen(QPen(QColor(Qt::black))),
+      _hoverPen(QPen(QColor(Qt::red)))
 {
     _edge->setGraphicsEdge(this);
     setZValue(0.);
 
-    QPen pen;
-    pen.setWidth(2);
-    setPen(pen);
+    QGraphicsPathItem::setPen(_simplePen);
 
     _weightItem->hide();
 
@@ -46,20 +46,41 @@ void QGraphicsEdge::setFont(const QFont &font, const QColor &color)
     _weightItem->setDefaultTextColor(color);
 }
 
+QFont QGraphicsEdge::font() const
+{
+    return _weightItem->font();
+}
+
 void QGraphicsEdge::setBrush(const QBrush &brush)
 {
     QGraphicsPathItem::setBrush(brush);
     _weightItem->setBrush(brush);
 }
 
-QFont QGraphicsEdge::font() const
-{
-    return _weightItem->font();
-}
-
 QBrush QGraphicsEdge::brush() const
 {
     return QGraphicsPathItem::brush();
+}
+
+void QGraphicsEdge::setPen(const QPen &pen)
+{
+    _simplePen = pen;
+    QGraphicsPathItem::setPen(_simplePen);
+}
+
+QPen QGraphicsEdge::pen() const
+{
+    return _simplePen;
+}
+
+void QGraphicsEdge::setHoverPen(const QPen &pen)
+{
+    _hoverPen = pen;
+}
+
+QPen QGraphicsEdge::hoverPen() const
+{
+    return _hoverPen;
 }
 
 void QGraphicsEdge::join(QGraphicsNode *fromNode, QGraphicsNode *toNode)
@@ -92,6 +113,18 @@ void QGraphicsEdge::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Delete)
         deleteCompletely();
+}
+
+void QGraphicsEdge::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    QGraphicsPathItem::setPen(_hoverPen);
+    QGraphicsPathItem::hoverEnterEvent(event);
+}
+
+void QGraphicsEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    QGraphicsPathItem::setPen(_simplePen);
+    QGraphicsPathItem::hoverLeaveEvent(event);
 }
 
 void QGraphicsEdge::showWeight()

@@ -8,6 +8,8 @@ BasicGraphScene::BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QOb
     : QGraphicsScene(parent), _graph(graph), _mode(mode),
       _nodePen(QPen(QColor(Qt::blue), 2)),
       _nodeHoverPen(QPen(QColor(Qt::red), 2)),
+      _edgePen(QPen(QColor(Qt::black), 2)),
+      _edgeHoverPen(QPen(QColor(Qt::red), 2)),
       _itemFont(QFont("Times New Roman", 10)),
       _nodeBrush(QBrush(QColor(192, 192, 192, 192))),
       _edgeBrush(QBrush(QColor(192, 192, 192, 255)))
@@ -53,8 +55,11 @@ QGraphicsEdge *BasicGraphScene::addEdge(WeightedEdge *edge)
 {
     assert(edge->graph() == this->_graph);
     QGraphicsEdge *graphics_edge = createGraphicsEdge(edge);
+    graphics_edge->setPen(_edgePen);
     graphics_edge->setFont(_itemFont);
     graphics_edge->setBrush(_edgeBrush);
+    graphics_edge->setHoverPen(_edgeHoverPen);
+    graphics_edge->setAcceptHoverEvents(false);
     graphics_edge->setFlags(QGraphicsItem::ItemIsFocusable);
     addItem(graphics_edge);
     return graphics_edge;

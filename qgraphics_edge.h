@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QGraphicsPathItem>
+#include <QPen>
 
 #include "item_info.h"
 
@@ -21,10 +22,16 @@ public:
     virtual void draw(QGraphicsNode *fromNode, const QPointF &toPoint) = 0;
 
     void setFont(const QFont &font, const QColor &color = Qt::black);
-    void setBrush(const QBrush &brush);
-
     QFont font() const;
+
+    void setBrush(const QBrush &brush);
     QBrush brush() const;
+
+    void setPen(const QPen &pen);
+    QPen pen() const;
+
+    void setHoverPen(const QPen &pen);
+    QPen hoverPen() const;
 
     void join(QGraphicsNode *fromNode, QGraphicsNode *toNode);
     void refresh();
@@ -35,11 +42,16 @@ public:
 protected:
     QGraphicsEdge(WeightedEdge *edge, QGraphicsItem *parent = 0);
 
-    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
-    virtual void keyPressEvent(QKeyEvent *event) override;
+    virtual void        mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void        keyPressEvent(QKeyEvent *event) override;
+    virtual void        hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    virtual void        hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
     WeightedEdge        *_edge;
     WeightEdgeTextItem  *_weightItem;
+
+    QPen    _simplePen;
+    QPen    _hoverPen;
 
 private slots:
     void setWeight(int weight);

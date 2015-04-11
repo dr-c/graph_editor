@@ -53,6 +53,8 @@ private:
 
     QPen    _nodePen;
     QPen    _nodeHoverPen;
+    QPen    _edgePen;
+    QPen    _edgeHoverPen;
     QFont   _itemFont;
     QBrush  _nodeBrush;
     QBrush  _edgeBrush;
