@@ -27,12 +27,16 @@ QGraphicsEdge::QGraphicsEdge(WeightedEdge *edge, QGraphicsItem *parent)
 
 QGraphicsEdge::~QGraphicsEdge()
 {
-    _edge->setGraphicsEdge(nullptr);
+    if (_edge != nullptr)
+        _edge->setGraphicsEdge(nullptr);
 }
 
 void QGraphicsEdge::deleteCompletely()
 {
+    int weight = _edge->weight();
     _edge->remove();
+    _edge = nullptr;
+    emit removed(weight);
     delete this;
 }
 
@@ -84,10 +88,21 @@ QPen QGraphicsEdge::hoverPen() const
     return _hoverPen;
 }
 
+void QGraphicsEdge::setPenTransparency(int minWeight, int maxWeight)
+{
+    const qreal d_weight = maxWeight - minWeight;
+    const qreal alpha = (d_weight == 0) ? 1 : 0.3 + (_edge->weight() - minWeight) / d_weight * 0.7;
+    QColor color = _simplePen.color();
+    color.setAlphaF(alpha);
+    _simplePen.setColor(color);
+    setPen(_simplePen);
+}
+
 void QGraphicsEdge::join(QGraphicsNode *fromNode, QGraphicsNode *toNode)
 {
     _edge->setNodes(fromNode->node(), toNode->node());
     refresh();
+    emit created(this);
 }
 
 void QGraphicsEdge::refresh()
@@ -126,6 +141,7 @@ void QGraphicsEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 void QGraphicsEdge::focusInEvent(QFocusEvent *event)
 {
+    QGraphicsPathItem::focusInEvent(event);
     _weightItem->setFocus();
 }
 
@@ -136,6 +152,8 @@ void QGraphicsEdge::showWeight()
 
 void QGraphicsEdge::setWeight(int weight)
 {
+    int old_weight = _edge->weight();
     _edge->setWeight(weight);
     _weightItem->placeInCenter();
+    emit changed(old_weight, this);
 }

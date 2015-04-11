@@ -25,16 +25,18 @@ QGraphicsNode::~QGraphicsNode()
 {
     delete _idItem;
     delete _weightItem;
-    _node->setGraphicsNode(nullptr);
+    if (_node != nullptr)
+        _node->setGraphicsNode(nullptr);
 }
 
 void QGraphicsNode::deleteCompletely()
 {
     _node->for_each([](std::pair<WeightedNode* const, WeightedEdge*>& pair){
         if (pair.second->graphicsEdge() != nullptr)
-            delete pair.second->graphicsEdge();
+            pair.second->graphicsEdge()->deleteCompletely();
     });
     _node->remove();
+    _node = nullptr;
     delete this;
 }
 
@@ -95,9 +97,9 @@ void QGraphicsNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 void QGraphicsNode::keyPressEvent(QKeyEvent *event)
 {
+    QGraphicsObject::keyPressEvent(event);
     if (event->key() == Qt::Key_Delete)
         deleteCompletely();
-    QGraphicsObject::keyPressEvent(event);
 }
 
 QVariant QGraphicsNode::itemChange(GraphicsItemChange change, const QVariant &value)

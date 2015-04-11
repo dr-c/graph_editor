@@ -32,11 +32,17 @@ public:
     void setHoverPen(const QPen &pen);
     QPen hoverPen() const;
 
+    void setPenTransparency(int minWeight, int maxWeight);
     void join(QGraphicsNode *fromNode, QGraphicsNode *toNode);
     void refresh();
     void showWeight();
 
     WeightedEdge *edge() const;
+
+signals:
+    void created(QGraphicsEdge *gEdge);
+    void changed(int from, QGraphicsEdge *gEdge);
+    void removed(int weight);
 
 public slots:
     void deleteCompletely();

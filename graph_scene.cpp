@@ -61,6 +61,9 @@ QGraphicsEdge *BasicGraphScene::addEdge(WeightedEdge *edge)
     graphics_edge->setHoverPen(_edgeHoverPen);
     graphics_edge->setAcceptHoverEvents(false);
     graphics_edge->setFlags(QGraphicsItem::ItemIsFocusable);
+    connect(graphics_edge, SIGNAL(created(QGraphicsEdge*)), this, SLOT(calcEdgesTransparencyOnCreate(QGraphicsEdge*)));
+    connect(graphics_edge, SIGNAL(changed(int,QGraphicsEdge *)), this, SLOT(calcEdgesTransparencyOnChange(int,QGraphicsEdge *)));
+    connect(graphics_edge, SIGNAL(removed(int)), this, SLOT(calcEdgesTransparencyOnDelete(int)));
     addItem(graphics_edge);
     return graphics_edge;
 }
@@ -81,6 +84,58 @@ void BasicGraphScene::setMode(GraphSceneMode *mode)
     _mode = mode;
     for (auto pair : _graph->nodes())
         _mode->setItemFlags(pair.second->graphicsNode());
+}
+
+void BasicGraphScene::calcEdgesTransparencyOnCreate(QGraphicsEdge *gEdge)
+{
+    if (gEdge->edge()->weight() <= _maxEdgeWeight && gEdge->edge()->weight() >= _minEdgeWeight)
+        gEdge->setPenTransparency(_minEdgeWeight, _maxEdgeWeight);
+    else
+        calcEdgesWeightRange();
+}
+
+void BasicGraphScene::calcEdgesTransparencyOnChange(int fromWeight, QGraphicsEdge *gEdge)
+{
+    if (fromWeight != _minEdgeWeight && fromWeight != _maxEdgeWeight &&
+            gEdge->edge()->weight() <= _maxEdgeWeight && gEdge->edge()->weight() >= _minEdgeWeight)
+        return;
+
+    if (!calcEdgesWeightRange())
+        gEdge->setPenTransparency(_minEdgeWeight, _maxEdgeWeight);
+}
+
+void BasicGraphScene::calcEdgesTransparencyOnDelete(int weight)
+{
+    if (_graph->edges().empty() ||
+            _minEdgeWeight == _maxEdgeWeight ||
+            (weight != _minEdgeWeight && weight != _maxEdgeWeight))
+        return;
+
+    calcEdgesWeightRange();
+}
+
+bool BasicGraphScene::calcEdgesWeightRange()
+{
+    int min_weight = std::numeric_limits<int>::max();
+    int max_weight = std::numeric_limits<int>::min();
+
+    for (auto edge : _graph->edges())
+    {
+        if (edge->weight() < min_weight)
+            min_weight = edge->weight();
+        if (edge->weight() > max_weight)
+            max_weight = edge->weight();
+    }
+
+    if (min_weight == _minEdgeWeight && max_weight == _maxEdgeWeight)
+        return false;
+
+    _minEdgeWeight = min_weight;
+    _maxEdgeWeight = max_weight;
+
+    for (auto edge : _graph->edges())
+        edge->graphicsEdge()->setPenTransparency(_minEdgeWeight, _maxEdgeWeight);
+    return true;
 }
 
 void BasicGraphScene::setNodePen(const QPen &pen)

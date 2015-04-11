@@ -11,6 +11,8 @@ class GraphSceneMode;
 
 class BasicGraphScene : public QGraphicsScene
 {
+    Q_OBJECT
+
 public:
     virtual ~BasicGraphScene();
 
@@ -47,9 +49,19 @@ protected:
     virtual void    keyPressEvent(QKeyEvent *keyEvent);
     virtual void    keyReleaseEvent(QKeyEvent *keyEvent);
 
+private slots:
+    void calcEdgesTransparencyOnCreate(QGraphicsEdge *gEdge);
+    void calcEdgesTransparencyOnChange(int fromWeight, QGraphicsEdge *gEdge);
+    void calcEdgesTransparencyOnDelete(int weight);
+
 private:
+    bool calcEdgesWeightRange();
+
     WeightedGraph   *_graph;
     GraphSceneMode  *_mode;
+
+    int _minEdgeWeight;
+    int _maxEdgeWeight;
 
     QPen    _nodePen;
     QPen    _nodeHoverPen;
