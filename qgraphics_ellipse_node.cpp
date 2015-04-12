@@ -1,6 +1,7 @@
 #include "qgraphics_ellipse_node.h"
 
 #include "weight_text_item.h"
+#include "qgraphics_edge.h"
 
 #include <QPainter>
 
@@ -112,16 +113,5 @@ void QGraphicsEllipseNode::setActivePen(const QPen &pen)
 
 QPointF QGraphicsEllipseNode::calcIntermediatePoint(const QPointF &toPoint) const
 {
-    QPointF from_point = _node->pos();
-    // y = kx + b, k = dy / dx
-    qreal dx = from_point.x() - toPoint.x();
-    qreal dy = from_point.y() - toPoint.y();
-    if (dx == 0)
-        return QPointF(from_point.x(), from_point.y() + (dy < 0 ? _radius : -_radius));
-
-    qreal k = dy / dx;
-    qreal deltaX = _radius / sqrt(k * k + 1);
-    if (dx > 0)
-        deltaX = -deltaX;
-    return QPointF(from_point.x() + deltaX, from_point.y() + k * deltaX);
+    return QGraphicsEdge::calcIntermediatePoint(_node->pos(), toPoint, _radius);
 }

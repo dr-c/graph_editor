@@ -8,6 +8,7 @@
 #include "qgraphics_rounded_rect_node.h"
 
 #include "qgraphics_simple_line_edge.h"
+#include "qgraphics_cubic_arrow_edge.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -16,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _ui->setupUi(this);
 
     _directedGraph = new DirectedGraph<NodeInfo, EdgeInfo>();
-    _graphScene = new DirectedGraphScene<QGraphicsRoundedRectNode, QGraphicsSimpleLineEdge>(_directedGraph, new PointerMode());
+    _graphScene = new DirectedGraphScene<QGraphicsEllipseNode, QGraphicsCubicArrowEdge>(_directedGraph, new PointerMode());
 
     _ui->graphicsView->setGraphScene(_graphScene);
 }

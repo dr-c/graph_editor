@@ -44,11 +44,16 @@ class WeightEdgeTextItem : public WeightTextItem
     Q_OBJECT
 
 public:
+    enum { Type = UserType + 302 };
+
     WeightEdgeTextItem(QGraphicsItem *parent = 0);
     WeightEdgeTextItem(const QString &text, QGraphicsItem *parent = 0);
     virtual ~WeightEdgeTextItem() override = default;
 
+    virtual int type() const override;
+
     void calcCenterPoint(const QRectF &rect);
+    void setCenterPoint(const QPointF &point);
     void placeInCenter();
     const QPointF &center() const;
 

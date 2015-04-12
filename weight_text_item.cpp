@@ -141,9 +141,19 @@ WeightEdgeTextItem::WeightEdgeTextItem(const QString &text, QGraphicsItem *paren
     setFlag(QGraphicsItem::ItemIsFocusable, true);
 }
 
+int WeightEdgeTextItem::type() const
+{
+    return Type;
+}
+
 void WeightEdgeTextItem::calcCenterPoint(const QRectF &rect)
 {
     _center = rect.center();
+}
+
+void WeightEdgeTextItem::setCenterPoint(const QPointF &point)
+{
+    _center = point;
 }
 
 void WeightEdgeTextItem::placeInCenter()
