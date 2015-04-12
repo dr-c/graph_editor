@@ -42,6 +42,7 @@ QGraphicsNode *BasicGraphScene::addNode(WeightedNode *node)
     graphics_node->setHoverPen(_nodeHoverPen);
     graphics_node->setAcceptHoverEvents(true);
     _mode->setItemFlags(graphics_node);
+    connect(graphics_node, SIGNAL(destroyed()), this, SLOT(calcEdgesWeightRange()));
     addItem(graphics_node);
     return graphics_node;
 }
@@ -108,9 +109,13 @@ void BasicGraphScene::calcEdgesTransparencyOnChange(int fromWeight, QGraphicsEdg
 
 void BasicGraphScene::calcEdgesTransparencyOnDelete(int weight)
 {
-    if (_graph->edges().empty() ||
-            _minEdgeWeight == _maxEdgeWeight ||
-            (weight != _minEdgeWeight && weight != _maxEdgeWeight))
+    if (_graph->edges().empty())
+    {
+        _minEdgeWeight = _maxEdgeWeight = 0;
+        return;
+    }
+
+    if (_minEdgeWeight == _maxEdgeWeight || (weight != _minEdgeWeight && weight != _maxEdgeWeight))
         return;
 
     calcEdgesWeightRange();

@@ -61,9 +61,9 @@ private slots:
     void calcEdgesTransparencyOnCreate(QGraphicsEdge *gEdge);
     void calcEdgesTransparencyOnChange(int fromWeight, QGraphicsEdge *gEdge);
     void calcEdgesTransparencyOnDelete(int weight);
+    bool calcEdgesWeightRange();
 
 private:
-    bool calcEdgesWeightRange();
 
     WeightedGraph   *_graph;
     GraphSceneMode  *_mode;

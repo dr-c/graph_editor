@@ -33,7 +33,7 @@ void QGraphicsNode::deleteCompletely()
 {
     _node->for_each([](std::pair<WeightedNode* const, WeightedEdge*>& pair){
         if (pair.second->graphicsEdge() != nullptr)
-            pair.second->graphicsEdge()->deleteCompletely();
+            delete pair.second->graphicsEdge();
     });
     _node->remove();
     _node = nullptr;
