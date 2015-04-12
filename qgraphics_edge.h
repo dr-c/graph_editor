@@ -23,8 +23,10 @@ public:
     void setFont(const QFont &font, const QColor &color = Qt::black);
     QFont font() const;
 
-    void setBrush(const QBrush &brush);
-    QBrush brush() const;
+    virtual void setBrush(const QBrush &brush);
+    virtual QBrush brush() const;
+
+    virtual void setActivePen(const QPen &pen);
 
     void setPen(const QPen &pen);
     const QPen &pen() const;
@@ -39,6 +41,8 @@ public:
 
     WeightedEdge *edge() const;
 
+    static QPointF calcIntermediatePoint(const QPointF &pointFrom, const QPointF &pointTo, qreal radius);
+
 signals:
     void created(QGraphicsEdge *gEdge);
     void changed(int from, QGraphicsEdge *gEdge);
@@ -50,7 +54,6 @@ public slots:
 protected:
     QGraphicsEdge(WeightedEdge *edge, QGraphicsItem *parent = 0);
 
-    virtual void    keyPressEvent(QKeyEvent *event) override;
     virtual void    hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     virtual void    hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
     virtual void    focusInEvent(QFocusEvent *event) override;

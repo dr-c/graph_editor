@@ -67,10 +67,15 @@ QBrush QGraphicsEdge::brush() const
     return QGraphicsPathItem::brush();
 }
 
+void QGraphicsEdge::setActivePen(const QPen &pen)
+{
+    QGraphicsPathItem::setPen(pen);
+}
+
 void QGraphicsEdge::setPen(const QPen &pen)
 {
     _simplePen = pen;
-    QGraphicsPathItem::setPen(_simplePen);
+    setActivePen(_simplePen);
 }
 
 const QPen &QGraphicsEdge::pen() const
@@ -120,23 +125,16 @@ void QGraphicsEdge::refresh()
     }
 }
 
-void QGraphicsEdge::keyPressEvent(QKeyEvent *event)
-{
-    QGraphicsPathItem::keyPressEvent(event);
-    if (event->key() == Qt::Key_Delete)
-        deleteCompletely();
-}
-
 void QGraphicsEdge::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    QGraphicsPathItem::setPen(_hoverPen);
     QGraphicsPathItem::hoverEnterEvent(event);
+    setActivePen(_hoverPen);
 }
 
 void QGraphicsEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    QGraphicsPathItem::setPen(_simplePen);
     QGraphicsPathItem::hoverLeaveEvent(event);
+    setActivePen(_simplePen);
 }
 
 void QGraphicsEdge::focusInEvent(QFocusEvent *event)
@@ -156,4 +154,19 @@ void QGraphicsEdge::setWeight(int weight)
     _edge->setWeight(weight);
     _weightItem->placeInCenter();
     emit changed(old_weight, this);
+}
+
+QPointF QGraphicsEdge::calcIntermediatePoint(const QPointF &pointFrom, const QPointF &pointTo, qreal radius)
+{
+    // y = kx + b, k = dy / dx
+    qreal dx = pointFrom.x() - pointTo.x();
+    qreal dy = pointFrom.y() - pointTo.y();
+    if (dx == 0)
+        return QPointF(pointFrom.x(), pointFrom.y() + (dy < 0 ? radius : -radius));
+
+    qreal k = dy / dx;
+    qreal deltaX = radius / sqrt(k * k + 1);
+    if (dx > 0)
+        deltaX = -deltaX;
+    return QPointF(pointFrom.x() + deltaX, pointFrom.y() + k * deltaX);
 }
