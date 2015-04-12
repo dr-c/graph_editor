@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     qgraphics_ellipse_node.cpp \
     qgraphics_simple_line_edge.cpp \
     qgraphics_rounded_rect_node.cpp \
-    weight_text_item.cpp
+    weight_text_item.cpp \
+    qgraphics_cubic_arrow_edge.cpp
 
 HEADERS  += mainwindow.h \
     graph.h \
@@ -39,7 +40,8 @@ HEADERS  += mainwindow.h \
     qgraphics_ellipse_node.h \
     qgraphics_simple_line_edge.h \
     qgraphics_rounded_rect_node.h \
-    weight_text_item.h
+    weight_text_item.h \
+    qgraphics_cubic_arrow_edge.h
 
 FORMS    += mainwindow.ui
 
