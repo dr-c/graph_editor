@@ -1,3 +1,25 @@
+/*
+ * Graph - logical representation of a set of objects(nodes),
+ *  where some objects are connected by links (edges).
+ *
+ * Graph stores two sets: Nodes and Edges, which was created by means createNode()/createEdge() methods.
+ * This sets can be accessible via nodes() and edges() respectively.
+ *
+ * Graph is abstract factory for Nodes and Edges.
+ * It provide functionality not only for creating(createNode()/createEdge()),
+ *  but also and deleting(remove(Node*)/remove(Edge*)) Nodes and Edges.
+ * Deleting may be accomplished from Node/edge directly via remove(). It`s actualy the same.
+ *
+ * Template parameters indicate types of Nodes and Edges.
+ * <E> must be a class with default constructor and virtual destructor. Edges inherite from <E>.
+ * <N> must be a class with default constructor and virtual destructor. Nodes inherite from <N>.
+ *
+ * Graph deletion deletes all nodes and edges.
+ *
+ * DirectedGraph different from UndirectedGraph in createNode() method.
+ * First create DirectedNode, second - UndirectedNode.
+ */
+
 #ifndef GRAPH_H
 #define GRAPH_H
 

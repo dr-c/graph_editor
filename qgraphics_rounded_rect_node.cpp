@@ -5,8 +5,8 @@
 QGraphicsRoundedRectNode::QGraphicsRoundedRectNode(WeightedNode *node, qreal lineShiftCoef, qreal roundingCoef, QGraphicsItem *parent)
     : QGraphicsNode(node, parent),
       _lineItem(new QGraphicsLineItem(this)),
-      _lineShiftCoefficient(checkInRange(lineShiftCoef, 0.5, 1.)),
-      _roundingCoefficient(checkInRange(roundingCoef, 0., 0.3)),
+      _lineShiftCoefficient(checkInRange(lineShiftCoef, minLineShiftCoef, maxLineShiftCoef)),
+      _roundingCoefficient(checkInRange(roundingCoef, minRoundingCoef, maxRoundingCoef)),
       _roundingRadius(_roundingCoefficient * _radius),
       _pen(pen())
 {
@@ -91,8 +91,8 @@ QPainterPath QGraphicsRoundedRectNode::shape() const
 
 void QGraphicsRoundedRectNode::setCoefficients(qreal lineShiftCoef, qreal roundingCoef)
 {
-    _lineShiftCoefficient = checkInRange(lineShiftCoef, 0.5, 1.);
-    _roundingCoefficient = checkInRange(roundingCoef, 0., 0.3);
+    _lineShiftCoefficient = checkInRange(lineShiftCoef, minLineShiftCoef, maxLineShiftCoef);
+    _roundingCoefficient = checkInRange(roundingCoef, minRoundingCoef, maxRoundingCoef);
     _roundingRadius = _roundingCoefficient * _radius;
     setGeometry(_node->pos());
 }

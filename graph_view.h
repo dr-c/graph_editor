@@ -1,3 +1,8 @@
+/*
+ * The GraphView class provides a widget for displaying the contents of a BasicGraphScene.
+ *
+ * GraphView is wrapper on QGraphicsView, which provides easy access to BasicGraphScene.
+ */
 #ifndef GRAPHVIEW_H
 #define GRAPHVIEW_H
 

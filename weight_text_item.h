@@ -1,3 +1,14 @@
+/*
+ * WeightTextItem - item for displaying weigth of QGraphicsNode.
+ *
+ * It can manipulate with positive integer numbers(until 3 digits).
+ * When text changed, it emits textChanged(new_weight) signal.
+ *
+ * WeightEdgeTextItem - item for displaying weigth of QGraphicsEdge.
+ * WeightEdgeTextItem is the same as WeightTextItem, but it has background for painting
+ *  and can emit deleteKeyPressed() when text field has focus and key_delete pressed.
+ */
+
 #ifndef WEIGHTTEXTITEM_H
 #define WEIGHTTEXTITEM_H
 

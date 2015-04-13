@@ -1,3 +1,10 @@
+/*
+ * QGraphicsCubicArrowEdge - curve(based on cubic Bezier) with triangle at the end(arrow).
+ *
+ * QGraphicsCubicArrowEdge one of the implementation of QGraphicsEdge.
+ * It is best to use QGraphicsCubicArrowEdge with DirectedGraph, as DirectedEdge.
+ */
+
 #ifndef QGRAPHICSCUBICARROWEDGE_H
 #define QGRAPHICSCUBICARROWEDGE_H
 
@@ -15,6 +22,7 @@ public:
     virtual void draw(QGraphicsNode *fromGNode, QGraphicsNode *toGNode) override;
     virtual void draw(QGraphicsNode *fromGNode, const QPointF &toPoint) override;
 
+protected:
     virtual void setActivePen(const QPen &pen) override;
 
 private:

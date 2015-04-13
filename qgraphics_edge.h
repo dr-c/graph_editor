@@ -1,3 +1,34 @@
+/*
+ * QGraphicsEdge - graphical representation of WeightedEdges.
+ *
+ * QGraphicsEdge is abstract, so need to use derived classes.
+ *
+ * Methods draw() are called every time, position one of ends is changed.
+ * Use it only before joining, otherwise use refresh().
+ * join() performs connection of two Nodes.
+ *
+ * QGraphicsEdge created with hidden WeightItem. To display it, use showWeight().
+ *
+ * Trancparency of Edges depends on weight. The higher weight, the larger opaque value.
+ *
+ * calcIntermediatePoint(A, B, R) function calculates intermediate point,
+ *  on line, between points A and B, at distance R from point B.
+ *
+ * < !!! CAREFUL !!!
+ * There are two ways to delete QGraphicsEdge:
+ *  - Destructor. In this case only QGraphicsEdge(responsible for graphical representation)
+ *     will be deleted. Edge(logical representation) will not be deleted.
+ *  - Method deleteCompletely(). In this case will be deleted both
+ *     Edge and next immediately QGraphicsEdge.
+ * !!! CAREFUL !!! >
+ *
+ * QGraphicsEdge emits three types of signals, to notify Scene
+ *  about possible necessary to recalculate transparency:
+ *  - created(gEdge*) after join().
+ *  - changed(int, gEdge*) after changing the weight.
+ *  - removed(int) deletion only via deleteCompletely().
+ */
+
 #ifndef QGRAPHICSEDGE_H
 #define QGRAPHICSEDGE_H
 
@@ -26,8 +57,6 @@ public:
     virtual void setBrush(const QBrush &brush);
     virtual QBrush brush() const;
 
-    virtual void setActivePen(const QPen &pen);
-
     void setPen(const QPen &pen);
     const QPen &pen() const;
 
@@ -53,6 +82,8 @@ public slots:
 
 protected:
     QGraphicsEdge(WeightedEdge *edge, QGraphicsItem *parent = 0);
+
+    virtual void    setActivePen(const QPen &pen);
 
     virtual void    hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     virtual void    hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;

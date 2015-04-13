@@ -1,3 +1,30 @@
+/*
+ * QGraphicsNode - graphical representation of WeightedNodes.
+ *
+ * QGraphicsNode is abstract, so need to use derived classes.
+ *
+ * Methods shape(), boundingRect() and paint() inherited from QGraphicsItem.
+ * Method calcIntermediatePoint(point) calculate intersection point
+ *  between line from center of Node to point and Node periphery.
+ * Method intersects(gNode*) checks if two QGraphicsNodes of the same type intersects.
+ * Method setGeometry(QPointF) used for the correct placement of subItems.
+ * All of those methods must be reimplemented in derived classes.
+ *
+ * The size of gNode depends of weight. The higher weight, the larger gNode size.
+ * The dependence is nonlinear. size = sqrt(weight+k1)*k2,
+ *  where k1 and k2 constant coefficients.
+ *
+ * < !!! CAREFUL !!!
+ * There are two ways to delete QGraphicsNode:
+ *  - Destructor. In this case only QGraphicsNode(responsible for graphical representation)
+ *     will be deleted. Node(logical representation) will not be deleted.
+ *  - Method deleteCompletely(). In this case will be deleted both
+ *     Node and next immediately QGraphicsNode with adjoined QGraphicsEdges.
+ * !!! CAREFUL !!! >
+ *
+ * Changing in QGraphicsNode cause changing in all adjoined QGraphicsEdges.
+ */
+
 #ifndef QGRAPHICSNODE_H
 #define QGRAPHICSNODE_H
 

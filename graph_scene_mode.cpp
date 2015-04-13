@@ -41,9 +41,9 @@ int PointerMode::type() const
     return Type;
 }
 
-void PointerMode::setItemFlags(QGraphicsItem *item) const
+void PointerMode::setGNodeFlags(QGraphicsNode *gNode) const
 {
-    item->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsFocusable
+    gNode->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsFocusable
                         | QGraphicsItem::ItemContainsChildrenInShape | QGraphicsItem::ItemSendsScenePositionChanges);
 }
 
@@ -67,9 +67,9 @@ int PencilMode::type() const
     return Type;
 }
 
-void PencilMode::setItemFlags(QGraphicsItem *item) const
+void PencilMode::setGNodeFlags(QGraphicsNode *gNode) const
 {
-    item->setFlags(QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemContainsChildrenInShape);
+    gNode->setFlags(QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemContainsChildrenInShape);
 }
 
 void PencilMode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)

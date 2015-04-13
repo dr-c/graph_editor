@@ -1,3 +1,10 @@
+/*
+ * QGraphicsSimpleLineEdge - just line.
+ *
+ * QGraphicsSimpleLineEdge one of the implementation of QGraphicsEdge.
+ * It is best to use QGraphicsCubicArrowEdge with UndirectedGraph, as UndirectedEdge.
+ */
+
 #ifndef QGRAPHICSSIMPLELINEEDGE_H
 #define QGRAPHICSSIMPLELINEEDGE_H
 

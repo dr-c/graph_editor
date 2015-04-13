@@ -1,3 +1,44 @@
+/*
+ * Node - logical representation of the fundamental unit of which graphs are formed.
+ * Node connected to other Nodes via Edges.
+ *
+ * Node may be constructed only in Graph with the same template parameters.
+ * Node inherites from <N>. It allows to create a different nodes easily.
+ * <N> must be a class with default constructor and virtual destructor.
+ *
+ * It`s prohibited to connect Nodes directly. Use Edges(method setNodes).
+ * Connect two nodes twice also prohibited.
+ *
+ * Where exist Edge from Node A to Node B this means, Node B is successor for Node A,
+ *  and Node A is predecessor for Node B.
+ * In UndirectedNode, if exist a way from Node A to Node B, then exist a reverse way, from B to A.
+ * This means, for UndirectedNode list of successors and predecessors is the same. See CAREFUL section.
+ *
+ * For checking, are two nodes already connected, use methods hasSuccesor(Node*)/hasPredecessor(Node*).
+ * For accessing to list of successors/predecessors use successors()/predecessors() methods.
+ * Thet return map with pairs of [Node, connected to this]->[Edge connecting these two Nodes].
+ *
+ * < !!! CAREFUL !!!
+ * successors()/predecessors() methods for UndirectedNode return same map.
+ * That`s why not recommended to use them for iterating over all ajacent Nodes(associated Edges).
+ * For this purpose use method for_each, which described below.
+ * !!! CAREFUL !!! >
+ *
+ * For iterating over all ajacent(not only successors or predecessors) Nodes and/or associated Edges,
+ *  use method for_each. It takes a pointer to function, which will execute for each element in
+ *   map(s) of ajacent Nodes and associated Edges.
+ * Unfortunately, for_each() cann`t take Functor, because virtual template function is deprecated.
+ * But, It is simply to use with lamba-functions.
+ *
+ * It`s possible to compare Nodes via id(). Each Node has a unique id_number.
+ *
+ * <E> specifies type of Edges, which connects the Node other Nodes.
+ * <E> must be a class with default constructor and virtual destructor.
+ *
+ * For correct deletion, necessary to use remove(). It will destroy Node, after removing from Graph.
+ * Node deletion deletes all edges, which connects this Node to other Nodes.
+ */
+
 #ifndef NODE_H
 #define NODE_H
 
@@ -23,6 +64,7 @@ public:
 
     virtual bool    hasSuccessor(Node<N, E> *node) const = 0;
     virtual map_ref successors() const = 0;
+
     virtual bool    hasPredecessor(Node<N, E> *node) const = 0;
     virtual map_ref predecessors() const = 0;
 

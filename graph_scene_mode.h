@@ -1,3 +1,19 @@
+/*
+ * GraphSceneMode determines behavior for QGraphicsNode via flags (setGNodeFlags(gNode*))
+ *  and presents interaction for Scene via events.
+ *
+ * PointerMode: Nodes can be moved, selected and focused(accept key events after click).
+ * MouseDoubleClick creates new Node.
+ *
+ * PrencilMode: Nodes cann`t be moved and selected, only focused(accept key events after click).
+ * MouseDoubleClick creates new Node(if no active Edge)
+ *  or deletes active Edge(if click was on the Node, from which it Edge begins)
+ *   or does nothing(if exists active Edge and click was on free space.)
+ * For creating new Edge click(Press+Release mouse button) on one Node and another.
+ * If there another Edge between these Nodes, Edge wouldn`t be created.
+ * If Escape_key pressed, while connecting two Nodes, Edge should be deleted.
+ */
+
 #ifndef GRAPHSCENEMODE_H
 #define GRAPHSCENEMODE_H
 
@@ -17,7 +33,7 @@ class GraphSceneMode
 public:
     virtual ~GraphSceneMode() = default;
 
-    virtual void    setItemFlags(QGraphicsItem *item) const = 0;
+    virtual void    setGNodeFlags(QGraphicsNode *gNode) const = 0;
     virtual int     type() const = 0;
 
     virtual void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -47,7 +63,7 @@ public:
     virtual ~PointerMode() override = default;
 
     virtual int     type() const override;
-    virtual void    setItemFlags(QGraphicsItem *item) const override;
+    virtual void    setGNodeFlags(QGraphicsNode *gNode) const override;
 };
 
 class PencilMode : public GraphSceneMode
@@ -58,7 +74,7 @@ public:
     virtual ~PencilMode() override;
 
     virtual int     type() const override;
-    virtual void    setItemFlags(QGraphicsItem *item) const override;
+    virtual void    setGNodeFlags(QGraphicsNode *gNode) const override;
 
     virtual void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
     virtual void    mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) override;

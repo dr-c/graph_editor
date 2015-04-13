@@ -1,3 +1,7 @@
+/*
+ * QGraphicsEllipseNode - circle with line, which bisects it.
+ */
+
 #ifndef QGRAPHICSELLIPSENODE_H
 #define QGRAPHICSELLIPSENODE_H
 

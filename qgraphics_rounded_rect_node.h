@@ -1,3 +1,17 @@
+/*
+ * QGraphicsRoundedRectNode - rectangle with rounded corners and line,
+ *  which divide it into two different part.
+ *
+ * The size of each parts depends on lineShiftCoef.
+ * lineShiftCoef must be in range [minLineShiftCoef;maxLineShiftCoef].
+ *
+ * The radii of circles defining the corners specified by roundingCoef.
+ * roundingCoef must be in range [minRoundingCoef;maxRoundingCoef].
+ *
+ * Those coefficient can be set in constructor and via setCoefficients() method.
+ */
+
+
 #ifndef QGRAPHICSROUNDEDRECTNODE_H
 #define QGRAPHICSROUNDEDRECTNODE_H
 
@@ -41,6 +55,10 @@ protected:
 
 private:
     static qreal checkInRange(qreal var, qreal from, qreal to);
+    static const double minLineShiftCoef = 0.5;
+    static const double maxLineShiftCoef = 1.;
+    static const double minRoundingCoef = 0.;
+    static const double maxRoundingCoef = 0.3;
 
     QGraphicsLineItem       *_lineItem;
 

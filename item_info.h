@@ -1,3 +1,10 @@
+/*
+ * NodeInfo and EdgeInfo classes which used as template parameters for Graph, Edge and Node.
+ * WeightedGraph(Graph<NodeInfo, EdgeInfo>) widely used by BasicGraphScene,
+ *  QGraphicsNodes and QGraphicsEdges.
+ * For different purposes you can create and use another classes.
+ */
+
 #ifndef ITEM_INFO_H
 #define ITEM_INFO_H
 
