@@ -5,8 +5,6 @@
 #include <QFocusEvent>
 #include <QPainter>
 
-#include <QDebug>
-
 WeightTextItem::WeightTextItem(QGraphicsItem *parent)
     : QGraphicsTextItem(parent)
 {
@@ -103,6 +101,7 @@ void WeightTextItem::focusOutEvent(QFocusEvent *event)
         setTextCursor(cursor);
         QGraphicsTextItem::focusOutEvent(event);
         setTextInteractionFlags(Qt::NoTextInteraction);
+        emit finishTextChanging(this->toPlainText().toInt());
     }
     else
         QGraphicsTextItem::focusOutEvent(event);
@@ -195,6 +194,7 @@ void WeightEdgeTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     WeightTextItem::mouseDoubleClickEvent(event);
     clearFocus();
+    emit startTextChanging(toPlainText().toInt());
     setTextInteractionFlags(Qt::TextEditorInteraction);
     setFocus();
 }

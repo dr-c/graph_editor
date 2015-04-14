@@ -68,6 +68,8 @@ public:
     virtual bool    hasPredecessor(Node<N, E> *node) const = 0;
     virtual map_ref predecessors() const = 0;
 
+    virtual typename map::size_type  countAdjacents() const = 0;
+
     virtual void    for_each(void (*funct)(std::pair<Node<N, E>* const, Edge<N, E>*>&)) = 0;
 
     void remove() {
@@ -102,7 +104,7 @@ private:
 template<typename N, typename E>
 class DirectedNode : public Node<N, E>
 {
-    friend class Graph<N, E>;
+    friend class DirectedGraph<N, E>;
     friend class Edge<N, E>;
 
     using typename Node<N, E>::map;
@@ -123,6 +125,10 @@ public:
 
     virtual map_ref predecessors() const override {
         return _predecessors;
+    }
+
+    virtual typename map::size_type countAdjacents() const override {
+        return _successors.size() + _predecessors.size();
     }
 
     virtual void for_each(void (*funct)(std::pair<Node<N, E>* const, Edge<N, E>*>&)) override {
@@ -169,7 +175,7 @@ private:
 template<typename N, typename E>
 class UndirectedNode : public Node<N, E>
 {
-    friend class Graph<N, E>;
+    friend class UndirectedGraph<N, E>;
     friend class Edge<N, E>;
 
     using typename Node<N, E>::map;
@@ -190,6 +196,10 @@ public:
 
     virtual map_ref predecessors() const override {
         return _adjacents;
+    }
+
+    virtual typename map::size_type countAdjacents() const override {
+        return _adjacents.size();
     }
 
     virtual void for_each(void (*funct)(std::pair<Node<N, E>* const, Edge<N, E>*>&)) override {

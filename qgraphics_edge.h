@@ -39,6 +39,7 @@
 #include "item_info.h"
 
 class WeightEdgeTextItem;
+class BasicGraphScene;
 
 class QGraphicsEdge : public QObject, public QGraphicsPathItem
 {
@@ -46,6 +47,7 @@ class QGraphicsEdge : public QObject, public QGraphicsPathItem
 
 public:
     virtual ~QGraphicsEdge() override;
+    void deleteCompletely();
 
     virtual int type() const override = 0;
     virtual void draw(QGraphicsNode *fromGNode, QGraphicsNode *toGNode) = 0;
@@ -70,6 +72,8 @@ public:
 
     WeightedEdge *edge() const;
 
+    void changeWeightOutside(int weight);
+
     static QPointF calcIntermediatePoint(const QPointF &pointFrom, const QPointF &pointTo, qreal radius);
 
 signals:
@@ -77,11 +81,8 @@ signals:
     void changed(int from, QGraphicsEdge *gEdge);
     void removed(int weight);
 
-public slots:
-    void deleteCompletely();
-
 protected:
-    QGraphicsEdge(WeightedEdge *edge, QGraphicsItem *parent = 0);
+    QGraphicsEdge(BasicGraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent = 0);
 
     virtual void    setActivePen(const QPen &pen);
 
@@ -89,11 +90,19 @@ protected:
     virtual void    hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
     virtual void    focusInEvent(QFocusEvent *event) override;
 
+    BasicGraphScene     *_scene;
     WeightedEdge        *_edge;
     WeightEdgeTextItem  *_weightItem;
 
     QPen    _simplePen;
     QPen    _hoverPen;
+
+    int _beforeWeightChanging;
+
+protected slots:
+    void prepareDeletion();
+    void startWeightFixed(int weight);
+    void weightFixed(int weight);
 
 private slots:
     void setWeight(int weight);

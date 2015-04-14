@@ -6,6 +6,7 @@
 
 BasicGraphScene::BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent)
     : QGraphicsScene(parent),
+      _history(new History(this)),
       _graph(graph),
       _mode(mode),
       _nodePen(QPen(QColor(Qt::blue), 2)),
@@ -22,10 +23,12 @@ BasicGraphScene::BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QOb
 BasicGraphScene::~BasicGraphScene()
 {
     delete _mode;
+    delete _history;
 }
 
 QGraphicsNode *BasicGraphScene::addNode(const QPointF &centerPos, int weight)
 {
+    //<History>: create node()
     WeightedNode *node = _graph->createNode();
     node->setPos(centerPos);
     node->setWeight(weight);
@@ -41,7 +44,7 @@ QGraphicsNode *BasicGraphScene::addNode(WeightedNode *node)
     graphics_node->setBrush(_nodeBrush);
     graphics_node->setHoverPen(_nodeHoverPen);
     graphics_node->setAcceptHoverEvents(true);
-    _mode->setItemFlags(graphics_node);
+    _mode->setGNodeFlags(graphics_node);
     connect(graphics_node, SIGNAL(destroyed()), this, SLOT(calcEdgesWeightRange()));
     addItem(graphics_node);
     return graphics_node;
@@ -49,6 +52,7 @@ QGraphicsNode *BasicGraphScene::addNode(WeightedNode *node)
 
 QGraphicsEdge *BasicGraphScene::addEdge(int weight)
 {
+    //<History>: create edge()
     WeightedEdge *edge = _graph->createEdge();
     edge->setWeight(weight);
     return addEdge(edge);
@@ -71,6 +75,11 @@ QGraphicsEdge *BasicGraphScene::addEdge(WeightedEdge *edge)
     return graphics_edge;
 }
 
+History *BasicGraphScene::history() const
+{
+    return _history;
+}
+
 const WeightedGraph *BasicGraphScene::graph() const
 {
     return _graph;
@@ -86,7 +95,7 @@ void BasicGraphScene::setMode(GraphSceneMode *mode)
     delete _mode;
     _mode = mode;
     for (auto pair : _graph->nodes())
-        _mode->setItemFlags(pair.second->graphicsNode());
+        _mode->setGNodeFlags(pair.second->graphicsNode());
 }
 
 void BasicGraphScene::calcEdgesTransparencyOnCreate(QGraphicsEdge *gEdge)

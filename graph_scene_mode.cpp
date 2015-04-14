@@ -27,7 +27,7 @@ const BasicGraphScene *GraphSceneMode::scene() const
 void GraphSceneMode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     if (mouseEvent->button() == Qt::LeftButton && _scene->itemAt(mouseEvent->scenePos(), QTransform()) == nullptr)
-        _scene->addNode(mouseEvent->scenePos());
+        _scene->history()->writeNodeCreation(_scene->addNode(mouseEvent->scenePos()));
 }
 
 PointerMode::PointerMode(BasicGraphScene *graphScene)
@@ -159,6 +159,7 @@ void PencilMode::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
             _arrowItem->join(_firstClickedItem, _mousePressedItem);
             _arrowItem->showWeight();
             _arrowItem->setAcceptHoverEvents(true);
+            _scene->history()->writeEdgeCreation(_arrowItem);
             reset();
         }
     }

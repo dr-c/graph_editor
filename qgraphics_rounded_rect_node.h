@@ -27,7 +27,7 @@ class QGraphicsRoundedRectNode : public QGraphicsNode
 public:
     enum { Type = UserType + 102 };
 
-    QGraphicsRoundedRectNode(WeightedNode *node, qreal lineShiftCoef = 0.8, qreal roundingCoef = 0.2, QGraphicsItem *parent = 0);
+    QGraphicsRoundedRectNode(BasicGraphScene *scene, WeightedNode *node, qreal lineShiftCoef = 0.8, qreal roundingCoef = 0.2, QGraphicsItem *parent = 0);
     virtual ~QGraphicsRoundedRectNode() override;
 
     virtual int type() const override;
@@ -55,10 +55,10 @@ protected:
 
 private:
     static qreal checkInRange(qreal var, qreal from, qreal to);
-    static const double minLineShiftCoef = 0.5;
-    static const double maxLineShiftCoef = 1.;
-    static const double minRoundingCoef = 0.;
-    static const double maxRoundingCoef = 0.3;
+    static constexpr double minLineShiftCoef = 0.5;
+    static constexpr double maxLineShiftCoef = 1.;
+    static constexpr double minRoundingCoef = 0.;
+    static constexpr double maxRoundingCoef = 0.3;
 
     QGraphicsLineItem       *_lineItem;
 

@@ -37,6 +37,9 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionUndo"/>
+   <addaction name="actionRedo"/>
+   <addaction name="separator"/>
    <addaction name="actionPointer"/>
    <addaction name="actionPencil"/>
   </widget>
@@ -71,6 +74,38 @@
    </property>
    <property name="shortcut">
     <string>Alt+2</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/img/arrow_white_back.png</normaloff>
+     <disabledoff>:/img/arrow_black_back.png</disabledoff>:/img/arrow_white_back.png</iconset>
+   </property>
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/img/arrow_white_forward.png.png</normaloff>
+     <disabledoff>:/img/arrow_black_forward.png</disabledoff>:/img/arrow_white_forward.png.png</iconset>
+   </property>
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Z</string>
    </property>
   </action>
  </widget>

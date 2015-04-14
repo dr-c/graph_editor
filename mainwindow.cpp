@@ -17,7 +17,10 @@ MainWindow::MainWindow(QWidget *parent) :
     _ui->setupUi(this);
 
     _directedGraph = new DirectedGraph<NodeInfo, EdgeInfo>();
+    _undirectedGraph = new UndirectedGraph<NodeInfo, EdgeInfo>();
+    //_graphScene = new UndirectedGraphScene<QGraphicsRoundedRectNode, QGraphicsSimpleLineEdge>(_undirectedGraph, new PointerMode());
     _graphScene = new DirectedGraphScene<QGraphicsEllipseNode, QGraphicsCubicArrowEdge>(_directedGraph, new PointerMode());
+    connect(_graphScene->history(), SIGNAL(newItemAdded()), this, SLOT(updateUndoRedo()));
 
     _ui->graphicsView->setGraphScene(_graphScene);
 }
@@ -53,4 +56,24 @@ void MainWindow::on_actionPencil_triggered(bool checked)
     }
     else
         _ui->actionPencil->setChecked(true);
+}
+
+void MainWindow::on_actionUndo_triggered()
+{
+    if (!_graphScene->history()->undo())
+        _ui->actionUndo->setEnabled(false);
+    _ui->actionRedo->setEnabled(true);
+}
+
+void MainWindow::on_actionRedo_triggered()
+{
+    if (!_graphScene->history()->redo())
+        _ui->actionRedo->setEnabled(false);
+    _ui->actionUndo->setEnabled(true);
+}
+
+void MainWindow::updateUndoRedo()
+{
+    _ui->actionUndo->setEnabled(true);
+    _ui->actionRedo->setEnabled(false);
 }

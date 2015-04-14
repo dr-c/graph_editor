@@ -3,8 +3,8 @@
 #include "qgraphics_node.h"
 #include "weight_text_item.h"
 
-QGraphicsSimpleLineEdge::QGraphicsSimpleLineEdge(WeightedEdge *edge, QGraphicsItem *parent)
-    : QGraphicsEdge(edge, parent)
+QGraphicsSimpleLineEdge::QGraphicsSimpleLineEdge(BasicGraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent)
+    : QGraphicsEdge(scene, edge, parent)
 {
 
 }

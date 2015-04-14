@@ -15,7 +15,7 @@ class QGraphicsSimpleLineEdge : public QGraphicsEdge
 public:
     enum { Type = UserType + 201 };
 
-    QGraphicsSimpleLineEdge(WeightedEdge *edge, QGraphicsItem *parent = 0);
+    QGraphicsSimpleLineEdge(BasicGraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent = 0);
     virtual ~QGraphicsSimpleLineEdge() override = default;
 
     virtual int type() const override;

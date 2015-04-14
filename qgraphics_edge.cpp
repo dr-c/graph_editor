@@ -1,18 +1,21 @@
 #include "qgraphics_edge.h"
 #include "qgraphics_node.h"
 
+#include "graph_scene.h"
 #include "weight_text_item.h"
 
 #include <QPen>
 #include <QFont>
 #include <QKeyEvent>
 
-QGraphicsEdge::QGraphicsEdge(WeightedEdge *edge, QGraphicsItem *parent)
+QGraphicsEdge::QGraphicsEdge(BasicGraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent)
     : QGraphicsPathItem(parent),
+      _scene(scene),
       _edge(edge),
       _weightItem(new WeightEdgeTextItem(QString::number(_edge->weight()), this)),
       _simplePen(QPen(QColor(Qt::black))),
-      _hoverPen(QPen(QColor(Qt::red)))
+      _hoverPen(QPen(QColor(Qt::red))),
+      _beforeWeightChanging(_edge->weight())
 {
     _edge->setGraphicsEdge(this);
     setZValue(0.);
@@ -22,7 +25,9 @@ QGraphicsEdge::QGraphicsEdge(WeightedEdge *edge, QGraphicsItem *parent)
     _weightItem->hide();
 
     connect(_weightItem, SIGNAL(textChanged(int)), this, SLOT(setWeight(int)));
-    connect(_weightItem, SIGNAL(deleteKeyPressed()), this, SLOT(deleteCompletely()));
+    connect(_weightItem, SIGNAL(deleteKeyPressed()), this, SLOT(prepareDeletion()));
+    connect(_weightItem, SIGNAL(startTextChanging(int)), this, SLOT(startWeightFixed(int)));
+    connect(_weightItem, SIGNAL(finishTextChanging(int)), this, SLOT(weightFixed(int)));
 }
 
 QGraphicsEdge::~QGraphicsEdge()
@@ -33,6 +38,7 @@ QGraphicsEdge::~QGraphicsEdge()
 
 void QGraphicsEdge::deleteCompletely()
 {
+    //<History>: delete edge()
     int weight = _edge->weight();
     _edge->remove();
     _edge = nullptr;
@@ -148,12 +154,37 @@ void QGraphicsEdge::showWeight()
     _weightItem->show();
 }
 
+void QGraphicsEdge::changeWeightOutside(int weight)
+{
+    _weightItem->setPlainText(QString::number(weight));
+    setWeight(weight);
+}
+
 void QGraphicsEdge::setWeight(int weight)
 {
+    //<History>: change edge()
     int old_weight = _edge->weight();
     _edge->setWeight(weight);
     _weightItem->placeInCenter();
     emit changed(old_weight, this);
+}
+
+void QGraphicsEdge::prepareDeletion()
+{
+    _scene->history()->writeEdgeDeletion(this);
+    deleteCompletely();
+}
+
+void QGraphicsEdge::startWeightFixed(int weight)
+{
+    _beforeWeightChanging = weight;
+}
+
+void QGraphicsEdge::weightFixed(int weight)
+{
+    //<History>: change node weight()
+    if (_beforeWeightChanging != weight)
+        _scene->history()->writeEdgeWeightChanging(this, _beforeWeightChanging, weight);
 }
 
 QPointF QGraphicsEdge::calcIntermediatePoint(const QPointF &pointFrom, const QPointF &pointTo, qreal radius)

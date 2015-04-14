@@ -36,6 +36,7 @@ protected:
 
 signals:
     void textChanged(int);
+    void finishTextChanging(int);
 
 private slots:
     void validateContentsChanging();
@@ -73,6 +74,7 @@ public:
 
 signals:
     void deleteKeyPressed();
+    void startTextChanging(int);
 
 protected:
     virtual void    keyPressEvent(QKeyEvent *event) override;

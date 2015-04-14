@@ -121,7 +121,7 @@ public:
     virtual ~UndirectedGraph() override = default;
 
     virtual Node<N, E> *createNode() override {
-        int id = this->_nodes.rbegin()->first;
+        int id = this->_nodes.empty() ? 1 : this->_nodes.rbegin()->first + 1;
         auto node = new UndirectedNode<N, E>(this, id);
         auto pair = this->_nodes.insert(std::make_pair(id, node));
         assert(pair.second == true);

@@ -13,7 +13,7 @@ class QGraphicsEllipseNode : public QGraphicsNode
 public:
     enum { Type = UserType + 101 };
 
-    QGraphicsEllipseNode(WeightedNode *node, QGraphicsItem *parent = 0);
+    QGraphicsEllipseNode(BasicGraphScene *scene, WeightedNode *node, QGraphicsItem *parent = 0);
     virtual ~QGraphicsEllipseNode() override;
 
     virtual int type() const override;

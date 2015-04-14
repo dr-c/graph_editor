@@ -45,6 +45,7 @@
 
 #include <QGraphicsScene>
 
+#include "history.h"
 #include "item_info.h"
 #include "qgraphics_edge.h"
 #include "qgraphics_node.h"
@@ -66,6 +67,7 @@ public:
     QGraphicsEdge *addEdge(int weight = 1);
     QGraphicsEdge *addEdge(WeightedEdge *edge);
 
+    History *history() const;
     const WeightedGraph *graph() const;
     const GraphSceneMode *mode() const;
     void setMode(GraphSceneMode *mode);
@@ -89,8 +91,8 @@ public:
 protected:
     BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent = 0);
 
-    virtual QGraphicsNode *createGraphicsNode(WeightedNode *node) const = 0;
-    virtual QGraphicsEdge *createGraphicsEdge(WeightedEdge *edge) const = 0;
+    virtual QGraphicsNode *createGraphicsNode(WeightedNode *node) = 0;
+    virtual QGraphicsEdge *createGraphicsEdge(WeightedEdge *edge) = 0;
 
     virtual void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
     virtual void	mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
@@ -107,6 +109,7 @@ private slots:
 
 private:
 
+    History         *_history;
     WeightedGraph   *_graph;
     GraphSceneMode  *_mode;
 
@@ -150,11 +153,11 @@ protected:
         }
     }
 
-    virtual QGraphicsNode *createGraphicsNode(WeightedNode *node) const override final {
-        return new GN(node);
+    virtual QGraphicsNode *createGraphicsNode(WeightedNode *node) override final {
+        return new GN(this, node);
     }
-    virtual QGraphicsEdge *createGraphicsEdge(WeightedEdge *edge) const override final {
-        return new GE(edge);
+    virtual QGraphicsEdge *createGraphicsEdge(WeightedEdge *edge) override final {
+        return new GE(this, edge);
     }
 };
 

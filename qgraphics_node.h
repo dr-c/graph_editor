@@ -33,6 +33,7 @@
 
 #include "item_info.h"
 
+class BasicGraphScene;
 class WeightTextItem;
 
 class QGraphicsNode : public QGraphicsObject
@@ -40,6 +41,7 @@ class QGraphicsNode : public QGraphicsObject
     Q_OBJECT
 public:
     virtual ~QGraphicsNode() override;
+    virtual void deleteCompletely();
 
     virtual int type() const override = 0;
     virtual QPainterPath shape() const override = 0;
@@ -67,23 +69,28 @@ public:
     qreal radius() const;
     WeightedNode *node() const;
 
+    void changePositionOutside(const QPointF &topLeft);
+    void changeWeightOutside(int weight);
+
 protected slots:
     void setWeight(int weight);
+    void weightFixed(int weight);
 
 protected:
-    QGraphicsNode(WeightedNode *node, QGraphicsItem *parent = 0);
-
-    virtual void        deleteCompletely();
+    QGraphicsNode(BasicGraphScene *scene, WeightedNode *node, QGraphicsItem *parent = 0);
 
     virtual void        setGeometry(const QPointF &centerPos) = 0;
     virtual void        calcRadius(int weight);
 
+    virtual void        mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+    virtual void        mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
     virtual void        mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
     virtual void        keyPressEvent(QKeyEvent *event) override;
     virtual QVariant    itemChange(GraphicsItemChange change, const QVariant &value) override;
     virtual void        hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     virtual void        hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
+    BasicGraphScene  *_scene;
     WeightedNode *_node;
 
     WeightTextItem          *_weightItem;
@@ -93,6 +100,9 @@ protected:
 
     QPen    _simplePen;
     QPen    _hoverPen;
+
+    int     _beforeWeightChanging;
+    QPointF _beforeMousePressPos;
 
 private:
     void updateRelatedEdges();

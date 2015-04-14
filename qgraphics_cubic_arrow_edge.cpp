@@ -3,8 +3,8 @@
 #include "qgraphics_node.h"
 #include "weight_text_item.h"
 
-QGraphicsCubicArrowEdge::QGraphicsCubicArrowEdge(WeightedEdge *edge, QGraphicsItem *parent)
-    : QGraphicsEdge(edge, parent),
+QGraphicsCubicArrowEdge::QGraphicsCubicArrowEdge(BasicGraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent)
+    : QGraphicsEdge(scene, edge, parent),
       _curve(new CurvePathItem(this))
 {
     _curve->setZValue(0);
