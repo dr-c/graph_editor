@@ -123,7 +123,14 @@ void QGraphicsNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     QPointF after_mouse_press_pos = pos();
     if (_beforeMousePressPos != after_mouse_press_pos)
-        _scene->history()->writeNodeMoving(this, _beforeMousePressPos, after_mouse_press_pos);
+    {
+        const QList<QGraphicsItem*> &listItems = _scene->selectedItems();
+        assert(!listItems.empty());
+        if (listItems.count() == 1)
+            _scene->history()->writeNodeMoving(this, _beforeMousePressPos, after_mouse_press_pos);
+        else
+            _scene->history()->writeGroupNodesMoving(listItems, _beforeMousePressPos, after_mouse_press_pos);
+    }
     QGraphicsObject::mouseReleaseEvent(mouseEvent);
 }
 

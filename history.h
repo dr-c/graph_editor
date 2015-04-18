@@ -9,6 +9,7 @@
 #include "item_info.h"
 
 class BasicGraphScene;
+class QGraphicsItem;
 class QGraphicsNode;
 class QGraphicsEdge;
 
@@ -22,6 +23,9 @@ public:
     void writeNodeMoving(QGraphicsNode *gNode, const QPointF &beforeMove, const QPointF &afterMove);
     void writeNodeWeightChanging(QGraphicsNode *gNode, int fromWeight, int toWeight);
     void writeNodeDeletion(QGraphicsNode *gNode);
+    void writeGroupNodesMoving(const QList<QGraphicsItem *> &listItems, const QPointF &beforeMove, const QPointF &afterMove);
+    void prepareGroupNodesDeletion(int nodesCount);
+    void writeNodeDeletionToGroup(QGraphicsNode *gNode);
     void writeEdgeCreation(QGraphicsEdge *gEdge);
     void writeEdgeWeightChanging(QGraphicsEdge *gEdge, int fromWeight, int toWeight);
     void writeEdgeDeletion(QGraphicsEdge *gEdge);
@@ -65,14 +69,14 @@ private:
     class NodeHistoryItem : public HistoryItem {
     public:
         NodeHistoryItem(History *history, const SharedGNode &sgNode);
-        virtual ~NodeHistoryItem();
+        virtual ~NodeHistoryItem() override;
     protected:
         SharedGNode _sgNode;
     };
     class EdgeHistoryItem : public HistoryItem {
     public:
         EdgeHistoryItem(History *history, const SharedGEdge &sgEdge);
-        virtual ~EdgeHistoryItem();
+        virtual ~EdgeHistoryItem() override;
     protected:
         SharedGEdge _sgEdge;
     };
@@ -93,6 +97,8 @@ private:
         virtual ~MoveNode() override = default;
         virtual void undo() override;
         virtual void redo() override;
+        void undoKeepSelection();
+        void redoKeepSelection();
     private:
         QPointF         _beforeMove;
         QPointF         _afterMove;
@@ -114,6 +120,8 @@ private:
         virtual ~DeleteNode() override = default;
         virtual void undo() override;
         virtual void redo() override;
+        void undoNodeOnly();
+        void undoEdgesOnly();
         void fillAjacentEdges(const std::pair<WeightedNode * const, WeightedEdge *> &pair);
     private:
         std::vector<DeleteEdge> _ajacentEdges;
@@ -152,6 +160,28 @@ private:
         int         _weight;
         SharedGNode _fromSGNode;
         SharedGNode _toSGNode;
+    };
+
+    class GroupMoveNode : public HistoryItem
+    {
+    public:
+        GroupMoveNode(History *history, const QList<QGraphicsItem *> &items, const QPointF &beforeMove, const QPointF &afterMove);
+        virtual ~GroupMoveNode() override = default;
+        virtual void undo() override;
+        virtual void redo() override;
+    protected:
+        std::vector<MoveNode> _moveNodes;
+    };
+    class GroupDeleteNode : public HistoryItem
+    {
+    public:
+        GroupDeleteNode(History *history, int deleteNodesCount);
+        virtual ~GroupDeleteNode() override = default;
+        virtual void undo() override;
+        virtual void redo() override;
+        void addNode(const SharedGNode &sgNode);
+    protected:
+        std::vector<DeleteNode> _deleteNodes;
     };
 };
 

@@ -37,11 +37,11 @@ public:
     virtual int     type() const = 0;
 
     virtual void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    virtual void    mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)       { Q_UNUSED(mouseEvent); }
-    virtual void    mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)        { Q_UNUSED(mouseEvent); }
-    virtual void	mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)     { Q_UNUSED(mouseEvent); }
-    virtual void	keyPressEvent(QKeyEvent *keyEvent)                          { Q_UNUSED(keyEvent);   }
-    virtual void    keyReleaseEvent(QKeyEvent *keyEvent)                        { Q_UNUSED(keyEvent);   }
+    virtual void    mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)   { Q_UNUSED(mouseEvent); }
+    virtual void    mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)    { Q_UNUSED(mouseEvent); }
+    virtual void	mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) { Q_UNUSED(mouseEvent); }
+    virtual void	keyPressEvent(QKeyEvent *keyEvent)                      { Q_UNUSED(keyEvent);   }
+    virtual void    keyReleaseEvent(QKeyEvent *keyEvent)                    { Q_UNUSED(keyEvent);   }
 
     const BasicGraphScene *scene() const;
 
@@ -64,6 +64,7 @@ public:
 
     virtual int     type() const override;
     virtual void    setGNodeFlags(QGraphicsNode *gNode) const override;
+    virtual void	keyPressEvent(QKeyEvent *keyEvent) override;
 };
 
 class PencilMode : public GraphSceneMode

@@ -59,6 +59,22 @@ void History::writeNodeDeletion(QGraphicsNode *gNode)
     addItem(HistoryItemPtr(new DeleteNode(this, findOrCreateSGNode(gNode))));
 }
 
+void History::writeGroupNodesMoving(const QList<QGraphicsItem*> &listItems, const QPointF &beforeMove, const QPointF &afterMove)
+{
+    addItem(HistoryItemPtr(new GroupMoveNode(this, listItems, beforeMove, afterMove)));
+}
+
+void History::prepareGroupNodesDeletion(int nodesCount)
+{
+    addItem(HistoryItemPtr(new GroupDeleteNode(this, nodesCount)));
+}
+
+void History::writeNodeDeletionToGroup(QGraphicsNode *gNode)
+{
+    assert(!_items.empty() && dynamic_cast<GroupDeleteNode*>(_items.back().get()) != nullptr);
+    static_cast<GroupDeleteNode*>(_items.back().get())->addNode(findOrCreateSGNode(gNode));
+}
+
 void History::writeEdgeCreation(QGraphicsEdge *gEdge)
 {
     auto edgeIter = _mainEdgeItems.insert(std::make_pair(gEdge, std::make_shared<QGraphicsEdge*>(gEdge)));
@@ -149,14 +165,17 @@ History::CreateNode::CreateNode(History *history, const SharedGNode &sgNode)
 
 void History::CreateNode::undo()
 {
+    _history->_scene->clearSelection();
     _history->_mainNodeItems.erase(*_sgNode);
     (*_sgNode)->deleteCompletely();
 }
 
 void History::CreateNode::redo()
 {
+    _history->_scene->clearSelection();
     (*_sgNode) = _history->_scene->addNode(_centerPos, _weight);
     _history->_mainNodeItems.insert(std::make_pair(*_sgNode, _sgNode));
+    (*_sgNode)->setSelected(true);
 }
 
 History::MoveNode::MoveNode(History *history, const SharedGNode &sgNode, const QPointF &beforeMove, const QPointF &afterMove)
@@ -167,12 +186,27 @@ History::MoveNode::MoveNode(History *history, const SharedGNode &sgNode, const Q
 
 void History::MoveNode::undo()
 {
-    (*_sgNode)->changePositionOutside(_beforeMove);
+    _history->_scene->clearSelection();
+    undoKeepSelection();
 }
 
 void History::MoveNode::redo()
 {
+    _history->_scene->clearSelection();
+    redoKeepSelection();
+}
+
+
+void History::MoveNode::undoKeepSelection()
+{
+    (*_sgNode)->changePositionOutside(_beforeMove);
+    (*_sgNode)->setSelected(true);
+}
+
+void History::MoveNode::redoKeepSelection()
+{
     (*_sgNode)->changePositionOutside(_afterMove);
+    (*_sgNode)->setSelected(true);
 }
 
 History::ChangeNodeWeight::ChangeNodeWeight(History *history, const SharedGNode &sgNode, int fromWeight, int toWeight)
@@ -183,12 +217,16 @@ History::ChangeNodeWeight::ChangeNodeWeight(History *history, const SharedGNode 
 
 void History::ChangeNodeWeight::undo()
 {
+    _history->_scene->clearSelection();
     (*_sgNode)->changeWeightOutside(_beforeWeight);
+    (*_sgNode)->setSelected(true);
 }
 
 void History::ChangeNodeWeight::redo()
 {
+    _history->_scene->clearSelection();
     (*_sgNode)->changeWeightOutside(_afterWeight);
+    (*_sgNode)->setSelected(true);
 }
 
 History::DeleteNode::DeleteNode(History *history, const SharedGNode &sgNode)
@@ -215,16 +253,29 @@ void History::DeleteNode::fillAjacentEdges(const std::pair<WeightedNode* const, 
 
 void History::DeleteNode::undo()
 {
-    (*_sgNode) = _history->_scene->addNode(_centerPos, _weight);
-    _history->_mainNodeItems.insert(std::make_pair(*_sgNode, _sgNode));
-    std::for_each(_ajacentEdges.begin(), _ajacentEdges.end(), [](DeleteEdge &item){item.undo();});
+    _history->_scene->clearSelection();
+    undoNodeOnly();
+    undoEdgesOnly();
 }
 
 void History::DeleteNode::redo()
 {
+    _history->_scene->clearSelection();
     std::for_each(_ajacentEdges.begin(), _ajacentEdges.end(), [](DeleteEdge &item){item.incompleteRedo();});
     _history->_mainNodeItems.erase(*_sgNode);
     (*_sgNode)->deleteCompletely();
+}
+
+void History::DeleteNode::undoNodeOnly()
+{
+    (*_sgNode) = _history->_scene->addNode(_centerPos, _weight);
+    _history->_mainNodeItems.insert(std::make_pair(*_sgNode, _sgNode));
+    (*_sgNode)->setSelected(true);
+}
+
+void History::DeleteNode::undoEdgesOnly()
+{
+    std::for_each(_ajacentEdges.begin(), _ajacentEdges.end(), [](DeleteEdge &item){item.undo();});
 }
 
 History::CreateEdge::CreateEdge(History *history, const SharedGEdge &sgEdge, const SharedGNode &fromSGNode, const SharedGNode &toSGNode)
@@ -248,12 +299,14 @@ History::CreateEdge::~CreateEdge()
 
 void History::CreateEdge::undo()
 {
+    _history->_scene->clearSelection();
     _history->_mainEdgeItems.erase(*_sgEdge);
     (*_sgEdge)->deleteCompletely();
 }
 
 void History::CreateEdge::redo()
 {
+    _history->_scene->clearSelection();
     (*_sgEdge) = _history->_scene->addEdge(_weight);
     (*_sgEdge)->join(*_fromSGNode, *_toSGNode);
     (*_sgEdge)->showWeight();
@@ -268,11 +321,13 @@ History::ChangeEdgeWeight::ChangeEdgeWeight(History *history, const SharedGEdge 
 
 void History::ChangeEdgeWeight::undo()
 {
+    _history->_scene->clearSelection();
     (*_sgEdge)->changeWeightOutside(_beforeWeight);
 }
 
 void History::ChangeEdgeWeight::redo()
 {
+    _history->_scene->clearSelection();
     (*_sgEdge)->changeWeightOutside(_afterWeight);
 }
 
@@ -297,6 +352,7 @@ History::DeleteEdge::~DeleteEdge()
 
 void History::DeleteEdge::undo()
 {
+    _history->_scene->clearSelection();
     (*_sgEdge) = _history->_scene->addEdge(_weight);
     (*_sgEdge)->join(*_fromSGNode, *_toSGNode);
     (*_sgEdge)->showWeight();
@@ -310,6 +366,65 @@ void History::DeleteEdge::incompleteRedo()
 
 void History::DeleteEdge::redo()
 {
+    _history->_scene->clearSelection();
     _history->_mainEdgeItems.erase(*_sgEdge);
     (*_sgEdge)->deleteCompletely();
+}
+
+History::GroupMoveNode::GroupMoveNode(History *history, const QList<QGraphicsItem *> &items,
+                                      const QPointF &beforeMove, const QPointF &afterMove)
+    : HistoryItem(history)
+{
+    _moveNodes.reserve(items.count());
+    QPointF shift = afterMove - beforeMove;
+    for (auto item : items)
+    {
+        assert(dynamic_cast<QGraphicsNode*>(item) != nullptr);
+        const QPointF &cur_pos = item->pos();
+        _moveNodes.emplace_back(history, _history->findOrCreateSGNode(static_cast<QGraphicsNode*>(item)),
+                                cur_pos - shift, cur_pos);
+    }
+}
+
+void History::GroupMoveNode::undo()
+{
+    _history->_scene->clearSelection();
+    for (auto item : _moveNodes)
+        item.undoKeepSelection();
+}
+
+void History::GroupMoveNode::redo()
+{
+    _history->_scene->clearSelection();
+    for (auto item : _moveNodes)
+        item.redoKeepSelection();
+}
+
+History::GroupDeleteNode::GroupDeleteNode(History *history, int deleteNodesCount)
+    : HistoryItem(history)
+{
+    _deleteNodes.reserve(deleteNodesCount);
+}
+
+void History::GroupDeleteNode::addNode(const SharedGNode &sgNode)
+{
+    _deleteNodes.emplace_back(_history, sgNode);
+}
+
+void History::GroupDeleteNode::undo()
+{
+    assert(_deleteNodes.capacity() == _deleteNodes.size());
+    _history->_scene->clearSelection();
+    for (auto item : _deleteNodes)
+        item.undoNodeOnly();
+    for (auto item : _deleteNodes)
+        item.undoEdgesOnly();
+}
+
+void History::GroupDeleteNode::redo()
+{
+    assert(_deleteNodes.capacity() == _deleteNodes.size());
+    _history->_scene->clearSelection();
+    for (auto item : _deleteNodes)
+        item.redo();
 }

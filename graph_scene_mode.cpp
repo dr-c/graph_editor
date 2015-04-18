@@ -47,6 +47,24 @@ void PointerMode::setGNodeFlags(QGraphicsNode *gNode) const
                         | QGraphicsItem::ItemContainsChildrenInShape | QGraphicsItem::ItemSendsScenePositionChanges);
 }
 
+void PointerMode::keyPressEvent(QKeyEvent *keyEvent)
+{
+    if (keyEvent->key() == Qt::Key_Delete)
+    {
+        const QList<QGraphicsItem*> &listItems = _scene->selectedItems();
+        if (listItems.count() < 2)
+            return;
+        _scene->history()->prepareGroupNodesDeletion(listItems.count());
+        for (auto item : listItems)
+        {
+            assert(dynamic_cast<QGraphicsNode*>(item) != nullptr);
+            QGraphicsNode* graphics_node = static_cast<QGraphicsNode*>(item);
+            _scene->history()->writeNodeDeletionToGroup(graphics_node);
+            graphics_node->deleteCompletely();
+        }
+    }
+}
+
 PencilMode::PencilMode(BasicGraphScene *graphScene)
     : GraphSceneMode(graphScene),
       _mousePressedItem(nullptr),
@@ -92,7 +110,7 @@ void PencilMode::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     if (cur_item != nullptr)
     {
         _mousePressedPoint = mouseEvent->scenePos();
-        _mousePressedItem = dynamic_cast<QGraphicsNode*>(cur_item);
+        _mousePressedItem = static_cast<QGraphicsNode*>(cur_item);
         if (_firstClickedItem == nullptr)
             toggleAcceptHoverEvent(_mousePressedItem, false);
         assert(_mousePressedItem != nullptr);
@@ -130,7 +148,7 @@ void PencilMode::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
             _arrowItem->draw(_firstClickedItem, cur_point);
         else
         {
-            QGraphicsNode *cur_gnode = dynamic_cast<QGraphicsNode*>(cur_item);
+            QGraphicsNode *cur_gnode = static_cast<QGraphicsNode*>(cur_item);
             if (_firstClickedItem->node()->hasSuccessor(cur_gnode->node()))
                 _arrowItem->draw(_firstClickedItem, cur_point);
             else
