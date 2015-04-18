@@ -20,5 +20,6 @@ void GraphView::setGraphScene(BasicGraphScene *graph)
 
 BasicGraphScene* GraphView::graphScene() const
 {
-    return dynamic_cast<BasicGraphScene*>(QGraphicsView::scene());
+    assert(dynamic_cast<BasicGraphScene*>(QGraphicsView::scene()) != nullptr);
+    return static_cast<BasicGraphScene*>(QGraphicsView::scene());
 }
