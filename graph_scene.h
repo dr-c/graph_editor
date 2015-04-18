@@ -62,7 +62,7 @@ public:
     virtual int typeGraphicsNode() const = 0;
     virtual int typeGraphicsEdge() const = 0;
 
-    QGraphicsNode *addNode(const QPointF &centerPos, int weight = 1);
+    QGraphicsNode *addNode(const QPointF &centerPos, int weight = 1, int id = 0);
     QGraphicsNode *addNode(WeightedNode *node);
     QGraphicsEdge *addEdge(int weight = 1);
     QGraphicsEdge *addEdge(WeightedEdge *edge);

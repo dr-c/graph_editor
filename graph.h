@@ -50,7 +50,15 @@ public:
         _nodes.clear();
     }
 
-    virtual Node<N, E> *createNode() = 0;
+    Node<N, E> *createNode(int id = 0) {
+        if (id == 0)
+            id = this->_nodes.empty() ? 1 : this->_nodes.rbegin()->first + 1;
+        assert(this->_nodes.find(id) == this->_nodes.end());
+        Node<N, E> *node = constructNode(id);
+        auto pair = this->_nodes.insert(std::make_pair(id, node));
+        assert(pair.second == true);
+        return node;
+    }
 
     Edge<N, E> *createEdge() {
         auto edge = new Edge<N, E>(this);
@@ -89,6 +97,8 @@ protected:
     Graph(const Graph<N, E> &graph) = delete;
     Graph<N, E> &operator=(const Graph<N, E> &graph) = delete;
 
+    virtual Node<N, E> *constructNode(int id) = 0;
+
     std::map<int, Node<N, E>*>    _nodes;
     std::vector<Edge<N, E>*>      _edges;
 };
@@ -102,12 +112,9 @@ public:
     DirectedGraph<N, E> &operator=(const DirectedGraph<N, E> &graph) = delete;
     virtual ~DirectedGraph() override = default;
 
-    virtual Node<N, E> *createNode() override {
-        int id = this->_nodes.empty() ? 1 : this->_nodes.rbegin()->first + 1;
-        auto node = new DirectedNode<N, E>(this, id);
-        auto pair = this->_nodes.insert(std::make_pair(id, node));
-        assert(pair.second == true);
-        return node;
+protected:
+    virtual Node<N, E> *constructNode(int id) override {
+        return new DirectedNode<N, E>(this, id);
     }
 };
 
@@ -120,12 +127,9 @@ public:
     UndirectedGraph<N, E> &operator=(const UndirectedGraph<N, E> &graph) = delete;
     virtual ~UndirectedGraph() override = default;
 
-    virtual Node<N, E> *createNode() override {
-        int id = this->_nodes.empty() ? 1 : this->_nodes.rbegin()->first + 1;
-        auto node = new UndirectedNode<N, E>(this, id);
-        auto pair = this->_nodes.insert(std::make_pair(id, node));
-        assert(pair.second == true);
-        return node;
+protected:
+    virtual Node<N, E> *constructNode(int id) override {
+        return new UndirectedNode<N, E>(this, id);
     }
 };
 

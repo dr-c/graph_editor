@@ -158,7 +158,8 @@ History::EdgeHistoryItem::~EdgeHistoryItem()
 }
 
 History::CreateNode::CreateNode(History *history, const SharedGNode &sgNode)
-    : NodeHistoryItem(history, sgNode), _centerPos((*sgNode)->node()->pos()), _weight((*sgNode)->node()->weight())
+    : NodeHistoryItem(history, sgNode), _centerPos((*sgNode)->node()->pos()),
+      _weight((*sgNode)->node()->weight()), _id((*sgNode)->node()->id())
 {
 
 }
@@ -173,7 +174,7 @@ void History::CreateNode::undo()
 void History::CreateNode::redo()
 {
     _history->_scene->clearSelection();
-    (*_sgNode) = _history->_scene->addNode(_centerPos, _weight);
+    (*_sgNode) = _history->_scene->addNode(_centerPos, _weight, _id);
     _history->_mainNodeItems.insert(std::make_pair(*_sgNode, _sgNode));
     (*_sgNode)->setSelected(true);
 }
@@ -230,7 +231,8 @@ void History::ChangeNodeWeight::redo()
 }
 
 History::DeleteNode::DeleteNode(History *history, const SharedGNode &sgNode)
-    : NodeHistoryItem(history, sgNode), _centerPos((*sgNode)->node()->pos()), _weight((*sgNode)->node()->weight())
+    : NodeHistoryItem(history, sgNode), _centerPos((*sgNode)->node()->pos()),
+      _weight((*sgNode)->node()->weight()), _id((*sgNode)->node()->id())
 {
     _ajacentEdges.reserve((*sgNode)->node()->countAdjacents());
 
@@ -268,7 +270,7 @@ void History::DeleteNode::redo()
 
 void History::DeleteNode::undoNodeOnly()
 {
-    (*_sgNode) = _history->_scene->addNode(_centerPos, _weight);
+    (*_sgNode) = _history->_scene->addNode(_centerPos, _weight, _id);
     _history->_mainNodeItems.insert(std::make_pair(*_sgNode, _sgNode));
     (*_sgNode)->setSelected(true);
 }

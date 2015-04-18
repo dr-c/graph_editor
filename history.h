@@ -90,6 +90,7 @@ private:
     private:
         QPointF _centerPos;
         int     _weight;
+        int     _id;
     };
     class MoveNode : public NodeHistoryItem {
     public:
@@ -127,6 +128,7 @@ private:
         std::vector<DeleteEdge> _ajacentEdges;
         QPointF _centerPos;
         int     _weight;
+        int     _id;
     };
     class CreateEdge : public EdgeHistoryItem {
     public:

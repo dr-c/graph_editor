@@ -26,10 +26,10 @@ BasicGraphScene::~BasicGraphScene()
     delete _history;
 }
 
-QGraphicsNode *BasicGraphScene::addNode(const QPointF &centerPos, int weight)
+QGraphicsNode *BasicGraphScene::addNode(const QPointF &centerPos, int weight, int id)
 {
     //<History>: create node()
-    WeightedNode *node = _graph->createNode();
+    WeightedNode *node = _graph->createNode(id);
     node->setPos(centerPos);
     node->setWeight(weight);
     return addNode(node);
