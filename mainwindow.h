@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <vector>
 
 #include "item_info.h"
 
@@ -10,6 +11,8 @@ class MainWindow;
 }
 
 class BasicGraphScene;
+class GraphCreationDialog;
+class QTabBar;
 
 class MainWindow : public QMainWindow
 {
@@ -25,12 +28,16 @@ private slots:
     void on_actionUndo_triggered();
     void on_actionRedo_triggered();
     void updateUndoRedo();
+    void on_actionNewGraph_triggered();
+    void changeTab(int index);
+    void closeTab(int index);
 
 private:
-    Ui::MainWindow                      *_ui;
-    DirectedGraph<NodeInfo, EdgeInfo>   *_directedGraph;
-    UndirectedGraph<NodeInfo, EdgeInfo> *_undirectedGraph;
-    BasicGraphScene                     *_graphScene;
+    Ui::MainWindow                 *_ui;
+    QTabBar                        *_tabBar;
+    GraphCreationDialog            *_creationDialog;
+    BasicGraphScene                *_graphScene;
+    int                             _tabId;
 };
 
 #endif // MAINWINDOW_H

@@ -14,7 +14,10 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <item>
      <widget class="GraphView" name="graphicsView">
       <property name="renderHints">
@@ -42,6 +45,8 @@
    <addaction name="separator"/>
    <addaction name="actionPointer"/>
    <addaction name="actionPencil"/>
+   <addaction name="separator"/>
+   <addaction name="actionNewGraph"/>
   </widget>
   <action name="actionPointer">
    <property name="checkable">
@@ -106,6 +111,21 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+Z</string>
+   </property>
+  </action>
+  <action name="actionNewGraph">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/img/so_new_black.png</normaloff>:/img/so_new_black.png</iconset>
+   </property>
+   <property name="text">
+    <string>NewGraph</string>
+   </property>
+   <property name="toolTip">
+    <string>Create New Graph</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
  </widget>

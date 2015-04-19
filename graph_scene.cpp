@@ -11,11 +11,12 @@ BasicGraphScene::BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QOb
       _mode(mode),
       _nodePen(QPen(QColor(Qt::blue), 2)),
       _nodeHoverPen(QPen(QColor(Qt::red), 2)),
+      _nodeBrush(QBrush(QColor(192, 192, 192, 192))),
+      _nodeFont(QFont("Times New Roman", 10)),
       _edgePen(QPen(QColor(Qt::black), 2)),
       _edgeHoverPen(QPen(QColor(Qt::red), 2)),
-      _itemFont(QFont("Times New Roman", 10)),
-      _nodeBrush(QBrush(QColor(192, 192, 192, 192))),
-      _edgeBrush(QBrush(QColor(192, 192, 192, 255)))
+      _edgeBrush(QBrush(QColor(192, 192, 192, 255))),
+      _edgeFont(QFont("Times New Roman", 10))
 {
     _mode->setScene(this);
 }
@@ -40,7 +41,7 @@ QGraphicsNode *BasicGraphScene::addNode(WeightedNode *node)
     assert(node->graph() == this->_graph);
     QGraphicsNode *graphics_node = createGraphicsNode(node);
     graphics_node->setPen(_nodePen);
-    graphics_node->setFont(_itemFont);
+    graphics_node->setFont(_nodeFont);
     graphics_node->setBrush(_nodeBrush);
     graphics_node->setHoverPen(_nodeHoverPen);
     graphics_node->setAcceptHoverEvents(true);
@@ -63,7 +64,7 @@ QGraphicsEdge *BasicGraphScene::addEdge(WeightedEdge *edge)
     assert(edge->graph() == this->_graph);
     QGraphicsEdge *graphics_edge = createGraphicsEdge(edge);
     graphics_edge->setPen(_edgePen);
-    graphics_edge->setFont(_itemFont);
+    graphics_edge->setFont(_edgeFont);
     graphics_edge->setBrush(_edgeBrush);
     graphics_edge->setHoverPen(_edgeHoverPen);
     graphics_edge->setAcceptHoverEvents(false);

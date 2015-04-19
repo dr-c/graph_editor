@@ -25,5 +25,7 @@
         <file>img/so_saveas_color.png</file>
         <file>img/so_save_black.png</file>
         <file>img/so_save_color.png</file>
+        <file>img/so_new_black.png</file>
+        <file>img/so_new_color.png</file>
     </qresource>
 </RCC>

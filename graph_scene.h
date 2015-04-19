@@ -73,20 +73,22 @@ public:
     void setMode(GraphSceneMode *mode);
 
     void setNodePen(const QPen &pen)        { _nodePen = pen;       }
-    void setnodeHoverPen(const QPen &pen)   { _nodeHoverPen = pen;  }
-    void setedgePen(const QPen &pen)        { _edgePen = pen;       }
-    void setedgeHoverPen(const QPen &pen)   { _edgeHoverPen = pen;  }
-    void setItemFont(const QFont &font)     { _itemFont = font;     }
+    void setNodeHoverPen(const QPen &pen)   { _nodeHoverPen = pen;  }
     void setNodeBrush(const QBrush &brush)  { _nodeBrush = brush;   }
-    void setedgeBrush(const QBrush &brush)  { _edgeBrush = brush;   }
+    void setNodeFont(const QFont &font)     { _nodeFont = font;     }
+    void setEdgePen(const QPen &pen)        { _edgePen = pen;       }
+    void setEdgeHoverPen(const QPen &pen)   { _edgeHoverPen = pen;  }
+    void setEdgeBrush(const QBrush &brush)  { _edgeBrush = brush;   }
+    void setEdgeFont(const QFont &font)     { _edgeFont = font;     }
 
     const QPen &nodePen() const             { return _nodePen;      }
     const QPen &nodeHoverPen() const        { return _nodeHoverPen; }
+    const QBrush &nodeBrush() const         { return _nodeBrush;    }
+    const QFont &nodeFont() const           { return _nodeFont;     }
     const QPen &edgePen() const             { return _edgePen;      }
     const QPen &edgeHoverPen() const        { return _edgeHoverPen; }
-    const QFont &itemFont() const           { return _itemFont;     }
-    const QBrush &nodeBrush() const         { return _nodeBrush;    }
     const QBrush &edgeBrush() const         { return _edgeBrush;    }
+    const QFont &edgeFont() const           { return _edgeFont;     }
 
 protected:
     BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent = 0);
@@ -118,11 +120,12 @@ private:
 
     QPen    _nodePen;
     QPen    _nodeHoverPen;
+    QBrush  _nodeBrush;
+    QFont   _nodeFont;
     QPen    _edgePen;
     QPen    _edgeHoverPen;
-    QFont   _itemFont;
-    QBrush  _nodeBrush;
     QBrush  _edgeBrush;
+    QFont   _edgeFont;
 };
 
 template<typename GN, typename GE>

@@ -26,7 +26,14 @@ SOURCES += main.cpp\
     qgraphics_rounded_rect_node.cpp \
     weight_text_item.cpp \
     qgraphics_cubic_arrow_edge.cpp \
-    history.cpp
+    history.cpp \
+    graph_creation_dialog.cpp \
+    pen_chooser_frame.cpp \
+    pen_chooser_dialog.cpp \
+    pen_observer_frame.cpp \
+    brush_chooser_frame.cpp \
+    brush_chooser_dialog.cpp \
+    brush_observer_frame.cpp
 
 HEADERS  += mainwindow.h \
     graph.h \
@@ -43,9 +50,21 @@ HEADERS  += mainwindow.h \
     qgraphics_rounded_rect_node.h \
     weight_text_item.h \
     qgraphics_cubic_arrow_edge.h \
-    history.h
+    history.h \
+    graph_creation_dialog.h \
+    pen_chooser_frame.h \
+    pen_chooser_dialog.h \
+    pen_observer_frame.h \
+    brush_chooser_frame.h \
+    brush_chooser_dialog.h \
+    brush_observer_frame.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    graph_creation_dialog.ui \
+    pen_chooser_frame.ui \
+    pen_chooser_dialog.ui \
+    brush_chooser_frame.ui \
+    brush_chooser_dialog.ui
 
 RESOURCES += \
     icons.qrc

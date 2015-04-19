@@ -8,7 +8,7 @@
 #include <QDebug>
 
 History::History(BasicGraphScene *scene)
-    : _scene(scene)
+    : _scene(scene), _current(0)
 {
 
 }
