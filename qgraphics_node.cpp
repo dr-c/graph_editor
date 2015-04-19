@@ -35,7 +35,6 @@ QGraphicsNode::~QGraphicsNode()
 
 void QGraphicsNode::deleteCompletely()
 {
-    //<History>: delete node()
     _node->for_each([](std::pair<WeightedNode* const, WeightedEdge*>& pair){
         if (pair.second->graphicsEdge() != nullptr)
             delete pair.second->graphicsEdge();
@@ -100,7 +99,6 @@ void QGraphicsNode::setWeight(int weight)
 
 void QGraphicsNode::weightFixed(int weight)
 {
-    //<History>: change node weight()
     if (_beforeWeightChanging != weight)
         _scene->history()->writeNodeWeightChanging(this, _beforeWeightChanging, weight);
 }

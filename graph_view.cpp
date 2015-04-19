@@ -23,3 +23,10 @@ BasicGraphScene* GraphView::graphScene() const
     assert(dynamic_cast<BasicGraphScene*>(QGraphicsView::scene()) != nullptr);
     return static_cast<BasicGraphScene*>(QGraphicsView::scene());
 }
+
+void GraphView::mousePressEvent(QMouseEvent *event)
+{
+    if (scene() == nullptr)
+        emit blankSceneMousePressed();
+    QGraphicsView::mousePressEvent(event);
+}

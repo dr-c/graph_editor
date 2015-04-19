@@ -39,6 +39,8 @@ BrushChooserDialog::BrushChooserDialog(QWidget *parent)
 
 BrushChooserDialog::~BrushChooserDialog()
 {
+    for (auto button : _styleButtonGroup->buttons())
+        delete button;
     delete _styleButtonGroup;
     delete _ui;
 }

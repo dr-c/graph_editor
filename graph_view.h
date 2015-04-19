@@ -12,6 +12,8 @@ class BasicGraphScene;
 
 class GraphView : public QGraphicsView
 {
+    Q_OBJECT
+
 public:
     GraphView(QWidget *parent = 0);
     GraphView(BasicGraphScene *graph, QWidget *parent = 0);
@@ -19,6 +21,12 @@ public:
 
     void setGraphScene(BasicGraphScene *graph);
     BasicGraphScene *graphScene() const;
+
+signals:
+    void blankSceneMousePressed();
+
+protected:
+    virtual void mousePressEvent(QMouseEvent *event) override;
 };
 
 #endif // GRAPHVIEW_H

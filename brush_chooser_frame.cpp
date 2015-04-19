@@ -20,6 +20,7 @@ BrushChooserFrame::~BrushChooserFrame()
 void BrushChooserFrame::setBrush(const QBrush &brush)
 {
     _brush = brush;
+    repaint();
 }
 
 QBrush BrushChooserFrame::brush() const

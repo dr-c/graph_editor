@@ -60,6 +60,12 @@ PenChooserDialog::PenChooserDialog(QWidget *parent)
 
 PenChooserDialog::~PenChooserDialog()
 {
+    for (auto button : _joinButtonGroup->buttons())
+        delete button;
+    for (auto button : _capButtonGroup->buttons())
+        delete button;
+    for (auto button : _penButtonGroup->buttons())
+        delete button;
     delete _joinButtonGroup;
     delete _capButtonGroup;
     delete _penButtonGroup;

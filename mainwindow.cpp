@@ -27,17 +27,19 @@ MainWindow::MainWindow(QWidget *parent) :
     _tabBar->setTabsClosable(true);
     _ui->verticalLayout->insertWidget(0, _tabBar);
 
+    connect(_ui->graphicsView, SIGNAL(blankSceneMousePressed()), this, SLOT(on_actionNewGraph_triggered()));
     connect(_tabBar, SIGNAL(currentChanged(int)), this, SLOT(changeTab(int)));
     connect(_tabBar, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 }
 
 MainWindow::~MainWindow()
 {
-    delete _creationDialog;
-    delete _ui;
     _tabId = -1;
     while (_tabBar->count() > 0)
         closeTab(0);
+    delete _tabBar;
+    delete _creationDialog;
+    delete _ui;
 }
 
 void MainWindow::on_actionPointer_triggered(bool checked)
@@ -101,10 +103,10 @@ void MainWindow::on_actionNewGraph_triggered()
         BasicGraphScene *scene = nullptr;
         if (_creationDialog->isDirected())
             scene = new DirectedGraphScene<QGraphicsEllipseNode, QGraphicsCubicArrowEdge>(
-                        new DirectedGraph<NodeInfo, EdgeInfo>(), mode);
+                        std::make_shared<DirectedGraph<NodeInfo, EdgeInfo>>(), mode);
         else
             scene = new UndirectedGraphScene<QGraphicsRoundedRectNode, QGraphicsSimpleLineEdge>(
-                        new UndirectedGraph<NodeInfo, EdgeInfo>(), mode);
+                        std::make_shared<UndirectedGraph<NodeInfo, EdgeInfo>>(), mode);
         _graphScene = scene;
         _creationDialog->configureGraphScene(scene);
         _ui->graphicsView->setGraphScene(scene);
@@ -129,6 +131,11 @@ void MainWindow::changeTab(int index)
             on_actionPencil_triggered(true);
         else
             on_actionPointer_triggered(true);
+    }
+    else
+    {
+        _ui->actionUndo->setEnabled(false);
+        _ui->actionRedo->setEnabled(false);
     }
 }
 

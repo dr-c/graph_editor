@@ -68,7 +68,7 @@ public:
     QGraphicsEdge *addEdge(WeightedEdge *edge);
 
     History *history() const;
-    const WeightedGraph *graph() const;
+    const std::shared_ptr<WeightedGraph> &graph() const;
     const GraphSceneMode *mode() const;
     void setMode(GraphSceneMode *mode);
 
@@ -91,7 +91,7 @@ public:
     const QFont &edgeFont() const           { return _edgeFont;     }
 
 protected:
-    BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent = 0);
+    BasicGraphScene(std::shared_ptr<WeightedGraph> graph, GraphSceneMode *mode, QObject *parent = 0);
 
     virtual QGraphicsNode *createGraphicsNode(WeightedNode *node) = 0;
     virtual QGraphicsEdge *createGraphicsEdge(WeightedEdge *edge) = 0;
@@ -112,7 +112,7 @@ private slots:
 private:
 
     History         *_history;
-    WeightedGraph   *_graph;
+    std::shared_ptr<WeightedGraph> _graph;
     GraphSceneMode  *_mode;
 
     int _minEdgeWeight;
@@ -142,7 +142,7 @@ public:
     }
 
 protected:
-    GraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent = 0) : BasicGraphScene(graph, mode, parent) {
+    GraphScene(std::shared_ptr<WeightedGraph> graph, GraphSceneMode *mode, QObject *parent = 0) : BasicGraphScene(graph, mode, parent) {
         static_assert(std::is_base_of<QGraphicsNode, GN>::value, "GN type must be derived from QGraphicsNode");
         static_assert(std::is_base_of<QGraphicsEdge, GE>::value, "GE type must be derived from QGraphicsEdge");
 
@@ -168,7 +168,7 @@ template<typename GN, typename GE>
 class DirectedGraphScene : public GraphScene<GN, GE>
 {
 public:
-    DirectedGraphScene(DirectedGraph<NodeInfo, EdgeInfo> *graph, GraphSceneMode *mode, QObject *parent = 0)
+    DirectedGraphScene(std::shared_ptr<DirectedGraph<NodeInfo, EdgeInfo>> graph, GraphSceneMode *mode, QObject *parent = 0)
         : GraphScene<GN, GE>(graph, mode, parent) {}
     DirectedGraphScene(const DirectedGraphScene<GN, GE> &scene) = delete;
     DirectedGraphScene<GN, GE> &operator=(const DirectedGraphScene<GN, GE> &scene) = delete;
@@ -179,7 +179,7 @@ template<typename GN, typename GE>
 class UndirectedGraphScene : public GraphScene<GN, GE>
 {
 public:
-    UndirectedGraphScene(UndirectedGraph<NodeInfo, EdgeInfo> *graph, GraphSceneMode *mode, QObject *parent = 0)
+    UndirectedGraphScene(std::shared_ptr<UndirectedGraph<NodeInfo, EdgeInfo>> graph, GraphSceneMode *mode, QObject *parent = 0)
         : GraphScene<GN, GE>(graph, mode, parent) {}
     UndirectedGraphScene(const UndirectedGraphScene<GN, GE> &scene) = delete;
     UndirectedGraphScene<GN, GE> &operator=(const UndirectedGraphScene<GN, GE> &scene) = delete;

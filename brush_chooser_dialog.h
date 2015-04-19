@@ -16,7 +16,7 @@ class BrushChooserDialog : public QDialog
 
 public:
     explicit BrushChooserDialog(QWidget *parent = 0);
-    ~BrushChooserDialog();
+    virtual ~BrushChooserDialog() override;
 
     void setBrush(const QBrush &brush);
     QBrush brush() const;

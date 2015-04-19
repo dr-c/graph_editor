@@ -38,7 +38,6 @@ QGraphicsEdge::~QGraphicsEdge()
 
 void QGraphicsEdge::deleteCompletely()
 {
-    //<History>: delete edge()
     int weight = _edge->weight();
     _edge->remove();
     _edge = nullptr;
@@ -162,7 +161,6 @@ void QGraphicsEdge::changeWeightOutside(int weight)
 
 void QGraphicsEdge::setWeight(int weight)
 {
-    //<History>: change edge()
     int old_weight = _edge->weight();
     _edge->setWeight(weight);
     _weightItem->placeInCenter();
@@ -182,7 +180,6 @@ void QGraphicsEdge::startWeightFixed(int weight)
 
 void QGraphicsEdge::weightFixed(int weight)
 {
-    //<History>: change node weight()
     if (_beforeWeightChanging != weight)
         _scene->history()->writeEdgeWeightChanging(this, _beforeWeightChanging, weight);
 }

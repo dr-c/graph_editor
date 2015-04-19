@@ -21,6 +21,7 @@ PenChooserFrame::~PenChooserFrame()
 void PenChooserFrame::setPen(const QPen &pen)
 {
     _pen = pen;
+    repaint();
 }
 
 QPen PenChooserFrame::pen() const

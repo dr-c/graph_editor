@@ -4,19 +4,19 @@
 
 #include <QGraphicsSceneMouseEvent>
 
-BasicGraphScene::BasicGraphScene(WeightedGraph *graph, GraphSceneMode *mode, QObject *parent)
+BasicGraphScene::BasicGraphScene(std::shared_ptr<WeightedGraph> graph, GraphSceneMode *mode, QObject *parent)
     : QGraphicsScene(parent),
       _history(new History(this)),
-      _graph(graph),
-      _mode(mode),
-      _nodePen(QPen(QColor(Qt::blue), 2)),
+      _graph(std::move(graph)),
+      _mode(mode)
+      /*_nodePen(QPen(QColor(Qt::blue), 2)),
       _nodeHoverPen(QPen(QColor(Qt::red), 2)),
       _nodeBrush(QBrush(QColor(192, 192, 192, 192))),
       _nodeFont(QFont("Times New Roman", 10)),
       _edgePen(QPen(QColor(Qt::black), 2)),
       _edgeHoverPen(QPen(QColor(Qt::red), 2)),
       _edgeBrush(QBrush(QColor(192, 192, 192, 255))),
-      _edgeFont(QFont("Times New Roman", 10))
+      _edgeFont(QFont("Times New Roman", 10))*/
 {
     _mode->setScene(this);
 }
@@ -29,7 +29,6 @@ BasicGraphScene::~BasicGraphScene()
 
 QGraphicsNode *BasicGraphScene::addNode(const QPointF &centerPos, int weight, int id)
 {
-    //<History>: create node()
     WeightedNode *node = _graph->createNode(id);
     node->setPos(centerPos);
     node->setWeight(weight);
@@ -38,7 +37,6 @@ QGraphicsNode *BasicGraphScene::addNode(const QPointF &centerPos, int weight, in
 
 QGraphicsNode *BasicGraphScene::addNode(WeightedNode *node)
 {
-    assert(node->graph() == this->_graph);
     QGraphicsNode *graphics_node = createGraphicsNode(node);
     graphics_node->setPen(_nodePen);
     graphics_node->setFont(_nodeFont);
@@ -53,7 +51,6 @@ QGraphicsNode *BasicGraphScene::addNode(WeightedNode *node)
 
 QGraphicsEdge *BasicGraphScene::addEdge(int weight)
 {
-    //<History>: create edge()
     WeightedEdge *edge = _graph->createEdge();
     edge->setWeight(weight);
     return addEdge(edge);
@@ -61,7 +58,6 @@ QGraphicsEdge *BasicGraphScene::addEdge(int weight)
 
 QGraphicsEdge *BasicGraphScene::addEdge(WeightedEdge *edge)
 {
-    assert(edge->graph() == this->_graph);
     QGraphicsEdge *graphics_edge = createGraphicsEdge(edge);
     graphics_edge->setPen(_edgePen);
     graphics_edge->setFont(_edgeFont);
@@ -81,7 +77,7 @@ History *BasicGraphScene::history() const
     return _history;
 }
 
-const WeightedGraph *BasicGraphScene::graph() const
+const std::shared_ptr<WeightedGraph> &BasicGraphScene::graph() const
 {
     return _graph;
 }
