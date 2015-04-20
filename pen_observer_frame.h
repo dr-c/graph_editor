@@ -1,3 +1,9 @@
+/*
+ * PenObserverFrame - Frame, which stores and displays Pen chosen by PenChooserDialog.
+ *
+ * OnMouseClick, it shows QColorDialog, which allows to change Color.
+ */
+
 #ifndef PENOBSERVERFRAME_H
 #define PENOBSERVERFRAME_H
 

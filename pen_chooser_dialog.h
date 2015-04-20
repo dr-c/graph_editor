@@ -1,3 +1,14 @@
+/*
+ * PenChooserDialog - Dialog, which allows to change Pen parameters: color and style.
+ *
+ * PenChooserDialog contains PenObserverFrame(uses for color control)
+ *  and buttons(uses for style, capStyle and joinStyle control).
+ * CustomDashLine style not supported.
+ * More info about Pen styles on http://doc.qt.io/qt-5/qpen.html#details
+ *
+ * BrushChooserDialog used by BrushChooserFrame.
+ */
+
 #ifndef PEN_CHOOSER_DIALOG_H
 #define PEN_CHOOSER_DIALOG_H
 

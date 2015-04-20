@@ -1,3 +1,9 @@
+/*
+ * BrushObserverFrame - Frame, which stores and displays Brush chosen by BrushChooserDialog.
+ *
+ * OnMouseClick, it shows QColorDialog, which allows to change Color.
+ */
+
 #ifndef BRUSHOBSERVERFRAME_H
 #define BRUSHOBSERVERFRAME_H
 

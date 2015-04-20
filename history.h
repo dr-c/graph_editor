@@ -1,3 +1,22 @@
+/*
+ * The History is a class which stores change records on Scene.
+ *
+ * Types of supported change records:
+ *  - creation, moving, weight changing and deletion of Nodes;
+ *  - creation, weight changing and deletion of Edges;
+ *  - moving and deletion a Node groups.
+ * All records store in list of records(actually, vector).
+ *
+ * write...() functions create record in history and emit newItemAdded signal.
+ * If some records follows active record in the list of records, they will be delete.
+ *
+ * undo() erases the last change done to the document reverting it to an older state.
+ * redo() reverts the effects of the undo() action.
+ * undo() moves active record back, and redo() - forward in the list of records.
+ *
+ * canUndo()/canRedo() function check, is it possible to use undo/redo() functions.
+ */
+
 #ifndef HISTORY_H
 #define HISTORY_H
 

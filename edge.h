@@ -1,16 +1,16 @@
 /*
- * Edge - logical representation of a line, connecting two verices of graph(nodes).
+ * Edge - logical representation of a line, which connects two vertices of graph(nodes).
  *
  * Edge may be constructed only in Graph with the same template parameters.
  * Edge inherites from <E>. It allows to create a different edges easily.
  * <E> must be a class with default constructor and virtual destructor.
  *
- * After creation Edge is useless until setNodes(...), which connect two Nodes.
+ * After creation, Edge is useless until setNodes(...), which connect two Nodes.
  * It's impossible to Reassign Nodes with setNodes(...).
  * <N> specifies type of Nodes, which connected(can be connected) by this Edge.
  * <N> must be a class with default constructor and virtual destructor.
  *
- * For correct deletion, necessary to use remove(). It will destroy Edge, after removing from Graph.
+ * For correct deletion, it's necessary to use remove(). Edge will be destroyed, after removing from Graph.
  */
 
 #ifndef EDGE_H

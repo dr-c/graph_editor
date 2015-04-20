@@ -1,3 +1,14 @@
+/*
+ * GraphCreationDialog - Dialog for determination Graph type, and parameters customization
+ *  for graphical representation, such as shape of Nodes/Edges, brushes, pens, fonts, etc.
+ *
+ * configureGraphScene(Scene) sets graphical parameters for scene items.
+ *
+ * GraphCreationDialog uses BrushChooserFrame and PenSchooserFrame.
+ *
+ * <TODO>: choise of shape.
+ */
+
 #ifndef GRAPH_CREATION_DIALOG_H
 #define GRAPH_CREATION_DIALOG_H
 

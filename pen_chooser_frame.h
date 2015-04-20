@@ -1,3 +1,9 @@
+/*
+ * PenChooserFrame - Frame, which stores and displays chosen Pen for different purposes.
+ *
+ * OnMouseClick, it shows PenChooserDialog, which allows to change Pen.
+ */
+
 #ifndef PEN_CHOOSER_FRAME_H
 #define PEN_CHOOSER_FRAME_H
 

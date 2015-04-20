@@ -1,3 +1,9 @@
+/*
+ * BrushChooserFrame - Frame, which stores and displays chosen Brush for different purposes.
+ *
+ * OnMouseClick, it shows BrushChooserDialog, which allows to change Brush.
+ */
+
 #ifndef BRUSH_CHOOSER_FRAME_H
 #define BRUSH_CHOOSER_FRAME_H
 
