@@ -57,7 +57,8 @@ HEADERS  += mainwindow.h \
     pen_observer_frame.h \
     brush_chooser_frame.h \
     brush_chooser_dialog.h \
-    brush_observer_frame.h
+    brush_observer_frame.h \
+    graph_configuration.h
 
 FORMS    += mainwindow.ui \
     graph_creation_dialog.ui \

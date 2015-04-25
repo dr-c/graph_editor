@@ -92,6 +92,8 @@ public:
         return _edges;
     }
 
+    virtual bool isDirected() const = 0;
+
 protected:
     Graph() = default;
     Graph(const Graph<N, E> &graph) = delete;
@@ -111,6 +113,7 @@ public:
     DirectedGraph(const DirectedGraph<N, E> &graph) = delete;
     DirectedGraph<N, E> &operator=(const DirectedGraph<N, E> &graph) = delete;
     virtual ~DirectedGraph() override = default;
+    virtual bool isDirected() const { return true; }
 
 protected:
     virtual Node<N, E> *constructNode(int id) override {
@@ -126,6 +129,7 @@ public:
     UndirectedGraph(const UndirectedGraph<N, E> &graph) = delete;
     UndirectedGraph<N, E> &operator=(const UndirectedGraph<N, E> &graph) = delete;
     virtual ~UndirectedGraph() override = default;
+    virtual bool isDirected() const { return false; }
 
 protected:
     virtual Node<N, E> *constructNode(int id) override {

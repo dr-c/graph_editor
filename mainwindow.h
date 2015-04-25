@@ -10,7 +10,7 @@ namespace Ui {
 class MainWindow;
 }
 
-class BasicGraphScene;
+class GraphScene;
 class GraphCreationDialog;
 class QTabBar;
 
@@ -32,11 +32,13 @@ private slots:
     void changeTab(int index);
     void closeTab(int index);
 
+    void on_actionConfigure_triggered();
+
 private:
     Ui::MainWindow                 *_ui;
     QTabBar                        *_tabBar;
     GraphCreationDialog            *_creationDialog;
-    BasicGraphScene                *_graphScene;
+    GraphScene                *_graphScene;
     int                             _tabId;
 };
 

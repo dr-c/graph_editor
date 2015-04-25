@@ -47,6 +47,7 @@
    <addaction name="actionPencil"/>
    <addaction name="separator"/>
    <addaction name="actionNewGraph"/>
+   <addaction name="actionConfigure"/>
   </widget>
   <action name="actionPointer">
    <property name="checkable">
@@ -126,6 +127,24 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionConfigure">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/img/configure.png</normaloff>:/img/configure.png</iconset>
+   </property>
+   <property name="text">
+    <string>Configure</string>
+   </property>
+   <property name="toolTip">
+    <string>Configure</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
    </property>
   </action>
  </widget>

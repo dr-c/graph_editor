@@ -7,21 +7,21 @@ GraphView::GraphView(QWidget *parent)
 
 }
 
-GraphView::GraphView(BasicGraphScene *graph, QWidget *parent)
+GraphView::GraphView(GraphScene *graph, QWidget *parent)
     : QGraphicsView(graph, parent)
 {
 
 }
 
-void GraphView::setGraphScene(BasicGraphScene *graph)
+void GraphView::setGraphScene(GraphScene *graph)
 {
     QGraphicsView::setScene(graph);
 }
 
-BasicGraphScene* GraphView::graphScene() const
+GraphScene* GraphView::graphScene() const
 {
-    assert(dynamic_cast<BasicGraphScene*>(QGraphicsView::scene()) != nullptr);
-    return static_cast<BasicGraphScene*>(QGraphicsView::scene());
+    assert(dynamic_cast<GraphScene*>(QGraphicsView::scene()) != nullptr);
+    return static_cast<GraphScene*>(QGraphicsView::scene());
 }
 
 void GraphView::mousePressEvent(QMouseEvent *event)

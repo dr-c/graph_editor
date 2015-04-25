@@ -6,7 +6,7 @@
 
 #include <QKeyEvent>
 
-QGraphicsNode::QGraphicsNode(BasicGraphScene *scene, WeightedNode *node, QGraphicsItem *parent)
+QGraphicsNode::QGraphicsNode(GraphScene *scene, WeightedNode *node, QGraphicsItem *parent)
     : QGraphicsObject(parent),
       _scene(scene),
       _node(node),

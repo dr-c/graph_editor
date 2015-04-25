@@ -13,10 +13,14 @@
 #define GRAPH_CREATION_DIALOG_H
 
 #include <QDialog>
+#include <memory>
 
 class QButtonGroup;
-class BasicGraphScene;
+class GraphScene;
 class GraphSceneMode;
+class GraphConfiguration;
+class GraphicsNodeCreator;
+class GraphicsEdgeCreator;
 
 namespace Ui {
 class GraphCreationDialog;
@@ -30,16 +34,24 @@ public:
     explicit GraphCreationDialog(QWidget *parent = 0);
     ~GraphCreationDialog();
 
+    void setDirected(bool isDirected);
     bool isDirected() const;
-    void configureGraphScene(BasicGraphScene *scene) const;
+    void lockGraphTypeButtons();
+    void unLockGraphTypeButtons();
+    void setConfiguration(const std::shared_ptr<GraphConfiguration> &config);
+    std::shared_ptr<GraphConfiguration> getConfiguration() const;
+
+public slots:
+    void reset();
 
 private slots:
-    void init();
     void on_nodeFontButton_clicked();
     void on_edgeFontButton_clicked();
 
 private:
     void changeFont(QPushButton *button);
+    GraphicsNodeCreator *getNodeCreator() const;
+    GraphicsEdgeCreator *getEdgeCreator() const;
 
     Ui::GraphCreationDialog *_ui;
     QButtonGroup *_graphTypeGroup;

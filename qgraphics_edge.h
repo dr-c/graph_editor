@@ -39,7 +39,7 @@
 #include "item_info.h"
 
 class WeightEdgeTextItem;
-class BasicGraphScene;
+class GraphScene;
 
 class QGraphicsEdge : public QObject, public QGraphicsPathItem
 {
@@ -82,7 +82,7 @@ signals:
     void removed(int weight);
 
 protected:
-    QGraphicsEdge(BasicGraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent = 0);
+    QGraphicsEdge(GraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent = 0);
 
     virtual void    setActivePen(const QPen &pen);
 
@@ -90,7 +90,7 @@ protected:
     virtual void    hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
     virtual void    focusInEvent(QFocusEvent *event) override;
 
-    BasicGraphScene     *_scene;
+    GraphScene     *_scene;
     WeightedEdge        *_edge;
     WeightEdgeTextItem  *_weightItem;
 

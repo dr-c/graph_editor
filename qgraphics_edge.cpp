@@ -8,7 +8,7 @@
 #include <QFont>
 #include <QKeyEvent>
 
-QGraphicsEdge::QGraphicsEdge(BasicGraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent)
+QGraphicsEdge::QGraphicsEdge(GraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent)
     : QGraphicsPathItem(parent),
       _scene(scene),
       _edge(edge),

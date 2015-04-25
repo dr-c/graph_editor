@@ -27,7 +27,7 @@ class QGraphicsRoundedRectNode : public QGraphicsNode
 public:
     enum { Type = UserType + 102 };
 
-    QGraphicsRoundedRectNode(BasicGraphScene *scene, WeightedNode *node, qreal lineShiftCoef = 0.8, qreal roundingCoef = 0.2, QGraphicsItem *parent = 0);
+    QGraphicsRoundedRectNode(GraphScene *scene, WeightedNode *node, qreal lineShiftCoef = 0.8, qreal roundingCoef = 0.2, QGraphicsItem *parent = 0);
     virtual ~QGraphicsRoundedRectNode() override;
 
     virtual int type() const override;

@@ -5,7 +5,7 @@
 
 #include <QPainter>
 
-QGraphicsEllipseNode::QGraphicsEllipseNode(BasicGraphScene *scene, WeightedNode *node, QGraphicsItem *parent)
+QGraphicsEllipseNode::QGraphicsEllipseNode(GraphScene *scene, WeightedNode *node, QGraphicsItem *parent)
     : QGraphicsNode(scene, node, parent),
       _ellipseItem(new QGraphicsEllipseItem(this)),
       _lineItem(new QGraphicsLineItem(this))

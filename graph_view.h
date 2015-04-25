@@ -8,7 +8,7 @@
 
 #include <QGraphicsView>
 
-class BasicGraphScene;
+class GraphScene;
 
 class GraphView : public QGraphicsView
 {
@@ -16,11 +16,11 @@ class GraphView : public QGraphicsView
 
 public:
     GraphView(QWidget *parent = 0);
-    GraphView(BasicGraphScene *graph, QWidget *parent = 0);
+    GraphView(GraphScene *graph, QWidget *parent = 0);
     virtual ~GraphView() override = default;
 
-    void setGraphScene(BasicGraphScene *graph);
-    BasicGraphScene *graphScene() const;
+    void setGraphScene(GraphScene *graph);
+    GraphScene *graphScene() const;
 
 signals:
     void blankSceneMousePressed();

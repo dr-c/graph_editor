@@ -15,7 +15,7 @@ class QGraphicsCubicArrowEdge : public QGraphicsEdge
 public:
     enum { Type = UserType + 202 };
 
-    QGraphicsCubicArrowEdge(BasicGraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent = 0);
+    QGraphicsCubicArrowEdge(GraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent = 0);
     virtual ~QGraphicsCubicArrowEdge() override;
 
     virtual int type() const override;

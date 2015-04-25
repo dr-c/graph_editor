@@ -27,7 +27,7 @@
 #include <QPointF>
 #include "item_info.h"
 
-class BasicGraphScene;
+class GraphScene;
 class QGraphicsItem;
 class QGraphicsNode;
 class QGraphicsEdge;
@@ -36,7 +36,7 @@ class History : public QObject
 {
     Q_OBJECT
 public:
-    History(BasicGraphScene *scene);
+    History(GraphScene *scene);
     ~History() = default;
     void writeNodeCreation(QGraphicsNode *gNode);
     void writeNodeMoving(QGraphicsNode *gNode, const QPointF &beforeMove, const QPointF &afterMove);
@@ -71,7 +71,7 @@ private:
     std::map<QGraphicsNode*, SharedGNode> _mainNodeItems;
     std::map<QGraphicsEdge*, SharedGEdge> _mainEdgeItems;
 
-    BasicGraphScene            *_scene;
+    GraphScene            *_scene;
     std::size_t                 _current;
 
     std::vector<HistoryItemPtr> _items;

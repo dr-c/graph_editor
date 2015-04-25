@@ -2,7 +2,7 @@
 
 #include "weight_text_item.h"
 
-QGraphicsRoundedRectNode::QGraphicsRoundedRectNode(BasicGraphScene *scene, WeightedNode *node, qreal lineShiftCoef, qreal roundingCoef, QGraphicsItem *parent)
+QGraphicsRoundedRectNode::QGraphicsRoundedRectNode(GraphScene *scene, WeightedNode *node, qreal lineShiftCoef, qreal roundingCoef, QGraphicsItem *parent)
     : QGraphicsNode(scene, node, parent),
       _lineItem(new QGraphicsLineItem(this)),
       _lineShiftCoefficient(checkInRange(lineShiftCoef, minLineShiftCoef, maxLineShiftCoef)),

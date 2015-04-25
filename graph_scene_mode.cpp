@@ -8,18 +8,18 @@
 #include <QKeyEvent>
 #include <QGraphicsSceneMouseEvent>
 
-GraphSceneMode::GraphSceneMode(BasicGraphScene *scene)
+GraphSceneMode::GraphSceneMode(GraphScene *scene)
     : _scene(scene)
 {
 
 }
 
-void GraphSceneMode::setScene(BasicGraphScene *scene)
+void GraphSceneMode::setScene(GraphScene *scene)
 {
     _scene = scene;
 }
 
-const BasicGraphScene *GraphSceneMode::scene() const
+const GraphScene *GraphSceneMode::scene() const
 {
     return _scene;
 }
@@ -30,7 +30,7 @@ void GraphSceneMode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
         _scene->history()->writeNodeCreation(_scene->addNode(mouseEvent->scenePos()));
 }
 
-PointerMode::PointerMode(BasicGraphScene *graphScene)
+PointerMode::PointerMode(GraphScene *graphScene)
     : GraphSceneMode(graphScene)
 {
 
@@ -65,7 +65,7 @@ void PointerMode::keyPressEvent(QKeyEvent *keyEvent)
     }
 }
 
-PencilMode::PencilMode(BasicGraphScene *graphScene)
+PencilMode::PencilMode(GraphScene *graphScene)
     : GraphSceneMode(graphScene),
       _mousePressedItem(nullptr),
       _firstClickedItem(nullptr),
@@ -96,7 +96,7 @@ void PencilMode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
         GraphSceneMode::mouseDoubleClickEvent(mouseEvent);
     else
     {
-        if (findNodeInAncestors(_scene->itemAt(mouseEvent->scenePos(), QTransform()), _scene->typeGraphicsNode()) != nullptr)
+        if (findNodeInAncestors(_scene->itemAt(mouseEvent->scenePos(), QTransform()), _scene->config()->_nodeCreator->type()) != nullptr)
         {
             _arrowItem->deleteCompletely();
             reset();
@@ -106,7 +106,7 @@ void PencilMode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void PencilMode::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    QGraphicsItem *cur_item = findNodeInAncestors(_scene->itemAt(mouseEvent->scenePos(), QTransform()), _scene->typeGraphicsNode());
+    QGraphicsItem *cur_item = findNodeInAncestors(_scene->itemAt(mouseEvent->scenePos(), QTransform()), _scene->config()->_nodeCreator->type());
     if (cur_item != nullptr)
     {
         _mousePressedPoint = mouseEvent->scenePos();
@@ -131,7 +131,7 @@ void PencilMode::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     if (_firstClickedItem != nullptr)
     {
         QPointF cur_point = mouseEvent->scenePos();
-        QGraphicsItem *cur_item = findNodeInAncestors(_scene->itemAt(cur_point, QTransform()), _scene->typeGraphicsNode());
+        QGraphicsItem *cur_item = findNodeInAncestors(_scene->itemAt(cur_point, QTransform()), _scene->config()->_nodeCreator->type());
         if (cur_item == _firstClickedItem)
         {
             if (_arrowItem->isVisible())

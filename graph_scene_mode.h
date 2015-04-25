@@ -20,7 +20,7 @@
 #include <QtGlobal>
 #include <QPointF>
 
-class BasicGraphScene;
+class GraphScene;
 class QGraphicsItem;
 class QGraphicsNode;
 class QGraphicsEdge;
@@ -43,23 +43,23 @@ public:
     virtual void	keyPressEvent(QKeyEvent *keyEvent)                      { Q_UNUSED(keyEvent);   }
     virtual void    keyReleaseEvent(QKeyEvent *keyEvent)                    { Q_UNUSED(keyEvent);   }
 
-    const BasicGraphScene *scene() const;
+    const GraphScene *scene() const;
 
 protected:
-    GraphSceneMode(BasicGraphScene *scene = nullptr);
+    GraphSceneMode(GraphScene *scene = nullptr);
 
-    BasicGraphScene *_scene;
+    GraphScene *_scene;
 
 private:
-    friend class BasicGraphScene;
-    void setScene(BasicGraphScene *scene);
+    friend class GraphScene;
+    void setScene(GraphScene *scene);
 };
 
 class PointerMode : public GraphSceneMode
 {
 public:
     enum { Type = 1 };
-    PointerMode(BasicGraphScene *graphScene = nullptr);
+    PointerMode(GraphScene *graphScene = nullptr);
     virtual ~PointerMode() override = default;
 
     virtual int     type() const override;
@@ -71,7 +71,7 @@ class PencilMode : public GraphSceneMode
 {
 public:
     enum { Type = 2 };
-    PencilMode(BasicGraphScene *graphScene = nullptr);
+    PencilMode(GraphScene *graphScene = nullptr);
     virtual ~PencilMode() override;
 
     virtual int     type() const override;

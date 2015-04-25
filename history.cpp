@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <QDebug>
 
-History::History(BasicGraphScene *scene)
+History::History(GraphScene *scene)
     : _scene(scene), _current(0)
 {
 

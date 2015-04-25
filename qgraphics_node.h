@@ -33,7 +33,7 @@
 
 #include "item_info.h"
 
-class BasicGraphScene;
+class GraphScene;
 class WeightTextItem;
 
 class QGraphicsNode : public QGraphicsObject
@@ -77,7 +77,7 @@ protected slots:
     void weightFixed(int weight);
 
 protected:
-    QGraphicsNode(BasicGraphScene *scene, WeightedNode *node, QGraphicsItem *parent = 0);
+    QGraphicsNode(GraphScene *scene, WeightedNode *node, QGraphicsItem *parent = 0);
 
     virtual void        setGeometry(const QPointF &centerPos) = 0;
     virtual void        calcRadius(int weight);
@@ -90,7 +90,7 @@ protected:
     virtual void        hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     virtual void        hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
-    BasicGraphScene  *_scene;
+    GraphScene  *_scene;
     WeightedNode *_node;
 
     WeightTextItem          *_weightItem;

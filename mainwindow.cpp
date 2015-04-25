@@ -6,12 +6,6 @@
 
 #include "graph_creation_dialog.h"
 
-#include "qgraphics_ellipse_node.h"
-#include "qgraphics_rounded_rect_node.h"
-
-#include "qgraphics_simple_line_edge.h"
-#include "qgraphics_cubic_arrow_edge.h"
-
 #include <QTabBar>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -92,27 +86,26 @@ void MainWindow::updateUndoRedo()
 
 void MainWindow::on_actionNewGraph_triggered()
 {
+    _creationDialog->setDirected(true);
+    _creationDialog->reset();
     if (_creationDialog->exec() == QDialog::Accepted)
     {
-        GraphSceneMode *mode = nullptr;
-        if (_ui->actionPencil->isChecked())
-            mode = new PencilMode();
-        else
-            mode = new PointerMode();
+        GraphSceneMode *mode = (_ui->actionPencil->isChecked()) ?
+                    static_cast<GraphSceneMode*>(new PencilMode()) :
+                    static_cast<GraphSceneMode*>(new PointerMode());
 
-        BasicGraphScene *scene = nullptr;
-        if (_creationDialog->isDirected())
-            scene = new DirectedGraphScene<QGraphicsEllipseNode, QGraphicsCubicArrowEdge>(
-                        std::make_shared<DirectedGraph<NodeInfo, EdgeInfo>>(), mode);
-        else
-            scene = new UndirectedGraphScene<QGraphicsRoundedRectNode, QGraphicsSimpleLineEdge>(
-                        std::make_shared<UndirectedGraph<NodeInfo, EdgeInfo>>(), mode);
+        std::shared_ptr<WeightedGraph> graph = _creationDialog->isDirected() ?
+                    static_cast<std::shared_ptr<WeightedGraph>>(std::make_shared<DirectedGraph<NodeInfo, EdgeInfo>>()) :
+                    static_cast<std::shared_ptr<WeightedGraph>>(std::make_shared<UndirectedGraph<NodeInfo, EdgeInfo>>());
+
+        GraphScene *scene = new GraphScene(std::move(graph), std::move(_creationDialog->getConfiguration()), mode);
+
         _graphScene = scene;
-        _creationDialog->configureGraphScene(scene);
         _ui->graphicsView->setGraphScene(scene);
         int index = _tabBar->addTab(QString::number(++_tabId));
         _tabBar->setTabData(index, QVariant::fromValue(scene));
         _tabBar->setCurrentIndex(index);
+        _ui->actionConfigure->setEnabled(true);
 
         connect(scene->history(), SIGNAL(newItemAdded()), this, SLOT(updateUndoRedo()));
     }
@@ -123,7 +116,7 @@ void MainWindow::changeTab(int index)
     QVariant data = _tabBar->tabData(index);
     if (index != -1 && data != QVariant() && _tabId != -1)
     {
-        _graphScene = data.value<BasicGraphScene*>();
+        _graphScene = data.value<GraphScene*>();
         _ui->graphicsView->setGraphScene(_graphScene);
         _ui->actionUndo->setEnabled(_graphScene->history()->canUndo());
         _ui->actionRedo->setEnabled(_graphScene->history()->canRedo());
@@ -136,11 +129,22 @@ void MainWindow::changeTab(int index)
     {
         _ui->actionUndo->setEnabled(false);
         _ui->actionRedo->setEnabled(false);
+        _ui->actionConfigure->setEnabled(false);
     }
 }
 
 void MainWindow::closeTab(int index)
 {
-    delete _tabBar->tabData(index).value<BasicGraphScene*>();
+    delete _tabBar->tabData(index).value<GraphScene*>();
     _tabBar->removeTab(index);
+}
+
+void MainWindow::on_actionConfigure_triggered()
+{
+    _creationDialog->setDirected(_graphScene->graph()->isDirected());
+    _creationDialog->lockGraphTypeButtons();
+    _creationDialog->setConfiguration(_graphScene->config());
+    if (_creationDialog->exec() == QDialog::Accepted)
+        _graphScene->setConfig(_creationDialog->getConfiguration());
+    _creationDialog->unLockGraphTypeButtons();
 }

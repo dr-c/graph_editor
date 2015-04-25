@@ -3,7 +3,7 @@
 #include "qgraphics_node.h"
 #include "weight_text_item.h"
 
-QGraphicsCubicArrowEdge::QGraphicsCubicArrowEdge(BasicGraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent)
+QGraphicsCubicArrowEdge::QGraphicsCubicArrowEdge(GraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent)
     : QGraphicsEdge(scene, edge, parent),
       _curve(new CurvePathItem(this))
 {
