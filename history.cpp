@@ -119,6 +119,24 @@ bool History::canRedo() const
     return _current < _items.size();
 }
 
+void History::substituteGraphicsNode(QGraphicsNode *fromGNode, QGraphicsNode *toGNode)
+{
+    auto iter = _mainNodeItems.find(fromGNode);
+    auto sg_node = iter->second;
+    (*sg_node) = toGNode;
+    _mainNodeItems.erase(iter);
+    _mainNodeItems.insert(std::make_pair(*sg_node, sg_node));
+}
+
+void History::substituteGraphicsEdge(QGraphicsEdge *fromGEdge, QGraphicsEdge *toGEdge)
+{
+    auto iter = _mainEdgeItems.find(fromGEdge);
+    auto sg_edge= iter->second;
+    (*sg_edge) = toGEdge;
+    _mainEdgeItems.erase(iter);
+    _mainEdgeItems.insert(std::make_pair(*sg_edge, sg_edge));
+}
+
 History::HistoryItem::HistoryItem(History *history)
     : _history(history)
 {

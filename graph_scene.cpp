@@ -96,8 +96,10 @@ void GraphScene::setConfig(std::shared_ptr<GraphConfiguration> &&config)
     {
         for (auto pair : _graph->nodes())
         {
-            delete pair.second->graphicsNode();
-            addNode(pair.second);
+            QGraphicsNode *old_gnode = pair.second->graphicsNode();
+            delete old_gnode;
+            QGraphicsNode *new_gnode = addNode(pair.second);
+            history()->substituteGraphicsNode(old_gnode, new_gnode);
         }
     }
     else if (config->_nodePen!= _config->_nodePen || config->_nodeHoverPen!= _config->_nodeHoverPen ||
@@ -111,10 +113,12 @@ void GraphScene::setConfig(std::shared_ptr<GraphConfiguration> &&config)
     {
         for (auto edge : _graph->edges())
         {
-            delete edge->graphicsEdge();
-            QGraphicsEdge *graphics_edge = addEdge(edge);
-            graphics_edge->refresh();
-            graphics_edge->showWeight();
+            QGraphicsEdge *old_gedge = edge->graphicsEdge();
+            delete old_gedge;
+            QGraphicsEdge *new_gedge = addEdge(edge);
+            new_gedge->refresh();
+            new_gedge->showWeight();
+            history()->substituteGraphicsEdge(old_gedge, new_gedge);
         }
         _minEdgeWeight = _maxEdgeWeight = 0;
         calcEdgesWeightRange();

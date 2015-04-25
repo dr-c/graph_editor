@@ -38,20 +38,28 @@ class History : public QObject
 public:
     History(GraphScene *scene);
     ~History() = default;
+
     void writeNodeCreation(QGraphicsNode *gNode);
     void writeNodeMoving(QGraphicsNode *gNode, const QPointF &beforeMove, const QPointF &afterMove);
     void writeNodeWeightChanging(QGraphicsNode *gNode, int fromWeight, int toWeight);
     void writeNodeDeletion(QGraphicsNode *gNode);
+
     void writeGroupNodesMoving(const QList<QGraphicsItem *> &listItems, const QPointF &beforeMove, const QPointF &afterMove);
     void prepareGroupNodesDeletion(int nodesCount);
     void writeNodeDeletionToGroup(QGraphicsNode *gNode);
+
     void writeEdgeCreation(QGraphicsEdge *gEdge);
     void writeEdgeWeightChanging(QGraphicsEdge *gEdge, int fromWeight, int toWeight);
     void writeEdgeDeletion(QGraphicsEdge *gEdge);
+
     bool undo();
     bool redo();
+
     bool canUndo() const;
     bool canRedo() const;
+
+    void substituteGraphicsNode(QGraphicsNode *fromGNode, QGraphicsNode *toGNode);
+    void substituteGraphicsEdge(QGraphicsEdge *fromGEdge, QGraphicsEdge *toGEdge);
 
 signals:
     void newItemAdded();
