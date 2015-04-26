@@ -41,7 +41,15 @@ void QGraphicsEdge::deleteCompletely()
     _edge->remove();
     _edge = nullptr;
     emit removed(weight);
-    delete this;
+    /*
+     * delete this; incorrect, because in this case:
+     * QGraphicsScene::keyPressEvent(event) {
+     *      QGraphicsItem::keyPressEvent(event);    // calls deleteCompletely()
+     *      QGraphicsItem::isPanel();               // QGraphicsItem will be already destroyed
+     *      QGraphicsItem::parentItem();            // QGraphicsItem will be already destroyed
+     * }
+    */
+    emit deleteLater();
 }
 
 WeightedEdge *QGraphicsEdge::edge() const

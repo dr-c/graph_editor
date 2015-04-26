@@ -38,7 +38,15 @@ void QGraphicsNode::deleteCompletely()
     });
     _node->remove();
     _node = nullptr;
-    delete this;
+    /*
+     * delete this; incorrect, because in this case:
+     * QGraphicsScene::keyPressEvent(event) {
+     *      QGraphicsItem::keyPressEvent(event);    // calls deleteCompletely()
+     *      QGraphicsItem::isPanel();               // QGraphicsItem will be already destroyed
+     *      QGraphicsItem::parentItem();            // QGraphicsItem will be already destroyed
+     * }
+    */
+    emit deleteLater();
 }
 
 void QGraphicsNode::setPen(const QPen &pen)
