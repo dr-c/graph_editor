@@ -141,10 +141,10 @@ protected:
     DirectedNode(const DirectedNode<N, E> &node) = delete;
     DirectedNode<N, E> &operator=(const DirectedNode<N, E> &node) = delete;
     virtual ~DirectedNode() override {
-        for (auto& pair : _successors)
-            pair.second->remove();
-        for (auto& pair : _predecessors)
-            pair.second->remove();
+        while (!_successors.empty())
+            _successors.begin()->second->remove();
+        while (!_predecessors.empty())
+            _predecessors.begin()->second->remove();
     }
 
     virtual void addSuccessor(Node<N, E> *node, Edge<N, E> *edge) override {
@@ -211,8 +211,8 @@ protected:
     UndirectedNode(const UndirectedNode<N, E> &node) = delete;
     UndirectedNode<N, E> &operator=(const UndirectedNode<N, E> &node) = delete;
     virtual ~UndirectedNode() override {
-        for (auto& pair : _adjacents)
-            pair.second->remove();
+        while (!_adjacents.empty())
+            _adjacents.begin()->second->remove();
     }
 
     virtual void addSuccessor(Node<N, E> *node, Edge<N, E> *edge) override {
