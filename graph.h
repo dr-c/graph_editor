@@ -44,10 +44,8 @@ public:
     virtual ~Graph() {
         for (auto edge : _edges)
             delete edge;
-        _edges.clear();
         for (auto& pair : _nodes)
             delete pair.second;
-        _nodes.clear();
     }
 
     Node<N, E> *createNode(int id = 0) {

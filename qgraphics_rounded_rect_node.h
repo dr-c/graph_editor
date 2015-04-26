@@ -28,7 +28,7 @@ public:
     enum { Type = UserType + 102 };
 
     QGraphicsRoundedRectNode(GraphScene *scene, WeightedNode *node, qreal lineShiftCoef = 0.8, qreal roundingCoef = 0.2, QGraphicsItem *parent = 0);
-    virtual ~QGraphicsRoundedRectNode() override;
+    virtual ~QGraphicsRoundedRectNode() override = default;
 
     virtual int type() const override;
     virtual QPainterPath shape() const override;
@@ -60,7 +60,7 @@ private:
     static constexpr double minRoundingCoef = 0.;
     static constexpr double maxRoundingCoef = 0.3;
 
-    QGraphicsLineItem       *_lineItem;
+    QGraphicsLineItem   _lineItem;
 
     qreal   _lineShiftCoefficient;
     qreal   _roundingCoefficient;

@@ -5,15 +5,10 @@
 
 QGraphicsCubicArrowEdge::QGraphicsCubicArrowEdge(GraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent)
     : QGraphicsEdge(scene, edge, parent),
-      _curve(new CurvePathItem(this))
+      _curve(this)
 {
-    _curve->setZValue(0);
-    _weightItem->setZValue(1);
-}
-
-QGraphicsCubicArrowEdge::~QGraphicsCubicArrowEdge()
-{
-    delete _curve;
+    _curve.setZValue(0);
+    _weightItem.setZValue(1);
 }
 
 void QGraphicsCubicArrowEdge::draw(QGraphicsNode *fromGNode, QGraphicsNode *toGNode)
@@ -24,14 +19,14 @@ void QGraphicsCubicArrowEdge::draw(QGraphicsNode *fromGNode, QGraphicsNode *toGN
     QPainterPath path_curve(from_interm_point);
     QPointF start_arrow_point = calcIntermediatePoint(to_interm_point, from_interm_point, 20);
     path_curve.cubicTo(calcCubicPoint(from_interm_point, start_arrow_point, 0.3, 30), calcCubicPoint(start_arrow_point, from_interm_point, 0.3, 0), start_arrow_point);
-    _curve->setPath(path_curve);
+    _curve.setPath(path_curve);
 
     QPainterPath path_triangle(to_interm_point);
     path_triangle.addPolygon(calcTrianglePolygon(from_interm_point, to_interm_point, 20, 6));
     setPath(path_triangle);
 
-    _weightItem->setCenterPoint(calcCubicPoint(from_interm_point, to_interm_point, 0.5, 10));
-    _weightItem->placeInCenter();
+    _weightItem.setCenterPoint(calcCubicPoint(from_interm_point, to_interm_point, 0.5, 10));
+    _weightItem.placeInCenter();
 }
 
 void QGraphicsCubicArrowEdge::draw(QGraphicsNode *fromGNode, const QPointF &toPoint)
@@ -41,7 +36,7 @@ void QGraphicsCubicArrowEdge::draw(QGraphicsNode *fromGNode, const QPointF &toPo
     QPainterPath path_curve(from_interm_point);
     QPointF start_arrow_point = calcIntermediatePoint(toPoint, from_interm_point, 20);
     path_curve.cubicTo(calcCubicPoint(from_interm_point, start_arrow_point, 0.3, 30), calcCubicPoint(start_arrow_point, from_interm_point, 0.3, 0), start_arrow_point);
-    _curve->setPath(path_curve);
+    _curve.setPath(path_curve);
 
     QPainterPath path_triangle(toPoint);
     path_triangle.addPolygon(calcTrianglePolygon(from_interm_point, toPoint, 20, 6));
@@ -51,7 +46,7 @@ void QGraphicsCubicArrowEdge::draw(QGraphicsNode *fromGNode, const QPointF &toPo
 void QGraphicsCubicArrowEdge::setActivePen(const QPen &pen)
 {
     QGraphicsPathItem::setPen(pen);
-    _curve->setPen(pen);
+    _curve.setPen(pen);
 }
 
 int QGraphicsCubicArrowEdge::type() const

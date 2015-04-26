@@ -13,9 +13,9 @@
 #define GRAPH_CREATION_DIALOG_H
 
 #include <QDialog>
+#include <QButtonGroup>
 #include <memory>
 
-class QButtonGroup;
 class GraphScene;
 class GraphSceneMode;
 class GraphConfiguration;
@@ -54,9 +54,9 @@ private:
     GraphicsEdgeCreator *getEdgeCreator() const;
 
     Ui::GraphCreationDialog *_ui;
-    QButtonGroup *_graphTypeGroup;
-    QButtonGroup *_shapeNodesGroup;
-    QButtonGroup *_formEdgesGroup;
+    QButtonGroup _graphTypeGroup;
+    QButtonGroup _shapeNodesGroup;
+    QButtonGroup _formEdgesGroup;
 };
 
 #endif // GRAPH_CREATION_DIALOG_H

@@ -1,7 +1,6 @@
 #include "qgraphics_node.h"
 #include "qgraphics_edge.h"
 
-#include "weight_text_item.h"
 #include "graph_scene.h"
 
 #include <QKeyEvent>
@@ -10,25 +9,23 @@ QGraphicsNode::QGraphicsNode(GraphScene *scene, WeightedNode *node, QGraphicsIte
     : QGraphicsObject(parent),
       _scene(scene),
       _node(node),
-      _weightItem(new WeightTextItem(_node->weight(), this)),
-      _idItem(new QGraphicsSimpleTextItem(QString::number(_node->id()), this)),
+      _weightItem(_node->weight(), this),
+      _idItem(QString::number(_node->id()), this),
       _simplePen(QPen(QColor(Qt::black))),
       _hoverPen(QPen(QColor(Qt::red))),
       _beforeWeightChanging(_node->weight())
 {
     _node->setGraphicsNode(this);
     calcRadius(_node->weight());
-    _weightItem->setZValue(1);
-    _idItem->setZValue(1);
+    _weightItem.setZValue(1);
+    _idItem.setZValue(1);
 
-    connect(_weightItem, SIGNAL(textChanged(int)), this, SLOT(setWeight(int)));
-    connect(_weightItem, SIGNAL(finishTextChanging(int)), this, SLOT(weightFixed(int)));
+    connect(&_weightItem, SIGNAL(textChanged(int)), this, SLOT(setWeight(int)));
+    connect(&_weightItem, SIGNAL(finishTextChanging(int)), this, SLOT(weightFixed(int)));
 }
 
 QGraphicsNode::~QGraphicsNode()
 {
-    delete _idItem;
-    delete _weightItem;
     if (_node != nullptr)
         _node->setGraphicsNode(nullptr);
 }
@@ -84,7 +81,7 @@ void QGraphicsNode::changePositionOutside(const QPointF &topLeft)
 
 void QGraphicsNode::changeWeightOutside(int weight)
 {
-    _weightItem->setPlainText(QString::number(weight));
+    _weightItem.setPlainText(QString::number(weight));
     setWeight(weight);
 }
 
@@ -100,7 +97,7 @@ void QGraphicsNode::setWeight(int weight)
 void QGraphicsNode::weightFixed(int weight)
 {
     if (_beforeWeightChanging != weight)
-        _scene->history()->writeNodeWeightChanging(this, _beforeWeightChanging, weight);
+        _scene->history().writeNodeWeightChanging(this, _beforeWeightChanging, weight);
 }
 
 void QGraphicsNode::calcRadius(int weight)
@@ -125,9 +122,9 @@ void QGraphicsNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
         const QList<QGraphicsItem*> &listItems = _scene->selectedItems();
         assert(!listItems.empty());
         if (listItems.count() == 1)
-            _scene->history()->writeNodeMoving(this, _beforeMousePressPos, after_mouse_press_pos);
+            _scene->history().writeNodeMoving(this, _beforeMousePressPos, after_mouse_press_pos);
         else
-            _scene->history()->writeGroupNodesMoving(listItems, _beforeMousePressPos, after_mouse_press_pos);
+            _scene->history().writeGroupNodesMoving(listItems, _beforeMousePressPos, after_mouse_press_pos);
     }
     QGraphicsObject::mouseReleaseEvent(mouseEvent);
 }
@@ -136,8 +133,8 @@ void QGraphicsNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mouseDoubleClickEvent(event);
     _beforeWeightChanging = _node->weight();
-    _weightItem->setTextInteractionFlags(Qt::TextEditorInteraction);
-    _weightItem->setFocus();
+    _weightItem.setTextInteractionFlags(Qt::TextEditorInteraction);
+    _weightItem.setFocus();
 }
 
 void QGraphicsNode::keyPressEvent(QKeyEvent *event)
@@ -145,7 +142,7 @@ void QGraphicsNode::keyPressEvent(QKeyEvent *event)
     QGraphicsObject::keyPressEvent(event);
     if (event->key() == Qt::Key_Delete)
     {
-        _scene->history()->writeNodeDeletion(this);
+        _scene->history().writeNodeDeletion(this);
         deleteCompletely();
     }
 }

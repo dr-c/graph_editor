@@ -14,7 +14,7 @@ public:
     enum { Type = UserType + 101 };
 
     QGraphicsEllipseNode(GraphScene *scene, WeightedNode *node, QGraphicsItem *parent = 0);
-    virtual ~QGraphicsEllipseNode() override;
+    virtual ~QGraphicsEllipseNode() override = default;
 
     virtual int type() const override;
     virtual QPainterPath shape() const override;
@@ -37,8 +37,8 @@ protected:
     virtual void setGeometry(const QPointF &centerPos) override;
 
 private:
-    QGraphicsEllipseItem    *_ellipseItem;
-    QGraphicsLineItem       *_lineItem;
+    QGraphicsEllipseItem    _ellipseItem;
+    QGraphicsLineItem       _lineItem;
 };
 
 #endif // QGRAPHICSELLIPSENODE_H

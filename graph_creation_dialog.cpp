@@ -2,7 +2,6 @@
 #include "ui_graph_creation_dialog.h"
 
 #include <QFontDialog>
-#include <QButtonGroup>
 
 #include "graph_scene.h"
 #include "graph_configuration.h"
@@ -15,43 +14,37 @@
 GraphCreationDialog::GraphCreationDialog(QWidget *parent)
     : QDialog(parent),
       _ui(new Ui::GraphCreationDialog),
-      _graphTypeGroup(new QButtonGroup(this)),
-      _shapeNodesGroup(new QButtonGroup(this)),
-      _formEdgesGroup(new QButtonGroup(this))
+      _graphTypeGroup(this),
+      _shapeNodesGroup(this),
+      _formEdgesGroup(this)
 {
     _ui->setupUi(this);
 
     reset();
 
-    _graphTypeGroup->addButton(_ui->directedGraphRadioButton);
-    _graphTypeGroup->addButton(_ui->undirectedGraphRadioButton);
-    _shapeNodesGroup->addButton(_ui->circleButton, QGraphicsEllipseNode::Type);
-    _shapeNodesGroup->addButton(_ui->rectangleButton, QGraphicsRoundedRectNode::Type);
-    _formEdgesGroup->addButton(_ui->arrowButton, QGraphicsCubicArrowEdge::Type);
-    _formEdgesGroup->addButton(_ui->simpleLineButton, QGraphicsSimpleLineEdge::Type);
+    _graphTypeGroup.addButton(_ui->undirectedGraphRadioButton, 0);
+    _graphTypeGroup.addButton(_ui->directedGraphRadioButton, 1);
+    _shapeNodesGroup.addButton(_ui->circleButton, QGraphicsEllipseNode::Type);
+    _shapeNodesGroup.addButton(_ui->rectangleButton, QGraphicsRoundedRectNode::Type);
+    _formEdgesGroup.addButton(_ui->arrowButton, QGraphicsCubicArrowEdge::Type);
+    _formEdgesGroup.addButton(_ui->simpleLineButton, QGraphicsSimpleLineEdge::Type);
 
     connect(_ui->resetButton, SIGNAL(clicked()), this, SLOT(reset()));
 }
 
 GraphCreationDialog::~GraphCreationDialog()
 {
-    delete _formEdgesGroup;
-    delete _shapeNodesGroup;
-    delete _graphTypeGroup;
     delete _ui;
 }
 
 void GraphCreationDialog::setDirected(bool isDirected)
 {
-    if (isDirected)
-        _ui->directedGraphRadioButton->setChecked(true);
-    else
-        _ui->undirectedGraphRadioButton->setChecked(true);
+    _graphTypeGroup.button(static_cast<int>(isDirected))->setChecked(true);
 }
 
 bool GraphCreationDialog::isDirected() const
 {
-    return _ui->directedGraphRadioButton->isChecked();
+    return static_cast<bool>(_graphTypeGroup.checkedId());
 }
 
 void GraphCreationDialog::lockGraphTypeButtons()
@@ -68,8 +61,8 @@ void GraphCreationDialog::unLockGraphTypeButtons()
 
 void GraphCreationDialog::setConfiguration(const std::shared_ptr<GraphConfiguration> &config)
 {
-    _shapeNodesGroup->button(config->_nodeCreator->type());
-    _formEdgesGroup->button(config->_edgeCreator->type());
+    _shapeNodesGroup.button(config->_nodeCreator->type());
+    _formEdgesGroup.button(config->_edgeCreator->type());
     _ui->nodePenFrame->setPen(config->_nodePen);
     _ui->nodeHoverPenFrame->setPen(config->_nodeHoverPen);
     _ui->nodeBrushFrame->setBrush(config->_nodeBrush);
@@ -134,7 +127,7 @@ void GraphCreationDialog::changeFont(QPushButton *button)
 
 GraphicsNodeCreator *GraphCreationDialog::getNodeCreator() const
 {
-    switch (_shapeNodesGroup->checkedId()) {
+    switch (_shapeNodesGroup.checkedId()) {
         case QGraphicsEllipseNode::Type :       return new GraphicsNodeCreatorT<QGraphicsEllipseNode>();
         case QGraphicsRoundedRectNode::Type :   return new GraphicsNodeCreatorT<QGraphicsRoundedRectNode>();
         default: assert(false);
@@ -143,7 +136,7 @@ GraphicsNodeCreator *GraphCreationDialog::getNodeCreator() const
 
 GraphicsEdgeCreator *GraphCreationDialog::getEdgeCreator() const
 {
-    switch (_formEdgesGroup->checkedId()) {
+    switch (_formEdgesGroup.checkedId()) {
         case QGraphicsCubicArrowEdge::Type :    return new GraphicsEdgeCreatorT<QGraphicsCubicArrowEdge>();
         case QGraphicsSimpleLineEdge::Type :    return new GraphicsEdgeCreatorT<QGraphicsSimpleLineEdge>();
         default: assert(false);

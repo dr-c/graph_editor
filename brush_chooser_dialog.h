@@ -12,13 +12,12 @@
 #define BRUSH_CHOOSER_DIALOG_H
 
 #include <QDialog>
+#include <QButtonGroup>
 #include <array>
 
 namespace Ui {
 class BrushChooserDialog;
 }
-
-class QButtonGroup;
 
 class BrushChooserDialog : public QDialog
 {
@@ -36,7 +35,7 @@ private slots:
 
 private:
     Ui::BrushChooserDialog *_ui;
-    QButtonGroup *_styleButtonGroup;
+    QButtonGroup _styleButtonGroup;
 
     static constexpr int array_size = 15;
     static const std::array<QString, array_size> names;

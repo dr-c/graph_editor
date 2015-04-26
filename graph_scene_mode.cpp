@@ -27,7 +27,7 @@ const GraphScene *GraphSceneMode::scene() const
 void GraphSceneMode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     if (mouseEvent->button() == Qt::LeftButton && _scene->itemAt(mouseEvent->scenePos(), QTransform()) == nullptr)
-        _scene->history()->writeNodeCreation(_scene->addNode(mouseEvent->scenePos()));
+        _scene->history().writeNodeCreation(_scene->addNode(mouseEvent->scenePos()));
 }
 
 PointerMode::PointerMode(GraphScene *graphScene)
@@ -54,12 +54,12 @@ void PointerMode::keyPressEvent(QKeyEvent *keyEvent)
         const QList<QGraphicsItem*> &listItems = _scene->selectedItems();
         if (listItems.count() < 2)
             return;
-        _scene->history()->prepareGroupNodesDeletion(listItems.count());
+        _scene->history().prepareGroupNodesDeletion(listItems.count());
         for (auto item : listItems)
         {
             assert(dynamic_cast<QGraphicsNode*>(item) != nullptr);
             QGraphicsNode* graphics_node = static_cast<QGraphicsNode*>(item);
-            _scene->history()->writeNodeDeletionToGroup(graphics_node);
+            _scene->history().writeNodeDeletionToGroup(graphics_node);
             graphics_node->deleteCompletely();
         }
     }
@@ -177,7 +177,7 @@ void PencilMode::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
             _arrowItem->join(_firstClickedItem, _mousePressedItem);
             _arrowItem->showWeight();
             _arrowItem->setAcceptHoverEvents(true);
-            _scene->history()->writeEdgeCreation(_arrowItem);
+            _scene->history().writeEdgeCreation(_arrowItem);
             reset();
         }
     }

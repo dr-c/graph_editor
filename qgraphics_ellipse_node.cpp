@@ -7,16 +7,10 @@
 
 QGraphicsEllipseNode::QGraphicsEllipseNode(GraphScene *scene, WeightedNode *node, QGraphicsItem *parent)
     : QGraphicsNode(scene, node, parent),
-      _ellipseItem(new QGraphicsEllipseItem(this)),
-      _lineItem(new QGraphicsLineItem(this))
+      _ellipseItem(this),
+      _lineItem(this)
 {
     setGeometry(_node->pos());
-}
-
-QGraphicsEllipseNode::~QGraphicsEllipseNode()
-{
-    delete _lineItem;
-    delete _ellipseItem;
 }
 
 int QGraphicsEllipseNode::type() const
@@ -26,7 +20,7 @@ int QGraphicsEllipseNode::type() const
 
 QRectF QGraphicsEllipseNode::boundingRect() const
 {
-    return _ellipseItem->boundingRect();
+    return _ellipseItem.boundingRect();
 }
 
 void QGraphicsEllipseNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -49,25 +43,25 @@ void QGraphicsEllipseNode::paint(QPainter *painter, const QStyleOptionGraphicsIt
 
 void QGraphicsEllipseNode::setFont(const QFont &font, const QColor &color)
 {
-    _weightItem->setDefaultTextColor(color);
-    _weightItem->setFont(font);
-    _idItem->setFont(font);
+    _weightItem.setDefaultTextColor(color);
+    _weightItem.setFont(font);
+    _idItem.setFont(font);
     setGeometry(_node->pos());
 }
 
 void QGraphicsEllipseNode::setBrush(const QBrush &brush)
 {
-    _ellipseItem->setBrush(brush);
+    _ellipseItem.setBrush(brush);
 }
 
 QFont QGraphicsEllipseNode::font() const
 {
-    return _idItem->font();
+    return _idItem.font();
 }
 
 QBrush QGraphicsEllipseNode::brush() const
 {
-    return _ellipseItem->brush();
+    return _ellipseItem.brush();
 }
 
 bool QGraphicsEllipseNode::intersects(QGraphicsNode *gNode) const
@@ -79,7 +73,7 @@ bool QGraphicsEllipseNode::intersects(QGraphicsNode *gNode) const
 
 QPainterPath QGraphicsEllipseNode::shape() const
 {
-    return _ellipseItem->shape();
+    return _ellipseItem.shape();
 }
 
 void QGraphicsEllipseNode::setGeometry(const QPointF &centerPos)
@@ -88,27 +82,27 @@ void QGraphicsEllipseNode::setGeometry(const QPointF &centerPos)
     setPos(centerPos.x() - _radius, centerPos.y() - _radius);
 
     const qreal diameter = _radius * 2;
-    _ellipseItem->setRect(0, 0, diameter, diameter);
+    _ellipseItem.setRect(0, 0, diameter, diameter);
 
     const qreal shift_to_text_item_center = _radius / sqrt2 / 2;
-    const QRectF weight_item_rect = _weightItem->boundingRect();
-    _weightItem->setPos(_radius + shift_to_text_item_center - weight_item_rect.width() / 2,
+    const QRectF weight_item_rect = _weightItem.boundingRect();
+    _weightItem.setPos(_radius + shift_to_text_item_center - weight_item_rect.width() / 2,
                        _radius + shift_to_text_item_center - weight_item_rect.height() / 2);
 
     const qreal line_item_rect_shift = _radius - _radius / sqrt2;
-    _lineItem->setPos(line_item_rect_shift, line_item_rect_shift);
+    _lineItem.setPos(line_item_rect_shift, line_item_rect_shift);
     const qreal line_projection_length = _radius * sqrt2;
-    _lineItem->setLine(0, line_projection_length, line_projection_length, 0);
+    _lineItem.setLine(0, line_projection_length, line_projection_length, 0);
 
-    const QRectF id_item_rect = _idItem->boundingRect();
-    _idItem->setPos(_radius - shift_to_text_item_center - id_item_rect.width() / 2,
-                    _radius - shift_to_text_item_center - id_item_rect.height() / 2);
+    const QRectF id_item_rect = _idItem.boundingRect();
+    _idItem.setPos(_radius - shift_to_text_item_center - id_item_rect.width() / 2,
+                   _radius - shift_to_text_item_center - id_item_rect.height() / 2);
 }
 
 void QGraphicsEllipseNode::setActivePen(const QPen &pen)
 {
-    _ellipseItem->setPen(pen);
-    _lineItem->setPen(pen);
+    _ellipseItem.setPen(pen);
+    _lineItem.setPen(pen);
 }
 
 QPointF QGraphicsEllipseNode::calcIntermediatePoint(const QPointF &toPoint) const

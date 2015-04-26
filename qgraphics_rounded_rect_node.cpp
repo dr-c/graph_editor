@@ -4,18 +4,13 @@
 
 QGraphicsRoundedRectNode::QGraphicsRoundedRectNode(GraphScene *scene, WeightedNode *node, qreal lineShiftCoef, qreal roundingCoef, QGraphicsItem *parent)
     : QGraphicsNode(scene, node, parent),
-      _lineItem(new QGraphicsLineItem(this)),
+      _lineItem(this),
       _lineShiftCoefficient(checkInRange(lineShiftCoef, minLineShiftCoef, maxLineShiftCoef)),
       _roundingCoefficient(checkInRange(roundingCoef, minRoundingCoef, maxRoundingCoef)),
       _roundingRadius(_roundingCoefficient * _radius),
       _pen(pen())
 {
     setGeometry(_node->pos());
-}
-
-QGraphicsRoundedRectNode::~QGraphicsRoundedRectNode()
-{
-    delete _lineItem;
 }
 
 int QGraphicsRoundedRectNode::type() const
@@ -52,9 +47,9 @@ void QGraphicsRoundedRectNode::paint(QPainter *painter, const QStyleOptionGraphi
 
 void QGraphicsRoundedRectNode::setFont(const QFont &font, const QColor &color)
 {
-    _weightItem->setFont(font);
-    _weightItem->setDefaultTextColor(color);
-    _idItem->setFont(font);
+    _weightItem.setFont(font);
+    _weightItem.setDefaultTextColor(color);
+    _idItem.setFont(font);
     setGeometry(_node->pos());
 }
 
@@ -66,7 +61,7 @@ void QGraphicsRoundedRectNode::setBrush(const QBrush &brush)
 
 QFont QGraphicsRoundedRectNode::font() const
 {
-    return _idItem->font();
+    return _idItem.font();
 }
 
 QBrush QGraphicsRoundedRectNode::brush() const
@@ -101,26 +96,26 @@ void QGraphicsRoundedRectNode::setGeometry(const QPointF &centerPos)
 {
     setPos(centerPos.x() - _radius, centerPos.y() - _radius);
 
-    const QRectF weight_item_rect = _weightItem->boundingRect();
+    const QRectF weight_item_rect = _weightItem.boundingRect();
     const qreal shift_to_weight_item_center = _radius * (2 - _lineShiftCoefficient / 2) - _roundingRadius / 2;
-    _weightItem->setPos(shift_to_weight_item_center - weight_item_rect.width() / 2,
+    _weightItem.setPos(shift_to_weight_item_center - weight_item_rect.width() / 2,
                         shift_to_weight_item_center - weight_item_rect.height() / 2);
 
     const qreal line_item_rect_shift = (1 - _lineShiftCoefficient) * _radius * 2;
-    _lineItem->setPos(line_item_rect_shift, line_item_rect_shift);
+    _lineItem.setPos(line_item_rect_shift, line_item_rect_shift);
     const qreal line_projection_length = _lineShiftCoefficient * _radius * 2 - _pen.widthF() / 2;
-    _lineItem->setLine(0, line_projection_length, line_projection_length, 0);
+    _lineItem.setLine(0, line_projection_length, line_projection_length, 0);
 
-    const QRectF id_item_rect = _idItem->boundingRect();
+    const QRectF id_item_rect = _idItem.boundingRect();
     const qreal shift_to_id_item_center = (_radius * (2 - _lineShiftCoefficient) + _roundingRadius) / 2;
-    _idItem->setPos(shift_to_id_item_center - id_item_rect.width() / 2,
+    _idItem.setPos(shift_to_id_item_center - id_item_rect.width() / 2,
                     shift_to_id_item_center - id_item_rect.height() / 2);
 }
 
 void QGraphicsRoundedRectNode::setActivePen(const QPen &pen)
 {
     _pen = pen;
-    _lineItem->setPen(_pen);
+    _lineItem.setPen(_pen);
     update(boundingRect());
 }
 

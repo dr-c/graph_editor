@@ -37,6 +37,8 @@ class History : public QObject
     Q_OBJECT
 public:
     History(GraphScene *scene);
+    History(const History&) = delete;
+    History &operator=(const History&) = delete;
     ~History() = default;
 
     void writeNodeCreation(QGraphicsNode *gNode);
@@ -79,8 +81,8 @@ private:
     std::map<QGraphicsNode*, SharedGNode> _mainNodeItems;
     std::map<QGraphicsEdge*, SharedGEdge> _mainEdgeItems;
 
-    GraphScene            *_scene;
-    std::size_t                 _current;
+    GraphScene *_scene;
+    std::size_t _current;
 
     std::vector<HistoryItemPtr> _items;
 

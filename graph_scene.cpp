@@ -4,9 +4,9 @@
 
 #include <QGraphicsSceneMouseEvent>
 
-GraphScene::GraphScene(std::shared_ptr<WeightedGraph> &&graph, std::shared_ptr<GraphConfiguration> &&config, GraphSceneMode *mode, QObject *parent)
+GraphScene::GraphScene(std::shared_ptr<WeightedGraph> &&graph, std::shared_ptr<GraphConfiguration> &&config, std::shared_ptr<GraphSceneMode> &&mode, QObject *parent)
     : QGraphicsScene(parent),
-      _history(new History(this)),
+      _history(this),
       _graph(graph),
       _config(config),
       _mode(mode),
@@ -18,8 +18,7 @@ GraphScene::GraphScene(std::shared_ptr<WeightedGraph> &&graph, std::shared_ptr<G
 
 GraphScene::~GraphScene()
 {
-    delete _mode;
-    delete _history;
+    clear();
 }
 
 QGraphicsNode *GraphScene::addNode(const QPointF &centerPos, int weight, int id)
@@ -61,32 +60,21 @@ QGraphicsEdge *GraphScene::addEdge(WeightedEdge *edge)
     return graphics_edge;
 }
 
-History *GraphScene::history() const
+History &GraphScene::history()
 {
     return _history;
 }
 
-const std::shared_ptr<WeightedGraph> &GraphScene::graph() const
+const History &GraphScene::history() const
 {
-    return _graph;
+    return _history;
 }
 
-const GraphSceneMode *GraphScene::mode() const
+void GraphScene::setMode(std::shared_ptr<GraphSceneMode> &&mode)
 {
-    return _mode;
-}
-
-void GraphScene::setMode(GraphSceneMode *mode)
-{
-    delete _mode;
-    _mode = mode;
+    _mode.swap(mode);
     for (auto pair : _graph->nodes())
         _mode->setGNodeFlags(pair.second->graphicsNode());
-}
-
-const std::shared_ptr<GraphConfiguration> &GraphScene::config()
-{
-    return _config;
 }
 
 void GraphScene::setConfig(std::shared_ptr<GraphConfiguration> &&config)
@@ -99,7 +87,7 @@ void GraphScene::setConfig(std::shared_ptr<GraphConfiguration> &&config)
             QGraphicsNode *old_gnode = pair.second->graphicsNode();
             delete old_gnode;
             QGraphicsNode *new_gnode = addNode(pair.second);
-            history()->substituteGraphicsNode(old_gnode, new_gnode);
+            _history.substituteGraphicsNode(old_gnode, new_gnode);
         }
     }
     else if (config->_nodePen!= _config->_nodePen || config->_nodeHoverPen!= _config->_nodeHoverPen ||
@@ -118,7 +106,7 @@ void GraphScene::setConfig(std::shared_ptr<GraphConfiguration> &&config)
             QGraphicsEdge *new_gedge = addEdge(edge);
             new_gedge->refresh();
             new_gedge->showWeight();
-            history()->substituteGraphicsEdge(old_gedge, new_gedge);
+            _history.substituteGraphicsEdge(old_gedge, new_gedge);
         }
         _minEdgeWeight = _maxEdgeWeight = 0;
         calcEdgesWeightRange();
@@ -131,6 +119,21 @@ void GraphScene::setConfig(std::shared_ptr<GraphConfiguration> &&config)
         _minEdgeWeight = _maxEdgeWeight = 0;
         calcEdgesWeightRange();
     }
+}
+
+const std::shared_ptr<WeightedGraph> &GraphScene::graph() const
+{
+    return _graph;
+}
+
+const std::shared_ptr<GraphSceneMode> &GraphScene::mode() const
+{
+    return _mode;
+}
+
+const std::shared_ptr<GraphConfiguration> &GraphScene::config() const
+{
+    return _config;
 }
 
 void GraphScene::calcEdgesTransparencyOnCreate(QGraphicsEdge *gEdge)

@@ -37,8 +37,8 @@
 #include <QPen>
 
 #include "item_info.h"
+#include "weight_text_item.h"
 
-class WeightEdgeTextItem;
 class GraphScene;
 
 class QGraphicsEdge : public QObject, public QGraphicsPathItem
@@ -90,9 +90,9 @@ protected:
     virtual void    hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
     virtual void    focusInEvent(QFocusEvent *event) override;
 
-    GraphScene     *_scene;
+    GraphScene          *_scene;
     WeightedEdge        *_edge;
-    WeightEdgeTextItem  *_weightItem;
+    WeightEdgeTextItem   _weightItem;
 
     QPen    _simplePen;
     QPen    _hoverPen;

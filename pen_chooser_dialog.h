@@ -13,11 +13,11 @@
 #define PEN_CHOOSER_DIALOG_H
 
 #include <QDialog>
+#include <QButtonGroup>
 #include <array>
 
 class QGroupBox;
 class QGridLayout;
-class QButtonGroup;
 
 namespace Ui {
 class PenChooserDialog;
@@ -42,9 +42,9 @@ private slots:
 
 private:
     Ui::PenChooserDialog *_ui;
-    QButtonGroup *_penButtonGroup;
-    QButtonGroup *_capButtonGroup;
-    QButtonGroup *_joinButtonGroup;
+    QButtonGroup _penButtonGroup;
+    QButtonGroup _capButtonGroup;
+    QButtonGroup _joinButtonGroup;
 
     template<typename Style, std::size_t sz>
     void initButtonGroup(const std::array<QString, sz> &names, const std::array<Style, sz> &styles,

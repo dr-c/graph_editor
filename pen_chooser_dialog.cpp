@@ -42,33 +42,30 @@ void PenChooserDialog::initButtonGroup(const std::array<QString, sz> &names, con
 PenChooserDialog::PenChooserDialog(QWidget *parent)
     : QDialog(parent),
       _ui(new Ui::PenChooserDialog),
-      _penButtonGroup(new QButtonGroup(this)),
-      _capButtonGroup(new QButtonGroup(this)),
-      _joinButtonGroup(new QButtonGroup(this))
+      _penButtonGroup(this),
+      _capButtonGroup(this),
+      _joinButtonGroup(this)
 {
     _ui->setupUi(this);
 
-    initButtonGroup<Qt::PenStyle, pen_array_size>(pen_names, pen_styles, _ui->penGroupBox, _ui->penGridLayout, _penButtonGroup);
-    initButtonGroup<Qt::PenCapStyle, cap_array_size>(cap_names, cap_styles, _ui->capGroupBox, _ui->capGridLayout, _capButtonGroup);
-    initButtonGroup<Qt::PenJoinStyle, join_array_size>(join_names, join_styles, _ui->joinGroupBox, _ui->joinGridLayout, _joinButtonGroup);
+    initButtonGroup<Qt::PenStyle, pen_array_size>(pen_names, pen_styles, _ui->penGroupBox, _ui->penGridLayout, &_penButtonGroup);
+    initButtonGroup<Qt::PenCapStyle, cap_array_size>(cap_names, cap_styles, _ui->capGroupBox, _ui->capGridLayout, &_capButtonGroup);
+    initButtonGroup<Qt::PenJoinStyle, join_array_size>(join_names, join_styles, _ui->joinGroupBox, _ui->joinGridLayout, &_joinButtonGroup);
 
     connect(_ui->doubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(setWidth(double)));
-    connect(_penButtonGroup, SIGNAL(buttonToggled(int,bool)), this, SLOT(setPenStyle(int,bool)));
-    connect(_capButtonGroup, SIGNAL(buttonToggled(int,bool)), this, SLOT(setCapStyle(int,bool)));
-    connect(_joinButtonGroup, SIGNAL(buttonToggled(int,bool)), this, SLOT(setJoinStyle(int,bool)));
+    connect(&_penButtonGroup, SIGNAL(buttonToggled(int,bool)), this, SLOT(setPenStyle(int,bool)));
+    connect(&_capButtonGroup, SIGNAL(buttonToggled(int,bool)), this, SLOT(setCapStyle(int,bool)));
+    connect(&_joinButtonGroup, SIGNAL(buttonToggled(int,bool)), this, SLOT(setJoinStyle(int,bool)));
 }
 
 PenChooserDialog::~PenChooserDialog()
 {
-    for (auto button : _joinButtonGroup->buttons())
+    for (auto button : _joinButtonGroup.buttons())
         delete button;
-    for (auto button : _capButtonGroup->buttons())
+    for (auto button : _capButtonGroup.buttons())
         delete button;
-    for (auto button : _penButtonGroup->buttons())
+    for (auto button : _penButtonGroup.buttons())
         delete button;
-    delete _joinButtonGroup;
-    delete _capButtonGroup;
-    delete _penButtonGroup;
     delete _ui;
 }
 
@@ -76,9 +73,9 @@ void PenChooserDialog::setPen(const QPen &pen)
 {
     _ui->frame->setPen(pen);
     _ui->doubleSpinBox->setValue(pen.widthF());
-    _penButtonGroup->button(pen.style())->click();
-    _capButtonGroup->button(pen.capStyle())->click();
-    _joinButtonGroup->button(pen.joinStyle())->click();
+    _penButtonGroup.button(pen.style())->click();
+    _capButtonGroup.button(pen.capStyle())->click();
+    _joinButtonGroup.button(pen.joinStyle())->click();
 }
 
 QPen PenChooserDialog::pen() const

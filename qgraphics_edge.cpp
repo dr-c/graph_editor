@@ -2,7 +2,6 @@
 #include "qgraphics_node.h"
 
 #include "graph_scene.h"
-#include "weight_text_item.h"
 
 #include <QPen>
 #include <QFont>
@@ -12,7 +11,7 @@ QGraphicsEdge::QGraphicsEdge(GraphScene *scene, WeightedEdge *edge, QGraphicsIte
     : QGraphicsPathItem(parent),
       _scene(scene),
       _edge(edge),
-      _weightItem(new WeightEdgeTextItem(QString::number(_edge->weight()), this)),
+      _weightItem(QString::number(_edge->weight()), this),
       _simplePen(QPen(QColor(Qt::black))),
       _hoverPen(QPen(QColor(Qt::red))),
       _beforeWeightChanging(_edge->weight())
@@ -22,12 +21,12 @@ QGraphicsEdge::QGraphicsEdge(GraphScene *scene, WeightedEdge *edge, QGraphicsIte
 
     QGraphicsPathItem::setPen(_simplePen);
 
-    _weightItem->hide();
+    _weightItem.hide();
 
-    connect(_weightItem, SIGNAL(textChanged(int)), this, SLOT(setWeight(int)));
-    connect(_weightItem, SIGNAL(deleteKeyPressed()), this, SLOT(prepareDeletion()));
-    connect(_weightItem, SIGNAL(startTextChanging(int)), this, SLOT(startWeightFixed(int)));
-    connect(_weightItem, SIGNAL(finishTextChanging(int)), this, SLOT(weightFixed(int)));
+    connect(&_weightItem, SIGNAL(textChanged(int)), this, SLOT(setWeight(int)));
+    connect(&_weightItem, SIGNAL(deleteKeyPressed()), this, SLOT(prepareDeletion()));
+    connect(&_weightItem, SIGNAL(startTextChanging(int)), this, SLOT(startWeightFixed(int)));
+    connect(&_weightItem, SIGNAL(finishTextChanging(int)), this, SLOT(weightFixed(int)));
 }
 
 QGraphicsEdge::~QGraphicsEdge()
@@ -52,19 +51,19 @@ WeightedEdge *QGraphicsEdge::edge() const
 
 void QGraphicsEdge::setFont(const QFont &font, const QColor &color)
 {
-    _weightItem->setFont(font);
-    _weightItem->setDefaultTextColor(color);
+    _weightItem.setFont(font);
+    _weightItem.setDefaultTextColor(color);
 }
 
 QFont QGraphicsEdge::font() const
 {
-    return _weightItem->font();
+    return _weightItem.font();
 }
 
 void QGraphicsEdge::setBrush(const QBrush &brush)
 {
     QGraphicsPathItem::setBrush(brush);
-    _weightItem->setBrush(brush);
+    _weightItem.setBrush(brush);
 }
 
 QBrush QGraphicsEdge::brush() const
@@ -145,17 +144,17 @@ void QGraphicsEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 void QGraphicsEdge::focusInEvent(QFocusEvent *event)
 {
     QGraphicsPathItem::focusInEvent(event);
-    _weightItem->setFocus();
+    _weightItem.setFocus();
 }
 
 void QGraphicsEdge::showWeight()
 {
-    _weightItem->show();
+    _weightItem.show();
 }
 
 void QGraphicsEdge::changeWeightOutside(int weight)
 {
-    _weightItem->setPlainText(QString::number(weight));
+    _weightItem.setPlainText(QString::number(weight));
     setWeight(weight);
 }
 
@@ -163,13 +162,13 @@ void QGraphicsEdge::setWeight(int weight)
 {
     int old_weight = _edge->weight();
     _edge->setWeight(weight);
-    _weightItem->placeInCenter();
+    _weightItem.placeInCenter();
     emit changed(old_weight, this);
 }
 
 void QGraphicsEdge::prepareDeletion()
 {
-    _scene->history()->writeEdgeDeletion(this);
+    _scene->history().writeEdgeDeletion(this);
     deleteCompletely();
 }
 
@@ -181,7 +180,7 @@ void QGraphicsEdge::startWeightFixed(int weight)
 void QGraphicsEdge::weightFixed(int weight)
 {
     if (_beforeWeightChanging != weight)
-        _scene->history()->writeEdgeWeightChanging(this, _beforeWeightChanging, weight);
+        _scene->history().writeEdgeWeightChanging(this, _beforeWeightChanging, weight);
 }
 
 QPointF QGraphicsEdge::calcIntermediatePoint(const QPointF &pointFrom, const QPointF &pointTo, qreal radius)

@@ -21,8 +21,8 @@ void QGraphicsSimpleLineEdge::draw(QGraphicsNode *fromGNode, QGraphicsNode *toGN
     QPainterPath path(from_interm_point);
     path.lineTo(to_interm_point);
     setPath(path);
-    _weightItem->calcCenterPoint(QRectF(from_interm_point, to_interm_point));
-    _weightItem->placeInCenter();
+    _weightItem.calcCenterPoint(QRectF(from_interm_point, to_interm_point));
+    _weightItem.placeInCenter();
 }
 
 void QGraphicsSimpleLineEdge::draw(QGraphicsNode *fromGNode, const QPointF &toPoint)

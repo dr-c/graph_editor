@@ -2,17 +2,20 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTabBar>
 #include <vector>
+#include <memory>
 
 #include "item_info.h"
+
+#include "graph_creation_dialog.h"
 
 namespace Ui {
 class MainWindow;
 }
 
 class GraphScene;
-class GraphCreationDialog;
-class QTabBar;
+class GraphSceneMode;
 
 class MainWindow : public QMainWindow
 {
@@ -35,11 +38,11 @@ private slots:
     void on_actionConfigure_triggered();
 
 private:
-    Ui::MainWindow                 *_ui;
-    QTabBar                        *_tabBar;
-    GraphCreationDialog            *_creationDialog;
-    GraphScene                *_graphScene;
-    int                             _tabId;
+    Ui::MainWindow      *_ui;
+    QTabBar              _tabBar;
+    GraphCreationDialog  _creationDialog;
+    GraphScene          *_curScene;
+    int                  _tabId;
 };
 
 #endif // MAINWINDOW_H

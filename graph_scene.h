@@ -58,20 +58,23 @@ class GraphScene : public QGraphicsScene
     Q_OBJECT
 
 public:
-    GraphScene(std::shared_ptr<WeightedGraph> &&graph, std::shared_ptr<GraphConfiguration> &&config, GraphSceneMode *mode, QObject *parent = 0);
-    virtual ~GraphScene();
+    GraphScene(std::shared_ptr<WeightedGraph> &&graph, std::shared_ptr<GraphConfiguration> &&config, std::shared_ptr<GraphSceneMode> &&mode, QObject *parent = 0);
+    virtual ~GraphScene() override;
 
     QGraphicsNode *addNode(const QPointF &centerPos, int weight = 1, int id = 0);
     QGraphicsNode *addNode(WeightedNode *node);
     QGraphicsEdge *addEdge(int weight = 1);
     QGraphicsEdge *addEdge(WeightedEdge *edge);
 
-    History *history() const;
-    const std::shared_ptr<WeightedGraph> &graph() const;
-    const GraphSceneMode *mode() const;
-    void setMode(GraphSceneMode *mode);
-    const std::shared_ptr<GraphConfiguration> &config();
+    History &history();
+    const History &history() const;
+
+    void setMode(std::shared_ptr<GraphSceneMode> &&mode);
     void setConfig(std::shared_ptr<GraphConfiguration> &&config);
+
+    const std::shared_ptr<WeightedGraph> &graph() const;
+    const std::shared_ptr<GraphSceneMode> &mode() const;
+    const std::shared_ptr<GraphConfiguration> &config() const;
 
 protected:
     virtual void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
@@ -88,10 +91,10 @@ private slots:
     bool calcEdgesWeightRange();
 
 private:
-    History         *_history;
-    std::shared_ptr<WeightedGraph> _graph;
+    History                             _history;
+    std::shared_ptr<WeightedGraph>      _graph;
     std::shared_ptr<GraphConfiguration> _config;
-    GraphSceneMode  *_mode;
+    std::shared_ptr<GraphSceneMode>     _mode;
 
     void setGNodeDesign(QGraphicsNode *gNode);
     void setGEdgeDesign(QGraphicsEdge *gEdge);

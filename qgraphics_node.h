@@ -32,9 +32,9 @@
 #include <QPen>
 
 #include "item_info.h"
+#include "weight_text_item.h"
 
 class GraphScene;
-class WeightTextItem;
 
 class QGraphicsNode : public QGraphicsObject
 {
@@ -90,11 +90,11 @@ protected:
     virtual void        hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     virtual void        hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
-    GraphScene  *_scene;
-    WeightedNode *_node;
+    GraphScene      *_scene;
+    WeightedNode    *_node;
 
-    WeightTextItem          *_weightItem;
-    QGraphicsSimpleTextItem *_idItem;
+    WeightTextItem          _weightItem;
+    QGraphicsSimpleTextItem _idItem;
 
     qreal   _radius;
 

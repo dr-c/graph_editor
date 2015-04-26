@@ -16,7 +16,7 @@ public:
     enum { Type = UserType + 202 };
 
     QGraphicsCubicArrowEdge(GraphScene *scene, WeightedEdge *edge, QGraphicsItem *parent = 0);
-    virtual ~QGraphicsCubicArrowEdge() override;
+    virtual ~QGraphicsCubicArrowEdge() override = default;
 
     virtual int type() const override;
     virtual void draw(QGraphicsNode *fromGNode, QGraphicsNode *toGNode) override;
@@ -61,7 +61,7 @@ private:
         QGraphicsCubicArrowEdge *_parent;
     };
 
-    CurvePathItem *_curve;
+    CurvePathItem _curve;
 };
 
 #endif // QGRAPHICSCUBICARROWEDGE_H
