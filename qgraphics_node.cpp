@@ -148,7 +148,7 @@ void QGraphicsNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 void QGraphicsNode::keyPressEvent(QKeyEvent *event)
 {
     QGraphicsObject::keyPressEvent(event);
-    if (event->key() == Qt::Key_Delete)
+    if (event->key() == Qt::Key_Delete && _node != nullptr)
     {
         _scene->history().writeNodeDeletion(this);
         deleteCompletely();

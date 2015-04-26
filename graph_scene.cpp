@@ -106,6 +106,7 @@ void GraphScene::setConfig(std::shared_ptr<GraphConfiguration> &&config)
             QGraphicsEdge *new_gedge = addEdge(edge);
             new_gedge->refresh();
             new_gedge->showWeight();
+            new_gedge->setAcceptHoverEvents(true);
             _history.substituteGraphicsEdge(old_gedge, new_gedge);
         }
         _minEdgeWeight = _maxEdgeWeight = 0;
@@ -210,36 +211,36 @@ void GraphScene::setGEdgeDesign(QGraphicsEdge *gEdge)
 
 void GraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
     _mode->mouseDoubleClickEvent(mouseEvent);
+    QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
 }
 
 void GraphScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    QGraphicsScene::mouseMoveEvent(mouseEvent);
     _mode->mouseMoveEvent(mouseEvent);
+    QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
 void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    QGraphicsScene::mousePressEvent(mouseEvent);
     _mode->mousePressEvent(mouseEvent);
+    QGraphicsScene::mousePressEvent(mouseEvent);
 }
 
 void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    QGraphicsScene::mouseReleaseEvent(mouseEvent);
     _mode->mouseReleaseEvent(mouseEvent);
+    QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
 
 void GraphScene::keyPressEvent(QKeyEvent *keyEvent)
 {
-    QGraphicsScene::keyPressEvent(keyEvent);
     _mode->keyPressEvent(keyEvent);
+    QGraphicsScene::keyPressEvent(keyEvent);
 }
 
 void GraphScene::keyReleaseEvent(QKeyEvent *keyEvent)
 {
-    QGraphicsScene::keyReleaseEvent(keyEvent);
     _mode->keyReleaseEvent(keyEvent);
+    QGraphicsScene::keyReleaseEvent(keyEvent);
 }
