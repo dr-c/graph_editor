@@ -73,12 +73,7 @@ public:
     }
 
     void remove(Edge<N, E> *edge) {
-        auto iter = _edges.begin();
-        while (iter != _edges.end()) {
-            if (*iter == edge)
-                break;
-            ++iter;
-        }
+        auto iter = std::find(_edges.begin(), _edges.end(), edge);
         assert(iter != _edges.end());
         _edges.erase(iter);
         delete edge;
