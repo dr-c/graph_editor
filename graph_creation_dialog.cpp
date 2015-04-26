@@ -61,8 +61,8 @@ void GraphCreationDialog::unLockGraphTypeButtons()
 
 void GraphCreationDialog::setConfiguration(const std::shared_ptr<GraphConfiguration> &config)
 {
-    _shapeNodesGroup.button(config->_nodeCreator->type());
-    _formEdgesGroup.button(config->_edgeCreator->type());
+    _shapeNodesGroup.button(config->_nodeCreator->type())->setChecked(true);
+    _formEdgesGroup.button(config->_edgeCreator->type())->setChecked(true);
     _ui->nodePenFrame->setPen(config->_nodePen);
     _ui->nodeHoverPenFrame->setPen(config->_nodeHoverPen);
     _ui->nodeBrushFrame->setBrush(config->_nodeBrush);
