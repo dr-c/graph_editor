@@ -5,7 +5,6 @@
 #include "qgraphics_edge.h"
 
 #include <assert.h>
-#include <QDebug>
 
 History::History(GraphScene *scene)
     : _scene(scene), _current(0)
@@ -254,10 +253,10 @@ History::DeleteNode::DeleteNode(History *history, const SharedGNode &sgNode)
 {
     _ajacentEdges.reserve((*sgNode)->node()->countAdjacents());
 
-    for (auto predecessor : (*sgNode)->node()->predecessors())
+    for (auto& predecessor : (*sgNode)->node()->predecessors())
         fillAjacentEdges(predecessor);
     if (&(*sgNode)->node()->predecessors() != &(*sgNode)->node()->successors())
-        for (auto successor : (*sgNode)->node()->successors())
+        for (auto& successor : (*sgNode)->node()->successors())
             fillAjacentEdges(successor);
 
     _history->_mainNodeItems.erase(*_sgNode);
@@ -281,7 +280,8 @@ void History::DeleteNode::undo()
 void History::DeleteNode::redo()
 {
     _history->_scene->clearSelection();
-    std::for_each(_ajacentEdges.begin(), _ajacentEdges.end(), [](DeleteEdge &item){item.incompleteRedo();});
+    for (auto& item : _ajacentEdges)
+        item.incompleteRedo();
     _history->_mainNodeItems.erase(*_sgNode);
     (*_sgNode)->deleteCompletely();
 }
@@ -295,7 +295,8 @@ void History::DeleteNode::undoNodeOnly()
 
 void History::DeleteNode::undoEdgesOnly()
 {
-    std::for_each(_ajacentEdges.begin(), _ajacentEdges.end(), [](DeleteEdge &item){item.undo();});
+    for (auto& item : _ajacentEdges)
+        item.undo();
 }
 
 History::CreateEdge::CreateEdge(History *history, const SharedGEdge &sgEdge, const SharedGNode &fromSGNode, const SharedGNode &toSGNode)
@@ -409,14 +410,14 @@ History::GroupMoveNode::GroupMoveNode(History *history, const QList<QGraphicsIte
 void History::GroupMoveNode::undo()
 {
     _history->_scene->clearSelection();
-    for (auto item : _moveNodes)
+    for (auto& item : _moveNodes)
         item.undoKeepSelection();
 }
 
 void History::GroupMoveNode::redo()
 {
     _history->_scene->clearSelection();
-    for (auto item : _moveNodes)
+    for (auto& item : _moveNodes)
         item.redoKeepSelection();
 }
 
@@ -435,9 +436,9 @@ void History::GroupDeleteNode::undo()
 {
     assert(_deleteNodes.capacity() == _deleteNodes.size());
     _history->_scene->clearSelection();
-    for (auto item : _deleteNodes)
+    for (auto& item : _deleteNodes)
         item.undoNodeOnly();
-    for (auto item : _deleteNodes)
+    for (auto& item : _deleteNodes)
         item.undoEdgesOnly();
 }
 
@@ -445,6 +446,6 @@ void History::GroupDeleteNode::redo()
 {
     assert(_deleteNodes.capacity() == _deleteNodes.size());
     _history->_scene->clearSelection();
-    for (auto item : _deleteNodes)
+    for (auto& item : _deleteNodes)
         item.redo();
 }

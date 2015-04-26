@@ -73,7 +73,7 @@ const History &GraphScene::history() const
 void GraphScene::setMode(std::shared_ptr<GraphSceneMode> &&mode)
 {
     _mode.swap(mode);
-    for (auto pair : _graph->nodes())
+    for (auto& pair : _graph->nodes())
         _mode->setGNodeFlags(pair.second->graphicsNode());
 }
 
@@ -82,7 +82,7 @@ void GraphScene::setConfig(std::shared_ptr<GraphConfiguration> &&config)
     _config.swap(config);
     if (config->_nodeCreator->type() != _config->_nodeCreator->type())
     {
-        for (auto pair : _graph->nodes())
+        for (auto& pair : _graph->nodes())
         {
             QGraphicsNode *old_gnode = pair.second->graphicsNode();
             delete old_gnode;
@@ -93,7 +93,7 @@ void GraphScene::setConfig(std::shared_ptr<GraphConfiguration> &&config)
     else if (config->_nodePen!= _config->_nodePen || config->_nodeHoverPen!= _config->_nodeHoverPen ||
              config->_nodeBrush != _config->_nodeBrush || config->_nodeFont != _config->_nodeFont)
     {
-        for (auto pair : _graph->nodes())
+        for (auto& pair : _graph->nodes())
             setGNodeDesign(pair.second->graphicsNode());
     }
 
@@ -210,36 +210,36 @@ void GraphScene::setGEdgeDesign(QGraphicsEdge *gEdge)
 
 void GraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    _mode->mouseDoubleClickEvent(mouseEvent);
     QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
+    _mode->mouseDoubleClickEvent(mouseEvent);
 }
 
 void GraphScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    _mode->mouseMoveEvent(mouseEvent);
     QGraphicsScene::mouseMoveEvent(mouseEvent);
+    _mode->mouseMoveEvent(mouseEvent);
 }
 
 void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    _mode->mousePressEvent(mouseEvent);
     QGraphicsScene::mousePressEvent(mouseEvent);
+    _mode->mousePressEvent(mouseEvent);
 }
 
 void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    _mode->mouseReleaseEvent(mouseEvent);
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
+    _mode->mouseReleaseEvent(mouseEvent);
 }
 
 void GraphScene::keyPressEvent(QKeyEvent *keyEvent)
 {
-    _mode->keyPressEvent(keyEvent);
     QGraphicsScene::keyPressEvent(keyEvent);
+    _mode->keyPressEvent(keyEvent);
 }
 
 void GraphScene::keyReleaseEvent(QKeyEvent *keyEvent)
 {
-    _mode->keyReleaseEvent(keyEvent);
     QGraphicsScene::keyReleaseEvent(keyEvent);
+    _mode->keyReleaseEvent(keyEvent);
 }

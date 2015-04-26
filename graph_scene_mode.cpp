@@ -52,8 +52,10 @@ void PointerMode::keyPressEvent(QKeyEvent *keyEvent)
     if (keyEvent->key() == Qt::Key_Delete)
     {
         const QList<QGraphicsItem*> &listItems = _scene->selectedItems();
+
         if (listItems.count() < 2)
             return;
+
         _scene->history().prepareGroupNodesDeletion(listItems.count());
         for (auto item : listItems)
         {
@@ -213,6 +215,6 @@ void PencilMode::toggleAcceptHoverEvent(QGraphicsNode *gNode, bool enable)
         gNode->setActivePen(gNode->pen());
 
     gNode->setAcceptHoverEvents(enable);
-    for (auto pair : gNode->node()->successors())
+    for (auto& pair : gNode->node()->successors())
         pair.first->graphicsNode()->setAcceptHoverEvents(enable);
 }
