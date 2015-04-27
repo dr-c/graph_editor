@@ -93,7 +93,10 @@ void MainWindow::on_actionNewGraph_triggered()
                     static_cast<std::shared_ptr<WeightedGraph>>(std::make_shared<DirectedGraph<NodeInfo, EdgeInfo>>()) :
                     static_cast<std::shared_ptr<WeightedGraph>>(std::make_shared<UndirectedGraph<NodeInfo, EdgeInfo>>());
 
-        addNewScene(graph, _creationDialog.getConfiguration());
+        int index = addNewScene(graph, _creationDialog.getConfiguration());
+        _tabBar.setTabToolTip(index, QString());
+        QString tab_text = _tabBar.tabText(index);
+        _tabBar.setTabText(index, tab_text + " [Untitled]");
     }
 }
 
@@ -106,6 +109,7 @@ void MainWindow::changeTab(int index)
         _ui->graphicsView->setGraphScene(_curScene);
         _ui->actionUndo->setEnabled(_curScene->history().canUndo());
         _ui->actionRedo->setEnabled(_curScene->history().canRedo());
+        _ui->actionSave->setEnabled(!_tabBar.tabToolTip(index).isEmpty());
         if (_ui->actionPencil->isChecked())
             on_actionPencil_triggered(true);
         else
@@ -116,6 +120,7 @@ void MainWindow::changeTab(int index)
         _ui->actionUndo->setEnabled(false);
         _ui->actionRedo->setEnabled(false);
         _ui->actionConfigure->setEnabled(false);
+        _ui->actionSave->setEnabled(false);
         _ui->actionSaveAs->setEnabled(false);
     }
 }
@@ -138,18 +143,8 @@ void MainWindow::on_actionConfigure_triggered()
 
 void MainWindow::on_actionSave_triggered()
 {
-
-}
-
-void MainWindow::on_actionSaveAs_triggered()
-{
-    QString fileName = QFileDialog::getSaveFileName(this, "Save Graph as ...", ".",
-                                                    "Graph files (*.gxml);;XML files (*.xml);;All files (*.*)");
-    if (fileName.isEmpty())
-        return;
-
-    if (!fileName.endsWith(".gxml", Qt::CaseInsensitive) && !fileName.endsWith(".xml", Qt::CaseInsensitive))
-        fileName += ".gxml";
+    QString fileName = _tabBar.tabToolTip(_tabBar.currentIndex());
+    assert(!fileName.isEmpty());
 
     QFile file(fileName);
     if (file.open(QIODevice::WriteOnly))
@@ -165,10 +160,41 @@ void MainWindow::on_actionSaveAs_triggered()
     }
 }
 
+void MainWindow::on_actionSaveAs_triggered()
+{
+    int index = _tabBar.currentIndex();
+    QString full_path = _tabBar.tabToolTip(index);
+    QString directory = full_path.isEmpty() ? "." : full_path.left(full_path.lastIndexOf('/'));
+    QString fileName = QFileDialog::getSaveFileName(this, "Save Graph as ...", directory,
+                                                    "Graph files (*.gxml);;XML files (*.xml);;All files (*.*)");
+    if (fileName.isEmpty())
+        return;
+
+    if (!fileName.endsWith(".gxml", Qt::CaseInsensitive) && !fileName.endsWith(".xml", Qt::CaseInsensitive))
+        fileName += ".gxml";
+
+    QFile file(fileName);
+    if (file.open(QIODevice::WriteOnly))
+    {
+        FileGraphManager::save(file, _curScene);
+        file.close();
+        _tabBar.setTabToolTip(index, fileName);
+        QString tab_text = _tabBar.tabText(index);
+        _tabBar.setTabText(index, tab_text.left(tab_text.indexOf(' ') + 1) + fileName.right(fileName.length() - fileName.lastIndexOf('/') - 1));
+        _ui->actionSave->setEnabled(true);
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText("Cann't write to file " + fileName);
+        msgBox.exec();
+    }
+}
+
 void MainWindow::on_actionLoad_triggered()
 {
     QString fileName = QFileDialog::getOpenFileName(this, "Open Graph...", ".",
-                                                    "Graph files (*.gxml);;XML files (*.xml);;All files (*.*)");
+                                                    "Graph files (*.gxml);;XML files (*.xml);;All files (*)");
     if (fileName.isEmpty())
         return;
 
@@ -178,7 +204,13 @@ void MainWindow::on_actionLoad_triggered()
         std::shared_ptr<WeightedGraph> graph;
         std::shared_ptr<GraphConfiguration> config;
         if (FileGraphManager::load(file, graph, config))
-            addNewScene(graph, config);
+        {
+            int index = addNewScene(graph, config);
+            _tabBar.setTabToolTip(index, fileName);
+            QString tab_text = _tabBar.tabText(index);
+            _tabBar.setTabText(index, tab_text + " " + fileName.right(fileName.length() - fileName.lastIndexOf('/') - 1));
+            _ui->actionSave->setEnabled(true);
+        }
         else
         {
             QMessageBox msgBox;
@@ -195,7 +227,7 @@ void MainWindow::on_actionLoad_triggered()
     }
 }
 
-void MainWindow::addNewScene(std::shared_ptr<WeightedGraph> graph, std::shared_ptr<GraphConfiguration> config)
+int MainWindow::addNewScene(std::shared_ptr<WeightedGraph> graph, std::shared_ptr<GraphConfiguration> config)
 {
     auto mode = (_ui->actionPencil->isChecked()) ?
                 static_cast<std::shared_ptr<GraphSceneMode>>(std::make_shared<PencilMode>()) :
@@ -210,4 +242,5 @@ void MainWindow::addNewScene(std::shared_ptr<WeightedGraph> graph, std::shared_p
     _ui->actionSaveAs->setEnabled(true);
 
     connect(&_curScene->history(), SIGNAL(newItemAdded()), this, SLOT(updateUndoRedo()));
+    return index;
 }

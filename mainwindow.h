@@ -41,7 +41,7 @@ private slots:
     void on_actionLoad_triggered();
 
 private:
-    void addNewScene(std::shared_ptr<WeightedGraph> graph, std::shared_ptr<GraphConfiguration> config);
+    int addNewScene(std::shared_ptr<WeightedGraph> graph, std::shared_ptr<GraphConfiguration> config);
 
     Ui::MainWindow      *_ui;
     QTabBar              _tabBar;
