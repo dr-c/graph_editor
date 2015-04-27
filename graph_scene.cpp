@@ -14,6 +14,16 @@ GraphScene::GraphScene(std::shared_ptr<WeightedGraph> &&graph, std::shared_ptr<G
       _maxEdgeWeight(0)
 {
     _mode->setScene(this);
+
+    for (auto& pair : _graph->nodes())
+        addNode(pair.second);
+    for (auto edge : _graph->edges())
+    {
+        QGraphicsEdge *new_gedge = addEdge(edge);
+        new_gedge->refresh();
+        new_gedge->showWeight();
+        new_gedge->setAcceptHoverEvents(true);
+    }
 }
 
 GraphScene::~GraphScene()
