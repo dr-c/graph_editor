@@ -121,6 +121,8 @@ bool History::canRedo() const
 void History::substituteGraphicsNode(QGraphicsNode *fromGNode, QGraphicsNode *toGNode)
 {
     auto iter = _mainNodeItems.find(fromGNode);
+    if (iter == _mainNodeItems.end())
+        return;
     auto sg_node = iter->second;
     (*sg_node) = toGNode;
     _mainNodeItems.erase(iter);
@@ -130,6 +132,8 @@ void History::substituteGraphicsNode(QGraphicsNode *fromGNode, QGraphicsNode *to
 void History::substituteGraphicsEdge(QGraphicsEdge *fromGEdge, QGraphicsEdge *toGEdge)
 {
     auto iter = _mainEdgeItems.find(fromGEdge);
+    if (iter != _mainEdgeItems.end())
+        return;
     auto sg_edge= iter->second;
     (*sg_edge) = toGEdge;
     _mainEdgeItems.erase(iter);
