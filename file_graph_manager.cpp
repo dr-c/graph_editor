@@ -69,6 +69,8 @@ void FileGraphManager::save(QFile &file, GraphScene *scene)
         {
             stream.writeStartElement("Node");
             stream.writeAttribute("id", QString::number(pair.first));
+            stream.writeAttribute("x", QString::number(pair.second->pos().x()));
+            stream.writeAttribute("y", QString::number(pair.second->pos().y()));
             stream.writeAttribute("weight", QString::number(pair.second->weight()));
             stream.writeEndElement();     // Node
         }
@@ -327,6 +329,11 @@ bool FileGraphManager::NodeListParser::parse(QDomElement &element, std::shared_p
         if (child_element.nodeName() != "Node") return false;
         WeightedNode *node = graph->createNode(child_element.attribute("id").toInt(&ok));
         if (!ok) return false;
+        double x = child_element.attribute("x").toDouble(&ok);
+        if (!ok) return false;
+        double y = child_element.attribute("y").toDouble(&ok);
+        if (!ok) return false;
+        node->setPos(QPointF(x, y));
         node->setWeight(child_element.attribute("weight").toInt(&ok));
         if (!ok) return false;
         child_element = child_element.nextSiblingElement();
