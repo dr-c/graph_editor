@@ -143,9 +143,14 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionSaveAs_triggered()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, "Save Graph as ...", QString(), "Graph files (*.gxml)");
+    QString fileName = QFileDialog::getSaveFileName(this, "Save Graph as ...", ".",
+                                                    "Graph files (*.gxml);;XML files (*.xml);;All files (*.*)");
     if (fileName.isEmpty())
         return;
+
+    if (!fileName.endsWith(".gxml", Qt::CaseInsensitive) && !fileName.endsWith(".xml", Qt::CaseInsensitive))
+        fileName += ".gxml";
+
     QFile file(fileName);
     if (file.open(QIODevice::WriteOnly))
     {
@@ -162,10 +167,11 @@ void MainWindow::on_actionSaveAs_triggered()
 
 void MainWindow::on_actionLoad_triggered()
 {
-    //QString fileName = QFileDialog::getOpenFileName(this, tr("Open Graph..."), ".", tr("Graph files (*.gxml)"));
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Graph..."), ".", tr("Graph files (*)"));
+    QString fileName = QFileDialog::getOpenFileName(this, "Open Graph...", ".",
+                                                    "Graph files (*.gxml);;XML files (*.xml);;All files (*.*)");
     if (fileName.isEmpty())
         return;
+
     QFile file(fileName);
     if (file.open(QIODevice::ReadOnly))
     {
