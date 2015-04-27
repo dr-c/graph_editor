@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui xml
 
 CONFIG  +=  c++11
 
@@ -33,7 +33,8 @@ SOURCES += main.cpp\
     pen_observer_frame.cpp \
     brush_chooser_frame.cpp \
     brush_chooser_dialog.cpp \
-    brush_observer_frame.cpp
+    brush_observer_frame.cpp \
+    file_graph_manager.cpp
 
 HEADERS  += mainwindow.h \
     graph.h \
@@ -58,7 +59,8 @@ HEADERS  += mainwindow.h \
     brush_chooser_frame.h \
     brush_chooser_dialog.h \
     brush_observer_frame.h \
-    graph_configuration.h
+    graph_configuration.h \
+    file_graph_manager.h
 
 FORMS    += mainwindow.ui \
     graph_creation_dialog.ui \

@@ -16,6 +16,7 @@ class MainWindow;
 
 class GraphScene;
 class GraphSceneMode;
+class QXmlStreamWriter;
 
 class MainWindow : public QMainWindow
 {
@@ -34,10 +35,14 @@ private slots:
     void on_actionNewGraph_triggered();
     void changeTab(int index);
     void closeTab(int index);
-
     void on_actionConfigure_triggered();
+    void on_actionSave_triggered();
+    void on_actionSaveAs_triggered();
+    void on_actionLoad_triggered();
 
 private:
+    void addNewScene(std::shared_ptr<WeightedGraph> graph, std::shared_ptr<GraphConfiguration> config);
+
     Ui::MainWindow      *_ui;
     QTabBar              _tabBar;
     GraphCreationDialog  _creationDialog;

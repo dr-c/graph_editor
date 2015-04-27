@@ -4,6 +4,11 @@
 #include "graph_scene.h"
 #include "graph_scene_mode.h"
 
+#include "file_graph_manager.h"
+
+#include <QFileDialog>
+#include <QMessageBox>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     _ui(new Ui::MainWindow),
@@ -84,24 +89,11 @@ void MainWindow::on_actionNewGraph_triggered()
     _creationDialog.reset();
     if (_creationDialog.exec() == QDialog::Accepted)
     {
-        auto mode = (_ui->actionPencil->isChecked()) ?
-                    static_cast<std::shared_ptr<GraphSceneMode>>(std::make_shared<PencilMode>()) :
-                    static_cast<std::shared_ptr<GraphSceneMode>>(std::make_shared<PointerMode>());
-
         auto graph = _creationDialog.isDirected() ?
                     static_cast<std::shared_ptr<WeightedGraph>>(std::make_shared<DirectedGraph<NodeInfo, EdgeInfo>>()) :
                     static_cast<std::shared_ptr<WeightedGraph>>(std::make_shared<UndirectedGraph<NodeInfo, EdgeInfo>>());
 
-        GraphScene *scene = new GraphScene(std::move(graph), std::move(_creationDialog.getConfiguration()), std::move(mode));
-
-        _curScene = scene;
-        _ui->graphicsView->setGraphScene(scene);
-        int index = _tabBar.addTab(QString::number(++_tabId));
-        _tabBar.setTabData(index, QVariant::fromValue(scene));
-        _tabBar.setCurrentIndex(index);
-        _ui->actionConfigure->setEnabled(true);
-
-        connect(&scene->history(), SIGNAL(newItemAdded()), this, SLOT(updateUndoRedo()));
+        addNewScene(graph, _creationDialog.getConfiguration());
     }
 }
 
@@ -124,6 +116,7 @@ void MainWindow::changeTab(int index)
         _ui->actionUndo->setEnabled(false);
         _ui->actionRedo->setEnabled(false);
         _ui->actionConfigure->setEnabled(false);
+        _ui->actionSaveAs->setEnabled(false);
     }
 }
 
@@ -141,4 +134,74 @@ void MainWindow::on_actionConfigure_triggered()
     if (_creationDialog.exec() == QDialog::Accepted)
         _curScene->setConfig(_creationDialog.getConfiguration());
     _creationDialog.unLockGraphTypeButtons();
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+
+}
+
+void MainWindow::on_actionSaveAs_triggered()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, "Save Graph as ...", QString(), "Graph files (*.gxml)");
+    if (fileName.isEmpty())
+        return;
+    QFile file(fileName);
+    if (file.open(QIODevice::WriteOnly))
+    {
+        FileGraphManager::save(file, _curScene);
+        file.close();
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText("Cann't write to file " + fileName);
+        msgBox.exec();
+    }
+}
+
+void MainWindow::on_actionLoad_triggered()
+{
+    //QString fileName = QFileDialog::getOpenFileName(this, tr("Open Graph..."), ".", tr("Graph files (*.gxml)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Graph..."), ".", tr("Graph files (*)"));
+    if (fileName.isEmpty())
+        return;
+    QFile file(fileName);
+    if (file.open(QIODevice::ReadOnly))
+    {
+        std::shared_ptr<WeightedGraph> graph;
+        std::shared_ptr<GraphConfiguration> config;
+        if (FileGraphManager::load(file, graph, config))
+            addNewScene(graph, config);
+        else
+        {
+            QMessageBox msgBox;
+            msgBox.setText("File " + fileName + " has incorrect format.");
+            msgBox.exec();
+        }
+        file.close();
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText("Cann't read file " + fileName);
+        msgBox.exec();
+    }
+}
+
+void MainWindow::addNewScene(std::shared_ptr<WeightedGraph> graph, std::shared_ptr<GraphConfiguration> config)
+{
+    auto mode = (_ui->actionPencil->isChecked()) ?
+                static_cast<std::shared_ptr<GraphSceneMode>>(std::make_shared<PencilMode>()) :
+                static_cast<std::shared_ptr<GraphSceneMode>>(std::make_shared<PointerMode>());
+
+    _curScene = new GraphScene(std::move(graph), std::move(config), std::move(mode));
+    _ui->graphicsView->setGraphScene(_curScene);
+    int index = _tabBar.addTab(QString::number(++_tabId));
+    _tabBar.setTabData(index, QVariant::fromValue(_curScene));
+    _tabBar.setCurrentIndex(index);
+    _ui->actionConfigure->setEnabled(true);
+    _ui->actionSaveAs->setEnabled(true);
+
+    connect(&_curScene->history(), SIGNAL(newItemAdded()), this, SLOT(updateUndoRedo()));
 }
