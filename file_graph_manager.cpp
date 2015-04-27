@@ -160,7 +160,10 @@ bool FileGraphManager::XMLParser::setPenFromAttribute(QDomElement &element, QPen
     pen->setWidthF(element.attribute("width").toDouble(&ok));
     if (!ok) return false;
 
-    pen->setColor(QColor(element.attribute("color").toUInt(&ok)));
+    QRgb rgb = element.attribute("color").toUInt(&ok);
+    QColor color(rgb);
+    color.setAlpha(rgb >> 24);
+    pen->setColor(color);
     if (!ok) return false;
     return true;
 }
@@ -171,7 +174,10 @@ bool FileGraphManager::XMLParser::setBrushFromAttribute(QDomElement &element, QB
     brush->setStyle(static_cast<Qt::BrushStyle>(element.attribute("brushStyle").toInt(&ok)));
     if (!ok) return false;
 
-    brush->setColor(QColor(element.attribute("color").toUInt(&ok)));
+    QRgb rgb = element.attribute("color").toUInt(&ok);
+    QColor color(rgb);
+    color.setAlpha(rgb >> 24);
+    brush->setColor(color);
     if (!ok) return false;
     return true;
 }
