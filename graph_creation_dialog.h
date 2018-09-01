@@ -18,7 +18,7 @@
 
 class GraphScene;
 class GraphSceneMode;
-class GraphConfiguration;
+struct GraphConfiguration;
 class GraphicsNodeCreator;
 class GraphicsEdgeCreator;
 

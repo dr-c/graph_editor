@@ -132,6 +132,7 @@ GraphicsNodeCreator *GraphCreationDialog::getNodeCreator() const
         case QGraphicsRoundedRectNode::Type :   return new GraphicsNodeCreatorT<QGraphicsRoundedRectNode>();
         default: assert(false);
     }
+    return nullptr; // avoid C4715 - not all control paths return a value
 }
 
 GraphicsEdgeCreator *GraphCreationDialog::getEdgeCreator() const
@@ -141,4 +142,5 @@ GraphicsEdgeCreator *GraphCreationDialog::getEdgeCreator() const
         case QGraphicsSimpleLineEdge::Type :    return new GraphicsEdgeCreatorT<QGraphicsSimpleLineEdge>();
         default: assert(false);
     }
+    return nullptr; // avoid C4715 - not all control paths return a value
 }

@@ -27,9 +27,7 @@ class Edge;
 template<typename N, typename E>
 class Edge : public E
 {
-    friend Edge<N, E> *Graph<N, E>::createEdge();
-    friend void Graph<N, E>::remove(Edge<N, E> *edge);
-    friend Graph<N, E>::~Graph<N, E>();
+    friend class Graph<N, E>;
 
 public:
     void setNodes(Node<N, E> *fromNode, Node<N, E> *toNode) {

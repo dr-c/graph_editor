@@ -11,7 +11,7 @@ class QDomElement;
 class QPen;
 class QBrush;
 class QFont;
-class GraphConfiguration;
+struct GraphConfiguration;
 
 class FileGraphManager
 {

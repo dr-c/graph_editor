@@ -66,6 +66,7 @@ public:
 
     void remove(Node<N, E> *node) {
         auto erased_count = _nodes.erase(node->id());
+        (void)erased_count; // avoid C4189 - local variable is initialized but not referenced
         assert(erased_count == 1);
         delete node;
     }
